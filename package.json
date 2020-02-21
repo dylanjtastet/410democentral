@@ -1,3 +1,5 @@
-"scripts": {
-  "postinstall": "cd 410democentral-backend && npm install"
+{
+  "scripts": {
+    "postinstall": "cd 410democentral-backend && npm install"
+  }
 }
