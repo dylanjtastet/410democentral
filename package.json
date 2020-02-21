@@ -1,0 +1,3 @@
+"scripts": {
+  "postinstall": "cd 410democentral-backend && npm install"
+}
