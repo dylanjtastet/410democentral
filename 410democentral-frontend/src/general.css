@@ -1,0 +1,16 @@
+.codebox {
+    height: 300px;
+}
+
+.terminal {
+    height: 150px;
+}
+
+.contentbox {
+    overflow: auto;
+    border: 1px;
+}
+
+.runbutton {
+    width: 100px;
+}
