@@ -33,3 +33,7 @@
 .titletext {
     margin-top: 10px;
 }
+
+.selected {
+    background-color: lightskyblue
+}

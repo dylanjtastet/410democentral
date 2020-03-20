@@ -5,8 +5,17 @@ export default function Codeselect(props) {
         event.preventDefault();
         props.setCode(props.program.code);
         props.setName(props.program.name);
+        props.setId(props.program.id);
     }
+
+    let background;
+    if (props.id==props.program.id) {
+        background = "selected";
+    } else {
+        background = "";
+    }
+
     return( 
-        <li onClick={handleClick}><a >{props.program.name}</a></li>
+        <li onClick={handleClick} className={background}><a>{props.program.name}</a></li>
     )
 }

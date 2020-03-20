@@ -10,9 +10,11 @@ let dummydata = [
      {subcat: 'Category 1',
       programs: [
         {
+          id: 1,
           name: 'Dummy code',
           code: 'console.log("Hello world");'
         },{
+          id: 2,
           name: 'Dummy code 2',
           code: 'console.log("this code sucks");'
         }
@@ -21,9 +23,11 @@ let dummydata = [
       {subcat: 'Category 2',
       programs: [
         {
+          id: 3,
           name: 'Dummy code 3',
           code: 'console.log("Bruh");'
         },{
+          id: 4,
           name: 'Dummy code 4',
           code: 'console.log("Test code");'
         }
@@ -36,6 +40,7 @@ let dummydata = [
        subcat: 'Category 3',
        programs: [
          {
+           id: 5,
            name: "Dummy code 5",
            code: "console.log('Lets gooo');"
          }
@@ -50,6 +55,7 @@ let dummydata = [
 function FrontPage() {
   const [code, setCode] = useState(dummydata[0].subcats[0].programs[0].code);
   const [name, setName] = useState(dummydata[0].subcats[0].programs[0].name);
+  const [id, setId] = useState(dummydata[0].subcats[0].programs[0].id)
   
   return (
     <div>
@@ -74,7 +80,7 @@ function FrontPage() {
 
       <div className="columns">
         <div className="column is-one-fifth section">
-          <Choices data={dummydata} setCode={setCode} setName={setName}/>
+          <Choices data={dummydata} setCode={setCode} setName={setName} id={id} setId={setId}/>
         </div>
         <div className="column section">
           <Content code={code} name={name} setCode={setCode} setName={setName}/>

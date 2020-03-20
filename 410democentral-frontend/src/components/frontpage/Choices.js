@@ -5,7 +5,6 @@ import Catselect from './catselect.jsx';
 
 function Choices(props) {
   let data = props.data;
-  const setCode = props.setCode;
   return (
     <div className="container choices">
         {data.map((category,i) => {
@@ -17,7 +16,7 @@ function Choices(props) {
               <ul className="menu-list">
                 {category.subcats.map((subcat,j) => {
                     return (
-                      <Catselect j={j} i={i} subcat={subcat} setCode={props.setCode} setName={props.setName}/>
+                      <Catselect subcat={subcat} setCode={props.setCode} setName={props.setName} id={props.id} setId={props.setId} key={j}/>
                     )
                   })
                 }

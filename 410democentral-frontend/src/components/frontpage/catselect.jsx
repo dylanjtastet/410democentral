@@ -14,7 +14,7 @@ export default function Catselect(props) {
             {opened ?
                 <ul>
                     {props.subcat.programs.map((program,k) => {
-                        return(<Codeselect program={program} setCode={props.setCode} setName={props.setName} key={[props.i,props.j,k]}/>)
+                        return(<Codeselect program={program} setCode={props.setCode} setName={props.setName} id={props.id} setId={props.setId} key={k}/>)
                     })}
                 </ul>
                 :
