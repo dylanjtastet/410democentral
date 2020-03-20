@@ -1,9 +1,20 @@
+@import '../node_modules/codemirror/lib/codemirror.css';
+@import '../node_modules/codemirror/theme/material.css';
+
 .codebox {
     height: 300px;
+    background-color: gray;
+    color: white;
 }
 
 .terminal {
     height: 150px;
+    background-color: gray;
+    color: white;
+}
+
+.graph-filler {
+    height: 300px;
 }
 
 .contentbox {
@@ -13,4 +24,12 @@
 
 .runbutton {
     width: 100px;
+}
+
+.choices {
+    margin-left: 15px;
+}
+
+.titletext {
+    margin-top: 10px;
 }
