@@ -56,7 +56,7 @@ function FrontPage() {
       <nav className="navbar is-info" role="navigation" aria-label="main navigation">
         <div className="navbar-menu">
           <div className="navbar-brand">
-            <a className="title titletext">210 Demo Central</a>
+            <a className="title titletext choices">210 Demo Central</a>
           </div>
 
           <div className="navbar-end">
