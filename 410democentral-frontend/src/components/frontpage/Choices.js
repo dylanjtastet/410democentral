@@ -1,32 +1,26 @@
 import React from 'react';
 import 'bulma/css/bulma.css';
 
+import Catselect from './catselect.jsx';
+
 function Choices(props) {
   let data = props.data;
   return (
-    <div className="container">
+    <div className="container choices">
         {data.map((category,i) => {
           return (
-            <aside className="menu">
-              <p class="menu-label">
+            <aside className="menu" key={i}>
+              <p className="menu-label titletext">
                   {category.cat}
               </p>
-              <ul class="menu-list">
+              <ul className="menu-list">
                 {category.subcats.map((subcat,j) => {
                     return (
-                      <li>
-                        <a>{subcat.subcat}</a>
-                        <ul>
-                          {subcat.programs.map((program,k) => {
-                            return(<li><a>{program.name}</a></li>)
-                          })}
-                        </ul>
-                      </li>
+                      <Catselect subcat={subcat} setCode={props.setCode} setName={props.setName} id={props.id} setId={props.setId} key={j}/>
                     )
                   })
                 }
               </ul>
-
             </aside>
             )
           })

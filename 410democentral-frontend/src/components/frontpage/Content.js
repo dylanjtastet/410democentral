@@ -1,16 +1,36 @@
 import React from 'react';
 import 'bulma/css/bulma.css';
 import '../../general.css';
+import Terminalbox from './terminal.jsx';
+import Graphbox from './graphbox.jsx';
 
-function Content() {
+ 
+
+
+import {Controlled as CodeMirror} from 'react-codemirror2'
+require('codemirror/mode/xml/xml');
+require('codemirror/mode/javascript/javascript');
+
+function Content(props) {
   return (
     <div className="container contentbox">
+        <h1 className="subtitle">
+            {props.name}
+        </h1>
+        <CodeMirror
+            value={props.code}
+            options={{
+                mode: 'javascript',
+                theme: 'material',
+                lineNumbers: true
+            }}
+            onBeforeChange={(editor, data, value) => {
+              props.setCode({value});
+            }}
+            onChange={(editor, data, value) => {
+            }}
+        />
 
-      {/*Codebox-- Should be replaced by something that styles code as it is typed (colors and whatnot)*/} 
-
-        <div className="container"> 
-            <textarea className="textarea codebox" placeholder="Insert code here"></textarea>
-        </div> 
         <br>
         </br>
         <div className="container columns">
@@ -23,9 +43,8 @@ function Content() {
                     <button className="button runbutton">Graph</button>
                 </p>
             </div>
-            {/*Terminal-- Should probably also be replaced by some sort of terminal-mimicking style thing */}
             <div className="column">
-                <textarea className="textarea terminal" placeholder="Terminal"></textarea>
+                <Terminalbox />
             </div>
         </div>
         <div className="container columns">
@@ -36,9 +55,7 @@ function Content() {
             </div>
             {/*Hypothetical graph-- generated when graph button is pressed*/}
             <div className="column">
-                <div className="box codebox is-dark">
-                    Graph here
-                </div>
+                <Graphbox />
             </div>
         </div>
         <br>
