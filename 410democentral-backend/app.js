@@ -21,7 +21,7 @@ app.get('/sample', function(req,res){
 });
 
 app.post('/sample', function(req,res){
-    db.putCodeSample(req.params.sampId, req.body).then((res)=>{
+    db.putCodeSample(req.params.category, req.body).then((res)=>{
         res.send(true);
     }).catch((err)=>{
         res.send(false);
