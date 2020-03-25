@@ -12,6 +12,12 @@ require('codemirror/mode/xml/xml');
 require('codemirror/mode/javascript/javascript');
 
 function Content(props) {
+  const addFunc = function(num1, num2) {
+      console.log(num1 + num2)
+  }
+  const handleRunCode = function() {
+      console.log(eval(props.code))
+  }
   return (
     <div className="container contentbox">
         <h1 className="subtitle">
@@ -25,7 +31,7 @@ function Content(props) {
                 lineNumbers: true
             }}
             onBeforeChange={(editor, data, value) => {
-              props.setCode({value});
+              props.setCode(value);
             }}
             onChange={(editor, data, value) => {
             }}
@@ -36,7 +42,7 @@ function Content(props) {
         <div className="container columns">
             <div className="column is-2"> 
                 <p>
-                    <button className="button runbutton">Run</button>
+                    <button className="button runbutton" onClick={handleRunCode}>Run</button>
                 </p>
                 <br></br>
                 <p>
