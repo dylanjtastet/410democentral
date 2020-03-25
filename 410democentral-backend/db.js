@@ -13,7 +13,7 @@ let dbPromise = new Promise((resolve, reject) => {
 
 ///////// Access promise objects (chain with dbPromise) /////////
 let codeSamplePromise = (db, id) => new Promise((resolve, reject) => {
-    db.collection("samples").findOne({id:id}, (err, result) => {
+    db.collection("samples").findOne({_id: new MongoClient.ObjectId(id)}, (err, result) => {
         if(err){
             reject(err);
         }
@@ -29,7 +29,7 @@ let codeSampleInsertPromise = (db, category, sample) => new Promise((resolve, re
             reject(err);
         }
         else{
-            resolve(result._id);
+            resolve(result.ops[0]._id);
         }
     });
 });
@@ -58,7 +58,7 @@ let getAllCategoriesPromise = (db) => new Promise((resolve, reject) => {
   
 // Only return ids and categories of code samples to build directory
 let getAllSamplesPromise = (db) => new Promise((resolve, reject) => {
-    db.collection("samples").find({}, {projection:{category:1, _id:1}}).toArray((err,result) => {
+    db.collection("samples").find({}, {projection:{category:1, name:1, _id:1}}).toArray((err,result) => {
         if(err){
             reject(err);
         }

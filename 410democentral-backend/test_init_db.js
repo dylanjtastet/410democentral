@@ -19,8 +19,9 @@ promises.push(db.clearDB().then(() => {
     process.exit();
 }));
 Promise.all(promises).then((vals) => {
-    console.log("Db init successful")
+    console.log("Db init successful");
 }).catch(err => {
     console.log("Failed to init DB. Reason:");
     console.log(err);
+    process.exit();
 });
