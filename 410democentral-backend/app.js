@@ -56,8 +56,8 @@ app.get('/sample', function(req,res,next){
 });
 
 app.post('/sample', function(req,res,next){
-    db.putCodeSample(req.query.category, req.body).then((id)=>{
-        res.send({newId:id});
+    db.putCodeSample(req.query.category, req.body).then((status)=>{
+        res.send({newId:status.ops[0]._id});
     }).catch((err)=>{
         next(err);
     });
@@ -65,10 +65,26 @@ app.post('/sample', function(req,res,next){
 
 
 // body here should include parent if there is one
-app.post('/category', function(req,res){
+app.post('/category', function(req,res,next){
     db.createCategory(req.query.name, req.query.parent).then((data)=>{
         res.send(true);
     }).catch((err)=>{
+        next(err);
+    });
+});
+
+app.delete('/category', function(req,res,next){
+    db.deleteCategory(req.query.name).then((data) => {
+        res.send(true);
+    }).catch((err) => {
+        next(err);
+    });
+});
+
+app.delete('/sample', function(req, res, next){
+    db.deleteSample(req.query.id).then((data) => {
+        res.send(true);
+    }).catch((err) => {
         next(err);
     });
 });

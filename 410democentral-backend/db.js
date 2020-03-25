@@ -11,73 +11,71 @@ let dbPromise = new Promise((resolve, reject) => {
     });
 });
 
-///////// Access promise objects (chain with dbPromise) /////////
-let codeSamplePromise = (db, id) => new Promise((resolve, reject) => {
-    db.collection("samples").findOne({_id: new MongoClient.ObjectId(id)}, (err, result) => {
+let promiseCallback = function(resolve, reject){
+    return (err, result) => {
         if(err){
             reject(err);
         }
         else{
             resolve(result);
         }
-    });
+    }
+}
+
+///////// Access promise objects (chain with dbPromise) /////////
+
+/// Crap, change all of these to use async await ///
+let codeSamplePromise = (db, id) => new Promise((resolve, reject) => {
+    db.collection("samples").findOne({_id: new MongoClient.ObjectId(id)}, promiseCallback(resolve, reject));
 });
 
 let codeSampleInsertPromise = (db, category, sample) => new Promise((resolve, reject) => {
-    db.collection("samples").insertOne({...sample, category:category}, (err, result) => {
-        if(err){
-            reject(err);
-        }
-        else{
-            resolve(result.ops[0]._id);
-        }
-    });
+    db.collection("samples").insertOne({...sample, category:category}, promiseCallback(resolve, reject));
 });
 
 let createCategoryPromise = (db, name, parent) => new Promise((resolve, reject) => {
-    db.collection("categories").insertOne({_id:name, parent:parent}, (err, result) => {
-        if(err){
-            reject(err);
-        }
-        else{
-            resolve();
-        }
-    });
+    db.collection("categories").insertOne({_id:name, parent:parent}, promiseCallback(resolve, reject));
 });
 
 let getAllCategoriesPromise = (db) => new Promise((resolve, reject) => {
-    db.collection("categories").find({}).toArray((err, result) => {
-        if(err){
-            reject(err);
-        }
-        else{
-            resolve(result);
-        }
-    });
+    db.collection("categories").find({}).toArray(promiseCallback(resolve, reject));
+});
+
+let getCategoriesByParentListPromise = (db, parents) => new Promise((resolve, reject) => {
+    db.collection("categories").find({parent:{$in: parents}}, {projection: {_id:1}}).toArray(promiseCallback(resolve, reject));
 });
   
 // Only return ids and categories of code samples to build directory
 let getAllSamplesPromise = (db) => new Promise((resolve, reject) => {
-    db.collection("samples").find({}, {projection:{category:1, name:1, _id:1}}).toArray((err,result) => {
-        if(err){
-            reject(err);
+    db.collection("samples").find({}, {projection:{category:1, name:1, _id:1}}).toArray(promiseCallback(resolve, reject));
+});
+
+let recursiveDeleteListPromise = (db, parents) => {
+    return getCategoriesByParentListPromise(db, parents).then((categories) => {
+        if(categories.length > 0){
+            return recursiveDeleteListPromise(db, categories.map(cat => cat._id));
         }
-        else{
-            resolve(result);
-        }
+        return [];
+    }).then((subList) =>{
+        return parents.concat(subList);
     });
+}
+
+let deleteCategoriesPromise = (db, categories) => new Promise((resolve, reject) => {
+    db.collection("categories").remove({_id: {$in: categories}}, promiseCallback(resolve, reject));
+});
+
+let deleteSamplesByCategoriesPromise = (db, categories) => new Promise((resolve, reject) => {
+    db.collection("samples").remove({category: {$in: categories}}, promiseCallback(resolve, reject));
+});
+
+let deleteSampleByIdPromise = (db, id) => new Promise((resolve, reject) => {
+    db.collection("samples").remove({_id: new MongoClient.ObjectId(id)}, promiseCallback(resolve, reject));
 });
 
 ///// Clear collections promises /////
 let clearCollectionPromise = (db, collectionName) => new Promise((resolve,reject) => {
-    db.collection(collectionName).remove({}, (err, res) => {
-        if(err){
-            reject(err);
-        }
-        else{
-            resolve(res);
-        }
-    });
+    db.collection(collectionName).remove({}, promiseCallback(resolve, reject));
 });
 
 
@@ -114,6 +112,27 @@ module.exports.getAllSampleStubs = function(){
         return getAllSamplesPromise(db);
     });
 }
+
+module.exports.deleteCategory = function(category){
+    return dbPromise.then(db => {
+        return recursiveDeleteListPromise(db, [category]).then((categories) => {
+            return Promise.all([deleteSamplesByCategoriesPromise(db, categories), deleteCategoriesPromise(db, categories)]);
+        });
+    });
+}
+
+module.exports.deleteSample = function(id){
+    return dbPromise.then(db => {
+        return deleteSampleByIdPromise(db, id);
+    });
+}
+
+module.exports.test_getCatsInSubtree = function(category){
+    return dbPromise.then(db => {
+        return recursiveDeleteListPromise(db, [category]);
+    });
+}
+
 
 ///// For testing. Clear the database. Expand when adding new collections
 module.exports.clearDB = function(){
