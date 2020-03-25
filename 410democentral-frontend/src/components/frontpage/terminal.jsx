@@ -20,7 +20,7 @@ export default function Terminalbox(props) {
         <Terminal
         commands={commands}
         //welcomeMessage={'Welcome to the React terminal!'}
-        promptLabel={'me@React:~$'}
+        promptLabel={''}
         contentStyle={contentStyle}
         />
     )

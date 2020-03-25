@@ -12,11 +12,11 @@ let dummydata = [
         {
           id: 1,
           name: 'Dummy code',
-          code: 'console.log("Hello world");'
+          code: 'console.log("Hello world"); \nlet num = 1;'
         },{
           id: 2,
           name: 'Dummy code 2',
-          code: 'console.log("this code sucks");'
+          code: 'console.log("???");'
         }
       ]},
 
@@ -25,7 +25,7 @@ let dummydata = [
         {
           id: 3,
           name: 'Dummy code 3',
-          code: 'console.log("Bruh");'
+          code: 'console.log("Testing testing");'
         },{
           id: 4,
           name: 'Dummy code 4',
@@ -42,7 +42,7 @@ let dummydata = [
          {
            id: 5,
            name: "Dummy code 5",
-           code: "console.log('Lets gooo');"
+           code: "console.log('Lets go');"
          }
        ]
      }
