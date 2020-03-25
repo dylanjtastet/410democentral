@@ -11,11 +11,12 @@ app.get('/', function (req, res) {
     res.send(JSON.stringify({ Hello: 'World'}));
 });
 
-app.get('/dir', function(req,res, next){
-    Promise.all([db.getAllCategories(), db.getAllSampleStubs()]).then((data) => {
-        let [categories, samples] = data;
+app.get('/dir', async function(req,res, next){
+    try{
+        let [categories, samples] = await Promise.all([db.getAllCategories(), db.getAllSampleStubs()]);
         let catMap = {};
         let roots = [];
+
         for(i=0; i < categories.length; i++){
             catMap[categories[i]._id] = categories[i];
             categories[i].type = "category";
@@ -38,55 +39,65 @@ app.get('/dir', function(req,res, next){
                 roots.push(samples[i]);
             }
         }
+
         res.send(roots);
-    }).catch((err) =>{
+    }
+    catch(err){
         next(err);
-    });
+    }
 });
 
 // Todo: All this. Note, use next() or throw() to return errors if the 
 // error is in synchronous or asynchronous code respectively
 
-app.get('/sample', function(req,res,next){
-    db.getCodeSample(req.query.id).then((data)=>{
-        res.send(data);
-    }).catch((err) => {
+app.get('/sample', async function(req,res,next){
+    try{
+        res.send(await db.getCodeSample(req.query.id));
+    }
+    catch(err){
         next(err);
-    });
+    }
 });
 
-app.post('/sample', function(req,res,next){
-    db.putCodeSample(req.query.category, req.body).then((status)=>{
-        res.send({newId:status.ops[0]._id});
-    }).catch((err)=>{
+app.post('/sample', async function(req,res,next){
+    try{
+        res.send({newId: (await db.putCodeSample(req.query.category, req.body)).ops[0]._id});
+    }
+    catch(err){
         next(err);
-    });
+    }
 });
 
 
 // body here should include parent if there is one
-app.post('/category', function(req,res,next){
-    db.createCategory(req.query.name, req.query.parent).then((data)=>{
+app.post('/category', async function(req,res,next){
+    try{
+        await db.createCategory(req.query.name, req.query.parent);
         res.send(true);
-    }).catch((err)=>{
-        next(err);
-    });
+    }
+    catch(err){
+        next(err)
+    }
 });
 
-app.delete('/category', function(req,res,next){
-    db.deleteCategory(req.query.name).then((data) => {
+app.delete('/category', async function(req,res,next){
+    try{
+        await db.deleteCategory(req.query.name);
         res.send(true);
-    }).catch((err) => {
+    }
+    catch(err){
         next(err);
-    });
+    }
 });
 
-app.delete('/sample', function(req, res, next){
-    db.deleteSample(req.query.id).then((data) => {
+app.delete('/sample', async function(req, res, next){
+    try{
+        await db.deleteSample(req.query.id);
         res.send(true);
-    }).catch((err) => {
+    }
+    catch(err){
         next(err);
-    });
+    }
 });
 
 app.listen(port, function () {

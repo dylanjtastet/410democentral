@@ -50,16 +50,25 @@ let getAllSamplesPromise = (db) => new Promise((resolve, reject) => {
     db.collection("samples").find({}, {projection:{category:1, name:1, _id:1}}).toArray(promiseCallback(resolve, reject));
 });
 
-let recursiveDeleteListPromise = (db, parents) => {
-    return getCategoriesByParentListPromise(db, parents).then((categories) => {
-        if(categories.length > 0){
-            return recursiveDeleteListPromise(db, categories.map(cat => cat._id));
-        }
-        return [];
-    }).then((subList) =>{
-        return parents.concat(subList);
-    });
+let recursiveDeleteListPromise = async(db,parents) => {
+    let categories = await getCategoriesByParentListPromise(db, parents);
+    let subList = [];
+    if(categories.length > 0){
+        subList = await recursiveDeleteListPromise(db, parents);
+    }
+    return parents.concat(subList);
 }
+
+// let recursiveDeleteListPromise = (db, parents) => {
+//     return getCategoriesByParentListPromise(db, parents).then((categories) => {
+//         if(categories.length > 0){
+//             return recursiveDeleteListPromise(db, categories.map(cat => cat._id));
+//         }
+//         return [];
+//     }).then((subList) =>{
+//         return parents.concat(subList);
+//     });
+// }
 
 let deleteCategoriesPromise = (db, categories) => new Promise((resolve, reject) => {
     db.collection("categories").remove({_id: {$in: categories}}, promiseCallback(resolve, reject));
@@ -81,62 +90,52 @@ let clearCollectionPromise = (db, collectionName) => new Promise((resolve,reject
 
 //////// db api functions. Return promises that resolve with requested data /////////
 
-module.exports.getCodeSample = function(id){
-    return dbPromise.then(db => {
-        return codeSamplePromise(db, id);
-    });
-};
+module.exports.getCodeSample = async function(id){
+    let db = await dbPromise;
+    return codeSamplePromise(db, id);
+}
 
-module.exports.putCodeSample = function(category, sample){
+module.exports.putCodeSample = async function(category, sample){
     //Todo: check ref integrity of category
-    return dbPromise.then(db => {
-        return codeSampleInsertPromise(db, category, sample);
-    });
+    let db = await dbPromise;
+    return codeSampleInsertPromise(db, category, sample);
 };
 
-module.exports.createCategory = function(name, parent){
+module.exports.createCategory = async function(name, parent){
     //Todo: check ref integrity of parent
-    return dbPromise.then(db => {
-        return createCategoryPromise(db, name, parent);
-    });
+    let db = await dbPromise;
+    return createCategoryPromise(db, name, parent)
 };
 
-module.exports.getAllCategories = function(){
-    return dbPromise.then(db =>{
-        return getAllCategoriesPromise(db);
-    });
+module.exports.getAllCategories = async function(){
+    let db = await dbPromise;
+    return getAllCategoriesPromise(db);
 }
 
-module.exports.getAllSampleStubs = function(){
-    return dbPromise.then(db => {
-        return getAllSamplesPromise(db);
-    });
+module.exports.getAllSampleStubs = async function(){
+    let db = await dbPromise;
+    return getAllSamplesPromise(db);
 }
 
-module.exports.deleteCategory = function(category){
-    return dbPromise.then(db => {
-        return recursiveDeleteListPromise(db, [category]).then((categories) => {
-            return Promise.all([deleteSamplesByCategoriesPromise(db, categories), deleteCategoriesPromise(db, categories)]);
-        });
-    });
+module.exports.deleteCategory = async function(category){
+    let db = await dbPromise;
+    let categories = await recursiveDeleteListPromise(db, [category]);
+    return Promise.all([deleteSamplesByCategoriesPromise(db, categories), deleteCategoriesPromise(db, categories)]);
 }
 
-module.exports.deleteSample = function(id){
-    return dbPromise.then(db => {
-        return deleteSampleByIdPromise(db, id);
-    });
+module.exports.deleteSample = async function(id){
+    let db = await dbPromise;
+    return deleteSampleByIdPromise(db, id);
 }
 
-module.exports.test_getCatsInSubtree = function(category){
-    return dbPromise.then(db => {
-        return recursiveDeleteListPromise(db, [category]);
-    });
+module.exports.test_getCatsInSubtree = async function(category){
+    let db = await dbPromise;
+    return recursiveDeleteListPromise(db, [category]);
 }
 
 
 ///// For testing. Clear the database. Expand when adding new collections
-module.exports.clearDB = function(){
-    return dbPromise.then(db => {
-        return Promise.all([clearCollectionPromise(db, "samples"), clearCollectionPromise(db, "categories")]);
-    });
+module.exports.clearDB = async function(){
+    let db = await dbPromise;
+    return Promise.all([clearCollectionPromise(db, "samples"), clearCollectionPromise(db, "categories")]);
 }
