@@ -1,54 +1,22 @@
 let MongoClient = require("mongodb");
 
-let dbPromise = new Promise((resolve, reject) => {
-    MongoClient.connect("mongodb://localhost:27017", function(err, conn){
-        if(err){
-            reject(err);
-        }
-        else{
-            resolve(conn.db("democentral"));
-        }
-    });
-});
-
-let promiseCallback = function(resolve, reject){
-    return (err, result) => {
-        if(err){
-            reject(err);
-        }
-        else{
-            resolve(result);
-        }
-    }
-}
+let dbPromise = MongoClient.connect("mongodb://localhost:27017").then((client) => client.db("democentral"));
 
 ///////// Access promise objects (chain with dbPromise) /////////
 
 /// Crap, change all of these to use async await ///
-let codeSamplePromise = (db, id) => new Promise((resolve, reject) => {
-    db.collection("samples").findOne({_id: new MongoClient.ObjectId(id)}, promiseCallback(resolve, reject));
-});
+let codeSamplePromise = async(db, id) => db.collection("samples").findOne({_id: new MongoClient.ObjectId(id)});
 
-let codeSampleInsertPromise = (db, category, sample) => new Promise((resolve, reject) => {
-    db.collection("samples").insertOne({...sample, category:category}, promiseCallback(resolve, reject));
-});
+let codeSampleInsertPromise = async(db, category, sample) => db.collection("samples").insertOne({...sample, category:category});
 
-let createCategoryPromise = (db, name, parent) => new Promise((resolve, reject) => {
-    db.collection("categories").insertOne({_id:name, parent:parent}, promiseCallback(resolve, reject));
-});
+let createCategoryPromise = async(db, name, parent) => db.collection("categories").insertOne({_id:name, parent:parent});
 
-let getAllCategoriesPromise = (db) => new Promise((resolve, reject) => {
-    db.collection("categories").find({}).toArray(promiseCallback(resolve, reject));
-});
+let getAllCategoriesPromise = async(db) => db.collection("categories").find({}).toArray();
 
-let getCategoriesByParentListPromise = (db, parents) => new Promise((resolve, reject) => {
-    db.collection("categories").find({parent:{$in: parents}}, {projection: {_id:1}}).toArray(promiseCallback(resolve, reject));
-});
+let getCategoriesByParentListPromise = async(db, parents) => db.collection("categories").find({parent:{$in: parents}}, {projection: {_id:1}}).toArray();
   
 // Only return ids and categories of code samples to build directory
-let getAllSamplesPromise = (db) => new Promise((resolve, reject) => {
-    db.collection("samples").find({}, {projection:{category:1, name:1, _id:1}}).toArray(promiseCallback(resolve, reject));
-});
+let getAllSamplesPromise = async(db) => db.collection("samples").find({}, {projection:{category:1, name:1, _id:1}}).toArray();
 
 let recursiveDeleteListPromise = async(db,parents) => {
     let categories = await getCategoriesByParentListPromise(db, parents);
@@ -59,33 +27,14 @@ let recursiveDeleteListPromise = async(db,parents) => {
     return parents.concat(subList);
 }
 
-// let recursiveDeleteListPromise = (db, parents) => {
-//     return getCategoriesByParentListPromise(db, parents).then((categories) => {
-//         if(categories.length > 0){
-//             return recursiveDeleteListPromise(db, categories.map(cat => cat._id));
-//         }
-//         return [];
-//     }).then((subList) =>{
-//         return parents.concat(subList);
-//     });
-// }
+let deleteCategoriesPromise = async(db, categories) => db.collection("categories").remove({_id: {$in: categories}});
 
-let deleteCategoriesPromise = (db, categories) => new Promise((resolve, reject) => {
-    db.collection("categories").remove({_id: {$in: categories}}, promiseCallback(resolve, reject));
-});
+let deleteSamplesByCategoriesPromise = async(db, categories) => db.collection("samples").remove({category: {$in: categories}});
 
-let deleteSamplesByCategoriesPromise = (db, categories) => new Promise((resolve, reject) => {
-    db.collection("samples").remove({category: {$in: categories}}, promiseCallback(resolve, reject));
-});
-
-let deleteSampleByIdPromise = (db, id) => new Promise((resolve, reject) => {
-    db.collection("samples").remove({_id: new MongoClient.ObjectId(id)}, promiseCallback(resolve, reject));
-});
+let deleteSampleByIdPromise = async(db, id) => db.collection("samples").remove({_id: new MongoClient.ObjectId(id)}, promiseCallback(resolve, reject));
 
 ///// Clear collections promises /////
-let clearCollectionPromise = (db, collectionName) => new Promise((resolve,reject) => {
-    db.collection(collectionName).remove({}, promiseCallback(resolve, reject));
-});
+let clearCollectionPromise = async(db, collectionName) => db.collection(collectionName).remove({});
 
 
 //////// db api functions. Return promises that resolve with requested data /////////
