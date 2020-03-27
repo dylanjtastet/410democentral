@@ -1,0 +1,199 @@
+//Category: Binary Search Tree
+//Desc: Sorts a randomly generated array with a binary search tree
+
+
+"use strict";
+
+function myMain() {
+  //var elts = [23,4,121,15,5,78,7,-21,12,-6,19];
+  var N=20, MAX=9000000;
+  N=Number(prompt("how many numbers to generate?"));
+  //MAX=Number(prompt("biggest num value?"));
+  var st, et;
+  
+  //var elts = genRandomElts(N, MAX);
+  var elts = genOrderedElts(N);
+  
+  //alert(elts);
+  
+  st = (new Date()).getTime();
+  elts = bstSort(elts); 
+  et = (new Date()).getTime(); 
+  alert(et-st + " msec");
+    
+  //alert(elts);
+}
+
+myMain();
+
+function bstSort( elts ) {
+  // build BST
+  var bst = makeBST();
+  for (var i=0; i<elts.length; i++) {
+     bst.insert_i(elts[i]); // this ignores adding dupes
+  }
+  
+  // extract ordered elements with traversal
+  var newElts = [];
+  var c=0;
+  inOrder( bst.root );  
+  //bigOhN(bst.root);
+  return newElts; // this is not really filled in this code
+   
+  function inOrder( cel ) {
+    if (cel===null) { return; }
+    inOrder(cel.LC);
+    newElts[c++] = cel.key;
+    inOrder(cel.RC);
+  }
+  
+  function bigOhN(cel) {
+    for (var i=0; i<bst.size(); i++) {
+      newElts[i] = cel.key;
+    }
+  }
+}
+
+//-------------------------------------------------------------------
+// the BST object constructor
+//-------------------------------------------------------------------
+
+function makeBST ( ) {
+  var bstObj = {
+    root: null,
+    
+    insert: function ( elt ) {
+      if (this.root==null) {
+        this.root = makeCell(elt,null,null);
+        return true;
+      }
+      var tf = this.insert_r( this.root, elt );
+      if (tf) { this.root.size++; }
+      return tf;
+    },
+    insert_r: function ( rn, elt ) { 
+      if (rn.key===elt) { return false; }
+      if (rn.key > elt) { // add to left child tree
+        if (rn.LC===null) {
+          rn.LC = makeCell(elt,null,null);
+          return true;
+        }
+        else { 
+          var tf = this.insert_r(rn.LC,elt);
+          if (tf) { rn.LC.size++; }
+          return tf;
+        }
+      }
+      else { // add to right child tree
+        if (rn.RC===null) {
+          rn.RC = makeCell(elt,null,null);
+          return true;
+        }
+        else { 
+          var tf = this.insert_r(rn.RC,elt); 
+          if (tf) { rn.RC.size++; }
+          return tf;
+        }
+      }
+    },
+    
+    insert_i: function ( elt ) { 
+      var c = makeCell(elt,null,null);
+      if (this.root===null) { 
+        this.root = c; 
+        return;
+      }
+      var parent, cur = this.root;
+      while (true) {
+        parent = cur;
+        if (cur.key===elt) return;
+        if (elt < cur.key) {
+          cur = cur.LC;
+          if (cur===null) {
+            parent.LC = c;
+            return;
+          }
+        }
+        else { // elt > cur.key 
+          cur = cur.RC;
+          if (cur===null) {
+            parent.RC=c;
+            return;
+          }
+        }
+      }
+    },
+    
+    
+    size: function() { 
+      if (this.root===null) { return 0; }
+      return this.root.size; 
+    },
+    
+    empty: function() { return (this.root===null); },
+    
+  };
+  
+  return bstObj;
+}
+
+//-------------------------------------------------------------------
+// the tree node constructor
+//-------------------------------------------------------------------
+
+function makeCell ( k, left, right ) {
+  var cell = {
+    key: k,
+    LC: left,
+    RC: right,
+    size: 1, // num nodes in the tree rooted in this cell
+  };
+  return cell;
+}
+
+//-----------------------------------------------------------------------
+// random 
+//-----------------------------------------------------------------------
+
+function genRandomElts(N,MAX) {
+  var arr=[];
+  for (var i=0; i<N; i++) {
+    arr[i] = genNumber(MAX);
+  }
+  return arr;
+}
+
+function genOrderedElts(N) {
+  var arr=[];
+  for (var i=0; i<N; i++) {
+    arr[i] = N-(i+1);
+  }
+  return arr;
+}
+
+
+function genNumber(MAX) {
+  return Math.floor(Math.random()*MAX); 
+}
+
+function genString(size){
+  if (size===0) { return ranAlpha(); }
+  else {  
+    var str = "";
+    for (var i=0; i<size; i++) { str += ranChar(); }
+    return str;
+  }
+
+  function ranAlpha() {
+    var chars = "abcdefghijklmnopqurstuvwxyzABCDEFGHIJKLMNOPQURSTUVWXYZ";
+    return chars.substr( Math.floor(Math.random() * chars.length), 1);
+  }
+  
+  function ranChar() {
+    var chars = "0123456789abcdefghijklmnopqurstuvwxyzABCDEFGHIJKLMNOPQURSTUVWXYZ";
+    return chars.substr( Math.floor(Math.random() * chars.length), 1);
+  }
+}
+
+
+

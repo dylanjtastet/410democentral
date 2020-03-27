@@ -1,0 +1,22 @@
+// Category: Binary Search Tree
+// Desc: Code to build a basic BST
+
+"use strict";
+
+myMain();
+
+function myMain() {
+  //var elts = [23,4,121,15,5,78,7,-21,12,-6,19];
+  var N=20, MAX=99999999;
+  N=Number(prompt("how many numbers to generate?"));
+  //MAX=Number(prompt("biggest num value?"));
+  var st, et;
+  
+  var elts = genRandomElts(N, MAX);
+  alert(elts.slice(0,10));
+  st = (new Date()).getTime();
+  elts = bubbleSort(elts); 
+  et = (new Date()).getTime();
+  alert(elts.slice(0,10));
+  alert("time: "+(et-st)+" msec");
+}
