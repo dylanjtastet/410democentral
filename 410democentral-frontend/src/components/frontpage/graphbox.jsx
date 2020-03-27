@@ -1,10 +1,28 @@
 import React from 'react';
+import { ScatterChart, Scatter, CartesianGrid, Tooltip, Legend,
+ XAxis, YAxis, ZAxis, Label, ResponsiveContainer } from 'recharts';
 
 export default function Graphbox(props) {
-    return( 
-        <div className="box graph-filler">
-            Graph here
-        </div>
+    return(
+       <ResponsiveContainer width="95%" height={400}>
+          <ScatterChart margin={{ top: 25, right: 20, bottom: 20, left: 20 }}>
+            <XAxis type="number" dataKey="x" name="Input size" label={{
+                value: "Input size",
+                offset: 0,
+                position: "bottom"
+            }} />
+            <YAxis dataKey="y" name="Runtime (ms)" unit="ms" label={{
+                value: "Runtime (ms)",
+                offset: 10,
+                angle: -90,
+                style: {textAnchor: "middle"},
+                position: "left"
+            }} />
+            <CartesianGrid />
+            <Tooltip cursor={{ stroke: '#808080', strokeDasharray: '5 5' }}/>
+            <Scatter line shape="square" legendType="square" data={props.data} fill="rebeccapurple" />
+          </ScatterChart>
+        </ResponsiveContainer>
     )
 }
 
