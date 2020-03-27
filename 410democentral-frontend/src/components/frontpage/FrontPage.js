@@ -55,7 +55,8 @@ let dummydata = [
 function FrontPage() {
   const [code, setCode] = useState(dummydata[0].subcats[0].programs[0].code);
   const [name, setName] = useState(dummydata[0].subcats[0].programs[0].name);
-  const [id, setId] = useState(dummydata[0].subcats[0].programs[0].id)
+  const [id, setId] = useState(dummydata[0].subcats[0].programs[0].id);
+  const [graph, setGraph] = useState({show: false, data: []});
   
   return (
     <div>
@@ -80,10 +81,10 @@ function FrontPage() {
 
       <div className="columns">
         <div className="column is-one-fifth section">
-          <Choices data={dummydata} setCode={setCode} setName={setName} id={id} setId={setId}/>
+          <Choices data={dummydata} setCode={setCode} setName={setName} id={id} setId={setId} setGraph={setGraph}/>
         </div>
         <div className="column section">
-          <Content code={code} name={name} setCode={setCode} setName={setName}/>
+          <Content code={code} name={name} setCode={setCode} setName={setName} graph={graph} setGraph={setGraph}/>
         </div>
       </div>
     </div>

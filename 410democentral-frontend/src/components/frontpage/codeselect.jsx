@@ -6,6 +6,7 @@ export default function Codeselect(props) {
         props.setCode(props.program.code);
         props.setName(props.program.name);
         props.setId(props.program.id);
+        props.setGraph({show: false, data: []})
     }
 
     let background;

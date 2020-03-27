@@ -22,6 +22,19 @@ function Content(props) {
   const handleRunCode = function() {
       console.log(eval(props.code))
   }
+
+  const getData = async function() {
+    return graph_data;
+  }
+
+  const getGraph = function(event) {
+    return async (event) => {
+        event.preventDefault();
+        let data = await getData();
+        props.setGraph({show: true, data: data});
+    }
+  }
+
   return (
     <div className="container contentbox">
         <h1 className="subtitle">
@@ -50,24 +63,29 @@ function Content(props) {
                 </p>
                 <br></br>
                 <p>
-                    <button className="button runbutton">Graph</button>
+                    <button className="button runbutton" onClick={getGraph()}>Graph</button>
                 </p>
             </div>
             <div className="column">
                 <Terminalbox />
             </div>
         </div>
+
+        {props.graph.show ?
         <div className="container columns">
-            <div className="column is-2"> 
-                <p>
-                    <button className="button runbutton">Evaluate</button>
-                </p>
-            </div>
-            {/*Hypothetical graph-- generated when graph button is pressed*/}
-            <div className="column">
-                <Graphbox data={graph_data} />
-            </div>
+                <div className="column is-2"> 
+                    <p>
+                        <button className="button runbutton">Evaluate</button>
+                    </p>
+                </div>
+                
+                <div className="column">
+                    <Graphbox data={props.graph.data} />
+                </div>
         </div>
+        :
+        <span></span>
+        }
         <br>
         </br>
         <div className="container">
