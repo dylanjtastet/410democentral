@@ -16,7 +16,7 @@ function Choices(props) {
               <ul className="menu-list">
                 {category.subcats.map((subcat,j) => {
                     return (
-                      <Catselect subcat={subcat} setCode={props.setCode} setName={props.setName} id={props.id} setId={props.setId} setGraph={props.setGraph} key={j}/>
+                      <Catselect subcat={subcat} setCode={props.setCode} setName={props.setName} id={props.id} setId={props.setId} setGraph={props.setGraph} setInput={props.setInput} setParameters={props.setParameters} key={j}/>
                     )
                   })
                 }
