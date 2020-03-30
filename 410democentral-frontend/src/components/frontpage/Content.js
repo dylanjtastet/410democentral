@@ -6,16 +6,23 @@ import Graphbox from './graphbox.jsx';
 import Paraminput from './paraminput.jsx';
 import {Controlled as CodeMirror} from 'react-codemirror2';
 
+import useCode from './useCode';
+
 require('codemirror/mode/xml/xml');
 require('codemirror/mode/javascript/javascript');
 
 function Content(props) {
+
+  let pendingPull = false;
+
+  const program = useCode(props.id, pendingPull);
+
   const handleRunCode = function() {
-      eval(props.code)
+      eval(program.code)
   }
 
   const getFunction = function() {
-      let func = new Function("return " + props.code)();
+      let func = new Function("return " + program.code)();
       return func;
   }
 
@@ -55,15 +62,17 @@ function Content(props) {
   }
 
   const getGraph = function() {
-    if (props.input === "array") {
+    if (program.input === "array") {
         return async (event) => {
             event.preventDefault();
-            let data = await getDataOneInputSize(passList, props.parameters.start_size, props.parameters.end_size, props.parameters.num_steps);
+            let data = await getDataOneInputSize(
+              passList, program.parameters.start_size, 
+              program.parameters.end_size, program.parameters.num_steps);
             console.log(data)
             props.setGraph({show: true, data: data});
         }
     }
-    if (props.input === "none") {
+    if (program.input === "none" || program.input === "") {
         return async (event) => {
             return;
         }
@@ -74,20 +83,22 @@ function Content(props) {
   return (
     <div className="container contentbox">
         <h1 className="subtitle">
-            {props.name}
+            {program.name}
         </h1>
 
-        <Paraminput input={props.input} setParameters={props.setParameters} parameters={props.parameters}></Paraminput>
+        <Paraminput input={program.input} setParameters={program.setParameters} parameters={program.parameters}></Paraminput>
 
         <CodeMirror
-            value={props.code}
+            value={program.code}
             options={{
                 mode: 'javascript',
                 theme: 'material',
                 lineNumbers: true
             }}
             onBeforeChange={(editor, data, value) => {
-              props.setCode(value);
+              // commented out due to current implementation
+              // need to revisit structure here
+              program.setCode(value);
             }}
             onChange={(editor, data, value) => {
             }}
@@ -97,6 +108,10 @@ function Content(props) {
         </br>
         <div className="container columns">
             <div className="column is-2"> 
+                <p>
+                    <button className="button runbutton" onClick={program.pullFromServer}>Reload</button>
+                </p>
+                <br></br>
                 <p>
                     <button className="button runbutton" onClick={handleRunCode}>Run</button>
                 </p>

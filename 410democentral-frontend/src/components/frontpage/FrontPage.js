@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import 'bulma/css/bulma.css';
-import Choices from './Choices';
+import CatGroupMenu from './CatGroupMenu';
 import Content from './Content';
 import Login from '../login/Login';
+import useCode from './useCode';
 
 let dummydata = [
   {
@@ -57,22 +58,18 @@ let dummydata = [
 ]
 
 function FrontPage(props) {
-  const [code, setCode] = useState("");
-  const [name, setName] = useState("");
   const [id, setId] = useState(-1);
   const [graph, setGraph] = useState({show: false, data: []});
-  const [input, setInput] = useState("none");
-  const [parameters, setParameters] = useState({})
 
   if(props.sessid){
     return (
       <div>
         <div className="columns">
           <div className="column is-one-fifth section">
-            <Choices data={dummydata} setCode={setCode} setName={setName} id={id} setId={setId} setGraph={setGraph} setInput={setInput} setParameters={setParameters}/>
+            <CatGroupMenu data={dummydata} id={id} setId={setId} setGraph={setGraph} />
           </div>
           <div className="column section">
-            <Content code={code} name={name} setCode={setCode} setName={setName} graph={graph} setGraph={setGraph} input={input} parameters={parameters} setParameters={setParameters}/>
+            <Content graph={graph} setGraph={setGraph} />
           </div>
         </div>
       </div>
