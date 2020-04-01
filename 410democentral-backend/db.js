@@ -27,14 +27,14 @@ let recursiveDeleteListPromise = async(db,parents) => {
     return parents.concat(subList);
 }
 
-let deleteCategoriesPromise = async(db, categories) => db.collection("categories").remove({_id: {$in: categories}});
+let deleteCategoriesPromise = async(db, categories) => db.collection("categories").deleteOne({_id: {$in: categories}});
 
-let deleteSamplesByCategoriesPromise = async(db, categories) => db.collection("samples").remove({category: {$in: categories}});
+let deleteSamplesByCategoriesPromise = async(db, categories) => db.collection("samples").deleteMany({category: {$in: categories}});
 
-let deleteSampleByIdPromise = async(db, id) => db.collection("samples").remove({_id: new MongoClient.ObjectId(id)}, promiseCallback(resolve, reject));
+let deleteSampleByIdPromise = async(db, id) => db.collection("samples").deleteOne({_id: new MongoClient.ObjectId(id)}, promiseCallback(resolve, reject));
 
 ///// Clear collections promises /////
-let clearCollectionPromise = async(db, collectionName) => db.collection(collectionName).remove({});
+let clearCollectionPromise = async(db, collectionName) => db.collection(collectionName).deleteMany({});
 
 
 //////// db api functions. Return promises that resolve with requested data /////////
@@ -75,6 +75,43 @@ module.exports.deleteCategory = async function(category){
 module.exports.deleteSample = async function(id){
     let db = await dbPromise;
     return deleteSampleByIdPromise(db, id);
+}
+
+module.exports.insertUser = async function(username, creds, email){
+    let db = await dbPromise;
+    return db.collection("users").insertOne({
+        _id: username,
+        creds: creds,
+        email: email,
+        groups = [username]
+    });
+}
+
+module.exports.getUserCreds = async function(username){
+    let db = await dbPromise;
+    return db.collection("users").findOne({_id: username}, {projection: {creds:1}});
+}
+
+module.exports.insertUserSession = async function(sessid, username){
+    let db = await dbPromise;
+    return db.collection("sessions").insertOne({
+        _id: sessid,
+        user: username
+    });
+}
+
+module.exports.deleteUserSession = async function(sessid){
+    let db = await dbPromise;
+    return db.collection("sessions").deleteOne({
+        _id: sessid
+    });
+}
+
+module.exports.deleteSessionByUser = async function(username){
+    let db = await dbPromise;
+    return db.collection("sessions").deleteOne({
+        user:username
+    });
 }
 
 module.exports.test_getCatsInSubtree = async function(category){

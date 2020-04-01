@@ -1,5 +1,6 @@
 var express = require('express');
 var db = require("./db.js");
+var auth = require("./auth.js");
 var port = process.env.PORT || 3000;
 var parser = require("body-parser");
 
@@ -94,6 +95,37 @@ app.delete('/sample', async function(req, res, next){
     try{
         await db.deleteSample(req.query.id);
         res.send(true);
+    }
+    catch(err){
+        next(err);
+    }
+});
+
+// User stuff
+app.get('/register', async function(req, res, next){
+    try{
+        await auth.registerUser(req.body.username, req.body.passwd, req.body.email);
+        res.send(true);
+    }
+    catch(err){
+        next(err);
+    }
+});
+
+app.get('/login', async function(req, res, next){
+    try{
+        let sessid = await auth.loginUser(req.body.username, req.body.passwd);
+        res.send(sessid);
+    }
+    catch(err){
+        next(err);
+    }
+});
+
+app.get('/logout', async function(req, res, next){
+    try{
+        await auth.logoutUser(req.body.sessid);
+        return true;
     }
     catch(err){
         next(err);
