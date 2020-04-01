@@ -83,7 +83,7 @@ module.exports.insertUser = async function(username, creds, email){
         _id: username,
         creds: creds,
         email: email,
-        groups = [username]
+        groups: [username]
     });
 }
 
@@ -92,6 +92,14 @@ module.exports.getUserCreds = async function(username){
     return db.collection("users").findOne({_id: username}, {projection: {creds:1}});
 }
 
+module.exports.checkUserExists = async function(username){
+    let db = await dbPromise;
+    let user = await db.collection("users").findOne({_id: username}, {projection: {_id:1}});
+    if(user){
+        return true;
+    }
+    return false;
+}
 module.exports.insertUserSession = async function(sessid, username){
     let db = await dbPromise;
     return db.collection("sessions").insertOne({

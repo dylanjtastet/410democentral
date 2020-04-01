@@ -5,11 +5,15 @@ import Cookies from 'js-cookie';
 
 import RegisterModal from "./Register";
 
+const loginStatus = {
+    DEFAULT: 0,
+    FAILURE: 1
+}
 
 export default class Login extends React.Component {
     constructor(props){
         super(props);
-        this.state = {username: '', password: '', modalOpen: false};
+        this.state = {username: '', password: '', modalOpen: false, status: loginStatus.DEFAULT};
         
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleChange = this.handleChange.bind(this);
@@ -21,13 +25,33 @@ export default class Login extends React.Component {
         const name = event.target.name;
         const value = event.target.value;
         this.setState({
-            [name]: value
+            [name]: value,
+            status: loginStatus.DEFAULT
         });
     }
 
-    handleSubmit(event){
-        Cookies.set("sessid", 123);
-        this.props.setSessid(123);
+    async handleSubmit(event){
+        try{
+            let resp = await fetch("http://localhost:3009/login", {
+                                    headers:{"Content-Type": "application/json"},
+                                    method: "POST",
+                                    body: JSON.stringify({
+                                        "username": this.state.username,
+                                        "password": this.state.password,
+                                    })
+                                });
+            let sessid = (await resp.json()).sessid;
+            if(sessid){
+                Cookies.set("sessid", sessid);
+                this.props.setSessid(sessid);
+            }
+            else{
+                this.setState({status: loginStatus.FAILURE});
+            }
+        }
+        catch(err){
+            this.setState({status: loginStatus.FAILURE});
+        }
     }
 
     openModal(){
@@ -81,6 +105,7 @@ export default class Login extends React.Component {
                         </div>
                     </div>
                 </div>
+                {this.state.status === loginStatus.FAILURE && <p>Username or password incorrect.</p>}
             </div>
             </div>
             </div>

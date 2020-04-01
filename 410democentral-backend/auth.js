@@ -23,7 +23,8 @@ const getPasswordSaltedHash = async function(passwd){
 };
 
 const verifyPasswd = async function(passwd, hashRecord){
-    return (await pbkdf2(passwd, hashRecord.salt, hashRecord.iterations, hashRecord.hash.length, hashRecord.fn)) == hashRecord.hash; 
+    let testHash = await pbkdf2(passwd, hashRecord.salt, hashRecord.iterations, hashRecord.hash.length, hashRecord.fn);
+    return testHash.equals(hashRecord.hash); 
 }
 
 module.exports.registerUser = async function(username, passwd, email){
@@ -34,6 +35,9 @@ module.exports.registerUser = async function(username, passwd, email){
 
 module.exports.loginUser = async function(username, passwd){
     let creds = (await db.getUserCreds(username)).creds;
+    // Mongo stores these as a type called Binary
+    creds.salt = creds.salt.buffer;
+    creds.hash = creds.hash.buffer;
     if(await verifyPasswd(passwd, creds)){
         await db.deleteSessionByUser(username);
         let sessid = (await randomBytes(RANDLEN)).toString("hex");

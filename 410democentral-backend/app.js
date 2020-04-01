@@ -1,12 +1,18 @@
 var express = require('express');
 var db = require("./db.js");
 var auth = require("./auth.js");
-var port = process.env.PORT || 3000;
+var port = process.env.PORT || 3009;
 var parser = require("body-parser");
 
 var app = express();
 
-app.use(parser.json());
+app.use(parser.json({strict:false}));
+
+app.use(function(req, res, next){
+    res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+    res.setHeader("Access-Control-Allow-Headers", "*")
+    next();
+});
 
 app.get('/', function (req, res) {
     res.send(JSON.stringify({ Hello: 'World'}));
@@ -102,20 +108,34 @@ app.delete('/sample', async function(req, res, next){
 });
 
 // User stuff
-app.get('/register', async function(req, res, next){
+
+app.get("/user/:username", async function(req, res, next){
     try{
-        await auth.registerUser(req.body.username, req.body.passwd, req.body.email);
-        res.send(true);
+        res.send({taken: (await db.checkUserExists(req.params.username))});
+    }
+    catch(err){
+        next(err);
+    }
+});
+app.post('/register', async function(req, res, next){
+    try{
+        if(!(await db.checkUserExists(req.body.username))){
+            await auth.registerUser(req.body.username, req.body.password, req.body.email);
+            res.send(true);
+        }
+        else{
+            res.send(false);
+        }
     }
     catch(err){
         next(err);
     }
 });
 
-app.get('/login', async function(req, res, next){
+app.post('/login', async function(req, res, next){
     try{
-        let sessid = await auth.loginUser(req.body.username, req.body.passwd);
-        res.send(sessid);
+        let sessid = await auth.loginUser(req.body.username, req.body.password);
+        res.send({sessid: sessid});
     }
     catch(err){
         next(err);
