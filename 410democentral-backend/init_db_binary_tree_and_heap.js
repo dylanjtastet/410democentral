@@ -3,6 +3,7 @@ var fs = require("fs");
 
 let promises = [];
 
+// this pushes one promise which pushes many other promises
 promises.push(db.clearDB().then(() => {
     promises.push(db.createCategory("Algorithms", null));
     promises.push(db.createCategory("Data Structures", null));
@@ -33,8 +34,12 @@ promises.push(db.clearDB().then(() => {
     console.log(err);
     process.exit();
 }));
-Promise.all(promises).then((vals) => {
-    console.log("Db init successful");
+
+Promise.all(promises).then(() => {
+    Promise.all(promises).then((vals) => {
+        console.log("Db init successful");
+        process.exit();
+    });
 }).catch(err => {
     console.log("Failed to init DB. Reason:");
     console.log(err);
