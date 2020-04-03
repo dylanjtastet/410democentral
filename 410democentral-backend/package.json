@@ -4,18 +4,15 @@
   "description": "backend",
   "main": "app.js",
   "scripts": {
-    "test": "concurrently --kill-others \"mongod --dbpath data\\db > NUL\" \"node test_init_db.js\"",
-    "serve": "concurrently --kill-others \"mongod --dbpath data\\db > NUL\" \"node app.js\"",
-    "start": "concurrently --kill-others \"mongod --dbpath data\\db > NUL\" \"node app.js\""
+    "stop": "pkill mongod; pkill node || true",
+    "start": "mkdir -p data/db; mongod --dbpath data/db > /dev/null & (sleep 1; node init_db_binary_tree_and_heap.js > /dev/null; node app.js > /dev/null & sleep 1)"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
     "express": "^4.17.1",
     "mongodb": "^3.5.5"
-  },
-  "devDependencies": {
-    "concurrently": "^5.1.0"
   }
 }
