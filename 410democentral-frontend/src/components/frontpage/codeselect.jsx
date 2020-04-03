@@ -18,7 +18,7 @@ export default function Codeselect(props) {
     }
 
     let background;
-    if (props.id==props.program.id) {
+    if (props.id === props.program.id) {
         background = "selected";
     } else {
         background = "";
