@@ -1,8 +1,6 @@
 import React from 'react';
 
 export default function Paraminput(props) {
-    const parameters = props.parameters
-    
     const handleStartSizeChange = function(event) {
         let end_size = props.parameters.end_size;
         let num_steps = props.parameters.num_steps;

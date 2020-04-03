@@ -1,6 +1,6 @@
 import React from 'react';
-import { ScatterChart, Scatter, CartesianGrid, Tooltip, Legend,
- XAxis, YAxis, ZAxis, Label, ResponsiveContainer } from 'recharts';
+import { ScatterChart, Scatter, CartesianGrid, Tooltip,
+ XAxis, YAxis, ResponsiveContainer } from 'recharts';
 
 export default function Graphbox(props) {
     return(

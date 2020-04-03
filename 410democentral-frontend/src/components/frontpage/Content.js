@@ -1,22 +1,13 @@
-import React, { useState } from 'react';
+import React from 'react';
 import 'bulma/css/bulma.css';
 import '../../general.css';
 import Terminalbox from './terminal.jsx';
 import Graphbox from './graphbox.jsx';
 import Paraminput from './paraminput.jsx';
 import {Controlled as CodeMirror} from 'react-codemirror2';
-import { checkPropTypes } from 'prop-types';
 
 require('codemirror/mode/xml/xml');
 require('codemirror/mode/javascript/javascript');
-
-const graph_data = [
-  { x: 10, y: 12.16 },
-  { x: 30, y: 94.29 },
-  { x: 50, y: 254.17 },
-  { x: 70, y: 493.88 },
-  { x: 100, y: 1002.31 },
-];
 
 function Content(props) {
   const handleRunCode = function() {

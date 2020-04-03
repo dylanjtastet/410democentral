@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import logo from './logo.svg';
 import './App.css';
 import FrontPage from './components/frontpage/FrontPage';
 import AdminPage from './components/adminpage/AdminPage';

@@ -3,7 +3,6 @@ import 'bulma/css/bulma.css';
 import Choices from './Choices';
 import Content from './Content';
 import Login from '../login/Login';
-import Cookies from 'js-cookie';
 
 let dummydata = [
   {
