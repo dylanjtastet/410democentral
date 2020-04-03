@@ -57,55 +57,17 @@ let dummydata = [
   }
 ]
 
-function FrontPage() {
+function FrontPage(props) {
   const [code, setCode] = useState("");
   const [name, setName] = useState("");
   const [id, setId] = useState(-1);
   const [graph, setGraph] = useState({show: false, data: []});
-  const [sessid, setSessid] = useState(Cookies.get('sessid'));
   const [input, setInput] = useState("none");
   const [parameters, setParameters] = useState({})
 
-  let logout = () => {
-    Cookies.remove("sessid");
-    setSessid(false);
-  }
-  
-  function Nav() {
-    return (    
-      <nav className="navbar is-info" role="navigation" aria-label="main navigation">
-        <div className="navbar-menu">
-          <div className="navbar-brand">
-            <a className="title titletext choices">210 Demo Central</a>
-          </div>
-
-          <div className="navbar-end">
-            <div className="navbar-item">
-              <div className="buttons">
-                <LogoutBtn/>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </nav>); 
-  }
-
-  function LogoutBtn(){
-    if(sessid){
-      return(
-        <a className="button is-light" onClick = {logout}>
-          Logout
-        </a>
-      )
-    }
-    return null;
-  }
-
-  if(sessid){
+  if(props.sessid){
     return (
       <div>
-        <Nav/>
         <div className="columns">
           <div className="column is-one-fifth section">
             <Choices data={dummydata} setCode={setCode} setName={setName} id={id} setId={setId} setGraph={setGraph} setInput={setInput} setParameters={setParameters}/>
@@ -120,8 +82,7 @@ function FrontPage() {
   else{
     return (
       <div>
-        <Nav/>
-        <Login setSessid = {setSessid}></Login>
+        <Login setSessid = {props.setSessid}></Login>
       </div>
     );
   }

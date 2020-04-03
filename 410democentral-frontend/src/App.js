@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import FrontPage from './components/frontpage/FrontPage';
 import AdminPage from './components/adminpage/AdminPage';
+import Cookies from 'js-cookie';
 
 import {
   BrowserRouter as Router,
@@ -12,6 +13,29 @@ import {
 } from "react-router-dom";
 
 function App() {
+  const [sessid, setSessid] = useState(Cookies.get('sessid'));
+
+  let logout = () => {
+    Cookies.remove("sessid");
+    setSessid(false);
+  }
+
+  function LogInOutBtn() {
+    if(sessid){
+      return(
+        <a className="button is-light" onClick = {logout}>
+          Logout
+        </a>
+      );
+    } else {
+       return (
+         <a className="button is-light">
+           Log in
+         </a>
+       );
+    }
+  }
+
   return (
     <Router>
       <div>
@@ -28,9 +52,7 @@ function App() {
                   </Link>
                   <Link to="/admin" className="button is-light">Admin
                   </Link>
-                  <a className="button is-light">
-                    Log in
-                  </a>
+                  <LogInOutBtn/>
                 </div>
               </div>
             </div>
@@ -46,7 +68,7 @@ function App() {
         */}
         <Switch>
           <Route exact path="/">
-            <FrontPage />
+            <FrontPage sessid={sessid} setSessid={setSessid} />
           </Route>
           <Route path="/admin">
             <AdminPage />
