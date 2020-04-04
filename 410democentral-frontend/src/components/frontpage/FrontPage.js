@@ -58,7 +58,7 @@ let dummydata = [
 ]
 
 function FrontPage(props) {
-  const [id, setId] = useState(-1);
+  const [id, setId] = useState("");
   const [graph, setGraph] = useState({show: false, data: []});
 
   if(props.sessid){
@@ -69,7 +69,7 @@ function FrontPage(props) {
             <CatGroupMenu data={dummydata} id={id} setId={setId} setGraph={setGraph} />
           </div>
           <div className="column section">
-            <Content graph={graph} setGraph={setGraph} />
+            <Content id={id} graph={graph} setGraph={setGraph} />
           </div>
         </div>
       </div>
