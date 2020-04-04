@@ -11,7 +11,7 @@ export default function Catselect(props) {
   
   return (
     <li>
-    <a onClick={handleClick}>{props.cat._id}</a>
+    <a onClick={handleClick} href="#category">{props.cat._id}</a>
     {opened ?
       <ul>
         {props.cat.children.map((item, i) => {
@@ -26,6 +26,8 @@ export default function Catselect(props) {
               <Codeselect id={props.id} setId={props.setId} setGraph={props.setGraph}
                 progID={item._id} name={item.name} key={i} />
               )
+          } else {
+            return undefined; // could also do some error handling
           }
         })}
       </ul>

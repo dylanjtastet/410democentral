@@ -3,7 +3,6 @@ import 'bulma/css/bulma.css';
 import CatGroupMenu from './CatGroupMenu';
 import Content from './Content';
 import Login from '../login/Login';
-import useCode from './useCode';
 
 let dummydata = [
   {

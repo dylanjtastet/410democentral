@@ -22,13 +22,13 @@ function App() {
   function LogInOutBtn() {
     if(sessid){
       return(
-        <a className="button is-light" onClick = {logout}>
+        <a className="button is-light" onClick = {logout} href="#logout">
           Logout
         </a>
       );
     } else {
        return (
-         <a className="button is-light">
+         <a className="button is-light" href="#login">
            Log in
          </a>
        );
@@ -41,7 +41,7 @@ function App() {
         <nav className="navbar is-info" role="navigation" aria-label="main navigation">
           <div className="navbar-menu">
             <div className="navbar-brand">
-              <a className="title titletext choices">210 Demo Central</a>
+              <a className="title titletext choices" href="#title">210 Demo Central</a>
             </div>
 
             <div className="navbar-end">

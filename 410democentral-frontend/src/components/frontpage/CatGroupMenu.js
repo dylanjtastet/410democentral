@@ -21,7 +21,7 @@ function CatGroupMenu(props) {
 				if (groupcat.parent != null) {
 					console.warn("Top-level category has non-null parent.");
 				}
-				if (groupcat.type != "category") {
+				if (groupcat.type !== "category") {
 					console.warn("Server returned non-category menu-item at top level. Skipping.");
 					return false;
 				}
@@ -36,15 +36,17 @@ function CatGroupMenu(props) {
 							{groupcat.children.map((item, j) => {
 								if (item.type === "category") {
 									return (
-										<Catselect cat={item} id={props.id} setId={props.setId} 
+										<Catselect cat={item} id={props.id} setId={props.setId}
 											setGraph={props.setGraph} startOpen={true} key={j} />
 										)
 								}
 								else if (item.type === "sample") {
 									return (
-			              <Codeselect id={props.id} setId={props.setId} setGraph={props.setGraph}
-		                	progID={item._id} name={item.name} key={j} />
+										<Codeselect id={props.id} setId={props.setId} setGraph={props.setGraph}
+											progID={item._id} name={item.name} key={j} />
 										)
+								} else {
+									return undefined; // could also do some error handling
 								}
 							})
 							}

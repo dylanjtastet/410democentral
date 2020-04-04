@@ -1,11 +1,10 @@
 import React from 'react';
-import useCode from './useCode'
 
 export default function Codeselect(props) {
 
     let background;
 
-    if (props.id==props.progID) {
+    if (props.id === props.progID) {
         background = "selected";
     } else {
         background = "";
@@ -18,6 +17,6 @@ export default function Codeselect(props) {
     }
 
     return( 
-        <li onClick={handleClick} className={background}><a>{props.name}</a></li>
+        <li onClick={handleClick} className={background}><a href="#codeselect">{props.name}</a></li>
     )
 }

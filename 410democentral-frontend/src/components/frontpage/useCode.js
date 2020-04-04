@@ -24,7 +24,7 @@ export default function useCode(id) {
         setParameters({});
       }
     })
-  }, [id, updateFlag]);
+  }, [id, input, updateFlag]);
 
   return {
     "name" : name,
