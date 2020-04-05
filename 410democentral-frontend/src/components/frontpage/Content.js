@@ -17,32 +17,44 @@ function Content(props) {
 
   const program = useCode(props.id, pendingPull);
 
+  const getLineGraph = function(data) {
+      props.setGraph({show: true, data: data})
+  } 
+
   const handleRunCode = function() {
-      eval(program.code)
+      try {
+          eval(program.code);
+      } catch(err) {
+          console.log(err)
+      }
   }
+
+  { //Below are the functions associated with the old version of graphing.
+      /*
 
   const getFunction = function() {
       let func = new Function("return " + program.code)();
       return func;
   }
-
-  const getDataOneInputSize = async function(timed_func, start_size, end_size, num_steps) {
-    let data = [];
-    if ((typeof start_size)=="string") {
-        start_size = parseInt(start_size);
+  
+    const getDataOneInputSize = async function(timed_func, start_size, end_size, num_steps) {
+        let data = [];
+        if ((typeof start_size)=="string") {
+            start_size = parseInt(start_size);
+        }
+        let step_size = Math.floor((end_size-start_size)/num_steps)
+        console.log(typeof start_size)
+        console.log(end_size)
+        console.log(num_steps)
+        console.log(step_size)
+        for (let i = start_size; i <= end_size; i += step_size) {
+            let y = await timed_func(i);
+            console.log(data)
+            data.push({x: i, y: y});
+        }
+        return data;
     }
-    let step_size = Math.floor((end_size-start_size)/num_steps)
-    console.log(typeof start_size)
-    console.log(end_size)
-    console.log(num_steps)
-    console.log(step_size)
-    for (let i = start_size; i <= end_size; i += step_size) {
-        let y = await timed_func(i);
-        console.log(data)
-        data.push({x: i, y: y});
-    }
-    return data;
-  }
+   
 
   const generateList = function(n) {
     let array = [];
@@ -78,6 +90,7 @@ function Content(props) {
         }
     }
   }
+  */}
 
 
   return (
@@ -116,9 +129,12 @@ function Content(props) {
                     <button className="button runbutton" onClick={handleRunCode}>Run</button>
                 </p>
                 <br></br>
+                {/*
                 <p>
                     <button className="button runbutton" onClick={getGraph()}>Graph</button>
                 </p>
+                */
+                }
             </div>
             <div className="column">
                 <Terminalbox />

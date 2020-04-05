@@ -44,13 +44,22 @@ function App() {
               <a className="title titletext choices" href="#title">210 Demo Central</a>
             </div>
 
+            <div className="navbar-start navlinks is-tab">
+                <Link to="/" className="navbar-item navtab">Home
+                </Link>
+                <Link to="/admin" className="navbar-item navtab">Admin
+                </Link>
+            </div>
+
             <div className="navbar-end">
               <div className="navbar-item">
                 <div className="buttons">
+                  {/*
                   <Link to="/" className="button is-light">Home
                   </Link>
                   <Link to="/admin" className="button is-light">Admin
                   </Link>
+                  */}
                   <LogInOutBtn/>
                 </div>
               </div>
