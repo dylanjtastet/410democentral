@@ -1,7 +1,5 @@
 //Category: Binary heap
 //Desc: Generates a basic binary heap from a randomly generated array.
-
-
 "use strict";
 
 myMain();

@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "stop": "pkill mongod; pkill node || true",
-    "start": "mkdir -p data/db; mongod --dbpath data/db > /dev/null & (sleep 1; node init_db_binary_tree_and_heap.js > /dev/null; node app.js > /dev/null & sleep 1)"
+    "start": "mkdir -p data/db; ~/../../usr/local/opt/mongodb-community@3.6/bin/mongod --dbpath data/db > /dev/null & (sleep 1; node init_db_binary_tree_and_heap.js > /dev/null; node app.js > /dev/null & sleep 1)"
   },
   "author": "",
   "license": "ISC",
