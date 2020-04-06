@@ -2,24 +2,38 @@ import React, { useState } from 'react';
 import Codeselect from './codeselect.jsx';
 
 export default function Catselect(props) {
-    const [opened, setOpened] = useState(true);
-    const handleClick = function(event) {
-        event.preventDefault();
-        setOpened(!opened);
-        
+  const [opened, setOpened] = useState(props.startOpen);
+  
+  const handleClick = function(event) {
+    event.preventDefault();
+    setOpened(!opened);
+  }
+  
+  return (
+    <li>
+    <a onClick={handleClick} href="#category">{props.cat._id}</a>
+    {opened ?
+      <ul>
+        {props.cat.children.map((item, i) => {
+          if (item.type === "category") {
+            return (
+              <Catselect cat={item} id={props.id} setId={props.setId} 
+                setGraph={props.setGraph} startOpen={false} key={i} />
+              )
+          }
+          else if (item.type === "sample") {
+            return (
+              <Codeselect id={props.id} setId={props.setId} setGraph={props.setGraph}
+                progID={item._id} name={item.name} key={i} />
+              )
+          } else {
+            return undefined; // could also do some error handling
+          }
+        })}
+      </ul>
+      :
+      <span></span>
     }
-    return( 
-        <li key={props.j}>
-            <a onClick={handleClick}>{props.subcat.subcat}</a>
-            {opened ?
-                <ul>
-                    {props.subcat.programs.map((program,k) => {
-                        return(<Codeselect program={program} setCode={props.setCode} setName={props.setName} id={props.id} setId={props.setId} setGraph={props.setGraph} key={k}/>)
-                    })}
-                </ul>
-                :
-                <span></span>
-            }
-        </li>
-    )
+    </li>
+  )
 }

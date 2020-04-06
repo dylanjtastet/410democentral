@@ -34,7 +34,7 @@ export default class RegisterModal extends React.Component{
             [name]: value
         }, () => {
             // Maybe only do this is username is stable for time period
-            if(name == "username"){
+            if(name === "username"){
                 this.checkUsername();
             }
         });
@@ -96,24 +96,24 @@ export default class RegisterModal extends React.Component{
     render() {
         let emailInputClass = (this.state.email.length < 1)? "input" : Utils.checkEmail(this.state.email)? "input is-success": "input is-danger";
         let confirmPasswordClass = (this.state.confirmPassword.length < 1)? "input" : 
-                                    (this.state.confirmPassword == this.state.password)? "input is-success": "input is-danger";
+                                    (this.state.confirmPassword === this.state.password)? "input is-success": "input is-danger";
         
         let passwordClass = (this.state.password.length < 1)? "input":
                             Utils.checkPassword(this.state.password)? "input is-success":
                             "input is-danger";
 
-        let usernameClass = (this.state.nstatus == nameStatus.DEFAULT)? "input":
-                            (this.state.nstatus == nameStatus.PENDING)? "input is-warning":
-                            (this.state.nstatus == nameStatus.OK)? "input is-success":
+        let usernameClass = (this.state.nstatus === nameStatus.DEFAULT)? "input":
+                            (this.state.nstatus === nameStatus.PENDING)? "input is-warning":
+                            (this.state.nstatus === nameStatus.OK)? "input is-success":
                             "input is-danger"
 
         let isSubmitDisabled = !(Utils.checkPassword(this.state.password) 
                                 && Utils.checkEmail(this.state.email) 
-                                && this.state.password == this.state.confirmPassword
+                                && this.state.password === this.state.confirmPassword
                                 //&& this.state.nstatus == nameStatus.OK
-                                && this.state.regStatus == submitStatus.DEFAULT);
+                                && this.state.regStatus === submitStatus.DEFAULT);
         
-        let errMsg = (this.state.regStatus == submitStatus.FAILUE)? <p>Registration Failed! Something must be broken.</p> : null;
+        let errMsg = (this.state.regStatus === submitStatus.FAILUE)? <p>Registration Failed! Something must be broken.</p> : null;
 
         return(
             <div class = {"modal" + (this.props.active? " is-active": "")}>

@@ -1,6 +1,5 @@
 // Category: Binary Search Tree
 // Desc: Code to build a basic BST
-
 "use strict";
 
 myMain();

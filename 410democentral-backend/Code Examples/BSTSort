@@ -1,30 +1,38 @@
 //Category: Binary Search Tree
 //Desc: Sorts a randomly generated array with a binary search tree
-
-
 "use strict";
+
+myMain();
 
 function myMain() {
   //var elts = [23,4,121,15,5,78,7,-21,12,-6,19];
+  //var elts = [23,4,121,15,5,78,7,-21,12,-6,19];
   var N=20, MAX=9000000;
-  N=Number(prompt("how many numbers to generate?"));
+  var Nstart=20, Nfinal=9000, numSteps=20;
+  
+  //N=Number(prompt("how many numbers to generate?"));
   //MAX=Number(prompt("biggest num value?"));
   var st, et;
+
   
   //var elts = genRandomElts(N, MAX);
-  var elts = genOrderedElts(N);
+  var datapoints = [];
+  for (let i=Nstart; i<Nfinal; i+=Math.floor((Nfinal-Nstart)/numSteps)) {
   
-  //alert(elts);
-  
-  st = (new Date()).getTime();
-  elts = bstSort(elts); 
-  et = (new Date()).getTime(); 
-  alert(et-st + " msec");
-    
+    var elts = genRandomElts(i);
+
+    //alert(elts);
+
+    st = (new Date()).getTime();
+    elts = bstSort(elts); 
+    et = (new Date()).getTime(); 
+  	datapoints.push({x: i, y: et-st});
+    //alert(et-st + " msec");
+  }
+
+  getLineGraph(datapoints);
   //alert(elts);
 }
-
-myMain();
 
 function bstSort( elts ) {
   // build BST

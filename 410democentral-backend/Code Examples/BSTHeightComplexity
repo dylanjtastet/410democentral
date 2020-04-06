@@ -1,6 +1,5 @@
 //Category: Binary Search Tree
 //Desc: Finds height and average time complexity of a binary search tree generated from random data
-
 "use strict";
 //var tab = window.open();   
 

@@ -1,7 +1,5 @@
 //Category: Binary heap
 //Desc: Does heap sort and build heap to heap sort and compares performance with bubble sort.
-
-
 "use strict";
 /*
 *  compare heap sort with build to heap sort with sequence of inserts
