@@ -90,7 +90,7 @@ export default class Login extends React.Component {
                     <div class="control">
                         <input class="input"
                             name =  "password"
-                            type = "text"
+                            type = "password"
                             value = {this.state.password}
                             onChange = {this.handleChange}
                         />
