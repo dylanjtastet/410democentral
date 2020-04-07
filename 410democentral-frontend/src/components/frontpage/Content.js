@@ -1,9 +1,10 @@
-import React from 'react';
+import React, {useState} from 'react';
 import 'bulma/css/bulma.css';
 import '../../general.css';
-import Terminalbox from './terminal.jsx';
+import ConsoleWrapper from './ConsoleWrapper.js'
 import Graphbox from './graphbox.jsx';
 import Paraminput from './paraminput.jsx';
+import CodeSandbox from './CodeSandbox.js'
 import {Controlled as CodeMirror} from 'react-codemirror2';
 
 import useCode from './useCode';
@@ -12,22 +13,16 @@ require('codemirror/mode/xml/xml');
 require('codemirror/mode/javascript/javascript');
 
 function Content(props) {
+  
+  const [consoleBuffer, setConsoleBuffer] = useState([]);
 
-  let pendingPull = false;
+  // log array for console feed
+  const [logs, setLogs] = useState([]);
 
-  const program = useCode(props.id, pendingPull);
+  // flag for code sandbox to indicate that code should be run
+  const [pendingRun, setPendingRun] = useState(false);
 
-  const getLineGraph = function(data) {
-      props.setGraph({show: true, data: data})
-  } 
-
-  const handleRunCode = function() {
-      try {
-          eval(program.code);
-      } catch(err) {
-          console.log(err)
-      }
-  }
+  const program = useCode(props.id);
 
   { //Below are the functions associated with the old version of graphing.
       /*
@@ -99,6 +94,9 @@ function Content(props) {
             {program.name}
         </h1>
 
+        <CodeSandbox code={program.code} pendingRun={pendingRun} setPendingRun={setPendingRun} 
+          setGraph={props.setGraph} setConsoleBuffer={setConsoleBuffer} />
+
         <Paraminput input={program.input} setParameters={program.setParameters} parameters={program.parameters}></Paraminput>
 
         <CodeMirror
@@ -126,7 +124,7 @@ function Content(props) {
                 </p>
                 <br></br>
                 <p>
-                    <button className="button runbutton" onClick={handleRunCode}>Run</button>
+                    <button className="button runbutton" onClick={() => {setPendingRun(true)}}>Run</button>
                 </p>
                 <br></br>
                 {/*
@@ -136,8 +134,9 @@ function Content(props) {
                 */
                 }
             </div>
-            <div className="column">
-                <Terminalbox />
+            <div className="column console">
+                <ConsoleWrapper logs={logs} setLogs={setLogs} 
+                  consoleBuffer={consoleBuffer} setConsoleBuffer={setConsoleBuffer} />
             </div>
         </div>
 
@@ -150,7 +149,7 @@ function Content(props) {
                 </div>
                 
                 <div className="column">
-                    <Graphbox data={props.graph.data} />
+                  <Graphbox data={props.graph.data} />
                 </div>
         </div>
         :

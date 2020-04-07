@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script>
+		let sendToParent = (messageInfo) => {
+			return (data) => {
+				let msg = {info: messageInfo, data: data};
+				try {
+					// Add origin-check for (maybe) more security
+					window.parent.postMessage(msg, '*');
+				} catch (err) {/*do something here*/}
+			}
+		}
+		
+		const console = {
+			// Probably better way to do this
+			info: sendToParent({msgType: "console", level: "info"}),
+			log: sendToParent({msgType: "console", level: "log"}),
+			warn: sendToParent({msgType: "console", level: "warn"}),
+			error: sendToParent({msgType: "console", level: "error"})
+		}
+
+		const getLineGraph = sendToParent({msgType: "graph"});
+
+		window.addEventListener('message', (e) => {
+			try {
+				eval(e.data);
+			} catch (err) {
+				sendToParent({msgType: "error"})(err);
+			}
+		})
+
+	</script>
+</head>
+</html>
