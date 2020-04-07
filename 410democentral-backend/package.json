@@ -4,8 +4,12 @@
   "description": "backend",
   "main": "app.js",
   "scripts": {
-    "stop": "pkill mongod; pkill node || true",
-    "start": "mkdir -p data/db; mongod --dbpath data/db > /dev/null & (sleep 1; node init_db_binary_tree_and_heap.js > /dev/null; node app.js > /dev/null & sleep 1)"
+    "start": "run-script-os",
+    "stop": "run-script-os",
+    "stop:darwin:linux": "pkill mongod; pkill node || true",
+    "start:darwin:linux": "mkdir -p data/db; mongod --dbpath data/db > /dev/null & (sleep 1; node init_db_binary_tree_and_heap.js > /dev/null; node app.js > /dev/null & sleep 1)",
+    "start:win32": "concurrently --kill-others \"mongod --dbpath data\\db > NUL\" \"node init_db_binary_tree_and_heap.js > NUL && node app.js > NUL\"",
+    "stop:win32": "@powershell Stop-Process -Name \"mongod\" -Force; Stop-Process -Name \"node\" -Force"
   },
   "author": "",
   "license": "ISC",
@@ -14,5 +18,9 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "mongodb": "^3.5.5"
+  },
+  "devDependencies": {
+    "concurrently": "^5.1.0",
+    "run-script-os": "^1.1.1"
   }
 }
