@@ -1,6 +1,6 @@
 import {useState, useEffect} from 'react';
 
-export default function useCode(id) {
+export default function useCode(id, evalWorker) {
   const [code, setCode] = useState("");
   const [name, setName] = useState("");
   // setInput is never used
@@ -18,6 +18,10 @@ export default function useCode(id) {
     .then(data => {
       setCode(data.code);
       setName(data.name);
+      evalWorker.postMessage({
+        type: "EVAL_CONST_INIT",
+        sample: code
+      });
       // Uncomment / modify if / when input added to backend
       // setInput(data.input);
       if (input === "array") {

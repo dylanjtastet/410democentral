@@ -14,6 +14,8 @@ require('codemirror/mode/javascript/javascript');
 
 function Content(props) {
   
+  const evalWorker = Worker('../../scripts/eval_worker.js');
+
   const [consoleBuffer, setConsoleBuffer] = useState([]);
 
   // log array for console feed
@@ -22,7 +24,8 @@ function Content(props) {
   // flag for code sandbox to indicate that code should be run
   const [pendingRun, setPendingRun] = useState(false);
 
-  const program = useCode(props.id);
+  const program = useCode(props.id, evalWorker);
+
 
     return (
     <div className="container contentbox">
