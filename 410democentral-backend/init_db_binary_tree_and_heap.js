@@ -29,6 +29,10 @@ promises.push(db.clearDB().then(() => {
         name: "Heap Sort Comparison",
         code: fs.readFileSync("Code Examples/HeapSortComparison").toString('utf-8')
     }));
+    promises.push(db.putCodeSample("Algorithms", {
+        name: "Test UI Widgets",
+        code: fs.readFileSync("Code Examples/TestWidgets").toString('utf-8')
+    }));
 }).catch((err) => {
     console.log("Unable to clear database before init: ");
     console.log(err);
