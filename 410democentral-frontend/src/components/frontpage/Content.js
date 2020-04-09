@@ -1,5 +1,7 @@
 import React, {useState} from 'react';
 import 'bulma/css/bulma.css';
+import 'bulma-slider/dist/css/bulma-slider.min.css'
+import 'bulma-switch/dist/css/bulma-switch.min.css'
 import '../../general.css';
 import ConsoleWrapper from './ConsoleWrapper.js'
 import Graphbox from './graphbox.jsx';
