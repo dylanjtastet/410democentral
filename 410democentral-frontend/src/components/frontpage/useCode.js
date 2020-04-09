@@ -3,6 +3,8 @@ import {useState, useEffect} from 'react';
 export default function useCode(id) {
   const [code, setCode] = useState("");
   const [name, setName] = useState("");
+  // setInput is never used
+  // eslint-disable-next-line
   const [input, setInput] = useState("");
   const [parameters, setParameters] = useState({});
   const [updateFlag, setUpdateFlag] = useState(false);

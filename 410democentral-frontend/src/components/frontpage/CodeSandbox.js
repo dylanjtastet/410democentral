@@ -3,35 +3,40 @@ import React , {useEffect, useRef} from 'react';
 function CodeSandbox(props) {
 
 	const frameRef = useRef();
-
-	const processMessage = (e) => {
-		if (e.origin === "null" && e.source === frameRef.current.contentWindow) {
-			let msg = e.data;
-			if (msg.info.msgType === "console") {
-				props.setConsoleBuffer(consoleBuffer =>
-					[...consoleBuffer, {level: msg.info.level, data: msg.data}]
-				);
-			} else if (msg.info.msgType === "graph") {
-				props.setGraph({show: true, data: msg.data});
-			} else if (msg.info.msgType === "error") {
-				console.error(msg.data);
-			}
-		}
-	}
+    const setConsoleBuffer = props.setConsoleBuffer;
+    const setGraph = props.setGraph;
 
 	useEffect(() => {
+        const processMessage = (e) => {
+            if (e.origin === "null" && e.source === frameRef.current.contentWindow) {
+                let msg = e.data;
+                if (msg.info.msgType === "console") {
+                    setConsoleBuffer(consoleBuffer =>
+                        [...consoleBuffer, {level: msg.info.level, data: msg.data}]
+                    );
+                } else if (msg.info.msgType === "graph") {
+                    setGraph({show: true, data: msg.data});
+                } else if (msg.info.msgType === "error") {
+                    console.error(msg.data);
+                }
+            }
+        }
 		window.addEventListener('message', processMessage);
-	}, []);
+	}, [setConsoleBuffer, setGraph]);
+
+    const setPendingRun = props.setPendingRun;
+    const pendingRun = props.pendingRun;
+    const code = props.code;
 
 	useEffect(() => {
-		if (props.pendingRun === true) {
-			frameRef.current.contentWindow.postMessage(props.code, "*");
-			props.setPendingRun(false);
+		if (pendingRun === true) {
+			frameRef.current.contentWindow.postMessage(code, "*");
+			setPendingRun(false);
 		}
-	}, [props.code, props.pendingRun]);
+	}, [setPendingRun, pendingRun, code]);
 
 	return (
-		<iframe
+		<iframe title="code sandbox"
 			src = {process.env.PUBLIC_URL + '/code_sandbox.html'}
 			sandbox = "allow-scripts"
 			ref = {frameRef}

@@ -24,8 +24,8 @@ function Content(props) {
 
   const program = useCode(props.id);
 
-  { //Below are the functions associated with the old version of graphing.
-      /*
+  //Below are the functions associated with the old version of graphing.
+  /*
 
   const getFunction = function() {
       let func = new Function("return " + program.code)();
@@ -85,8 +85,7 @@ function Content(props) {
         }
     }
   }
-  */}
-
+  */
 
   return (
     <div className="container contentbox">
