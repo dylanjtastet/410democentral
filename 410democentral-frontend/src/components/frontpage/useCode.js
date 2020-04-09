@@ -18,7 +18,7 @@ export default function useCode(id, evalWorker) {
       setName(data.name);
       evalWorker.postMessage({
         type: "EVAL_CONST_INIT",
-        sample: code
+        sample: data.code
       });
       // Uncomment / modify if / when input added to backend
       // setInput(data.input);

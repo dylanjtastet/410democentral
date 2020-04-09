@@ -1,0 +1,7 @@
+var N,B;
+function initvars(){
+    N = integerRange(0, 100, "N");
+    B = getBoolean("B");
+}
+initvars();
+console.log(N, B);

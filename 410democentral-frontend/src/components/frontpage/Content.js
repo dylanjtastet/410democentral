@@ -5,6 +5,9 @@ import ConsoleWrapper from './ConsoleWrapper.js'
 import Graphbox from './graphbox.jsx';
 import Paraminput from './paraminput.jsx';
 import CodeSandbox from './CodeSandbox.js'
+import ConstControlPanel from './ConstControlPanel.js'
+import worker_script from "../../scripts/eval_worker.js"
+import WorkerWrapper from "../../scripts/workerWrapper.js"
 import {Controlled as CodeMirror} from 'react-codemirror2';
 
 import useCode from './useCode';
@@ -12,9 +15,10 @@ import useCode from './useCode';
 require('codemirror/mode/xml/xml');
 require('codemirror/mode/javascript/javascript');
 
+const evalWorker = new WorkerWrapper(worker_script);
+
 function Content(props) {
   
-  const evalWorker = Worker('../../scripts/eval_worker.js');
 
   const [consoleBuffer, setConsoleBuffer] = useState([]);
 
@@ -90,6 +94,10 @@ function Content(props) {
   }
   */}
 
+  function sendRun(){
+      evalWorker.postMessage({type: "EVAL_ALL", sample: program.code});
+  }
+
 
   return (
     <div className="container contentbox">
@@ -120,6 +128,7 @@ function Content(props) {
 
         <br>
         </br>
+        <ConstControlPanel code={program.code} evalWorker = {evalWorker}/>
         <div className="container columns">
             <div className="column is-2"> 
                 <p>
@@ -130,12 +139,9 @@ function Content(props) {
                     <button className="button runbutton" onClick={() => {setPendingRun(true)}}>Run</button>
                 </p>
                 <br></br>
-                {/*
                 <p>
-                    <button className="button runbutton" onClick={getGraph()}>Graph</button>
+                    <button className="button runbutton" onClick={sendRun}>Run With Inputs</button>
                 </p>
-                */
-                }
             </div>
             <div className="column console">
                 <ConsoleWrapper logs={logs} setLogs={setLogs} 
