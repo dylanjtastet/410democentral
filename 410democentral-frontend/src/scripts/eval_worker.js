@@ -1,4 +1,25 @@
 export default () => {
+
+let sendToParent = (messageInfo) => {
+    return (data) => {
+        let msg = {...messageInfo, data: data};
+        try {
+            // Add origin-check for (maybe) more security
+            // eslint-disable-next-line no-restricted-globals
+            self.postMessage(msg);
+        } catch (err) {/*do something here*/}
+    }
+}
+
+// eslint-disable-next-line no-restricted-globals
+self.console = {
+    // Probably better way to do this
+    info: sendToParent({type: "console", level: "info"}),
+    log: sendToParent({type: "console", level: "log"}),
+    warn: sendToParent({type: "console", level: "warn"}),
+    error: sendToParent({type: "console", level: "error"})
+}
+
 //The worker is going to have to be a little stateful for our illusion to work
 let constVals = {};
 

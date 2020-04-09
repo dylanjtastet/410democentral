@@ -36,7 +36,7 @@ function ConsoleWrapper(props) {
 
 	return (
 		<div style={{height: "150px", overflow: "scroll"}}>
-			<Console logs={props.logs} variant="dark" />
+			<Console class="console" logs={props.logs} variant="dark" />
 		</div>
 	)
 }

@@ -8,6 +8,7 @@ function CodeSandbox(props) {
 
 	useEffect(() => {
         const processMessage = (e) => {
+            console.log(e.data);
             if (e.origin === "null" && e.source === frameRef.current.contentWindow) {
                 let msg = e.data;
                 if (msg.info.msgType === "console") {

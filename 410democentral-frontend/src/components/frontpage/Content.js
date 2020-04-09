@@ -30,7 +30,7 @@ function Content(props) {
   // flag for code sandbox to indicate that code should be run
   const [pendingRun, setPendingRun] = useState(false);
 
-  const program = useCode(props.id, evalWorker);
+  const program = useCode(props.id, setLogs);
 
   //Below are the functions associated with the old version of graphing.
   /*
@@ -131,9 +131,9 @@ function Content(props) {
 
         <br>
         </br>
-        <ConstControlPanel code={program.code} evalWorker = {evalWorker}/>
         <div className="container columns">
-            <div className="column is-2"> 
+            <div className="column is-2">
+                <ConstControlPanel setConsoleBuffer = {setConsoleBuffer} code={program.code} evalWorker = {evalWorker}/>
                 <p>
                     <button className="button runbutton" onClick={program.pullFromServer}>Reload</button>
                 </p>
@@ -143,7 +143,7 @@ function Content(props) {
                 </p>
                 <br></br>
                 <p>
-                    <button className="button runbutton" onClick={sendRun}>Run With Inputs</button>
+                    <button className="button runbutton" onClick={sendRun}>Run Inputs</button>
                 </p>
             </div>
             <div className="column console">
