@@ -2,13 +2,7 @@
 // Desc: Code to build a basic BST
 "use strict";
 
-var N;
 
-function initvars(){
-  N = integerRange(0, 100, "N");
-}
-initvars();
-console.log(N);
 myMain();
 
 function myMain() {

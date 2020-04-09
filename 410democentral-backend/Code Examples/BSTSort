@@ -21,7 +21,7 @@ function myMain() {
   
     var elts = genOrderedElts(i);
 
-    //alert(elts);
+    console.log(elts);
 
     st = (new Date()).getTime();
     elts = bstSort(elts); 
