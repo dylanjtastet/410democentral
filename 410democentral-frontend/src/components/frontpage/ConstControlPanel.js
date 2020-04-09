@@ -14,7 +14,8 @@ export default class ConstControlPanel extends React.Component{
     }
 
     handleChange(id, e){
-        this.props.evalWorker.postMessage({type: "CONST_VAL", id: id, val: e.target.value});
+        let val = (e.target.type === "checkbox")? e.target.checked:e.target.value;
+        this.props.evalWorker.postMessage({type: "CONST_VAL", id: id, val: val});
     }
     
     onConstInit(event){
@@ -29,8 +30,10 @@ export default class ConstControlPanel extends React.Component{
             let step = (event.data.top - event.data.bottom)/100;
             let crangeWidget = (
                 <div key={id} class="field">
-                    <input id={id} class="slider is-fullwidth" step={step} min={event.data.bottom} max={event.data.top} type="range"
+                    <input id={id} class="slider" step={step} min={event.data.bottom} max={event.data.top} type="range"
                             onChange ={this.handleChange.bind(this, id)}/>
+                    <label for={id}>{id}</label>
+ 
                 </div>
             );
             this.setState({widgets: append(this.state.widgets, crangeWidget)});
@@ -38,8 +41,9 @@ export default class ConstControlPanel extends React.Component{
         else if(type === "INIT_IRANGE"){
             let irangeWidget = (
                 <div key={id} class="field">
-                    <input id={id} class="slider is-fullwidth" step="1" min={event.data.bottom} max={event.data.top} type="range"
+                    <input id={id} class="slider" step="1" min={event.data.bottom} max={event.data.top} type="range"
                             onChange ={this.handleChange.bind(this, id)}/>
+                    <label for={id}>{id}</label>
                 </div>
             );
             this.setState({widgets: append(this.state.widgets, irangeWidget)})
@@ -47,7 +51,7 @@ export default class ConstControlPanel extends React.Component{
         else if(type === "INIT_BOOL"){
             let boolWidget = (
                 <div key={id} class = "field">
-                    <input id={id} type="checkbox" name="switchExample" class="switch" checked={event.data.def}
+                    <input id={id} type="checkbox" name="switchExample" class="switch" //checked={event.data.def}
                         onChange ={this.handleChange.bind(this, id)}/>
                     <label for={id}>{id}</label>
                 </div>
