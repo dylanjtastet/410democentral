@@ -31,7 +31,7 @@ function ConsoleWrapper(props) {
 		}
 	}, [props.consoleBuffer]);
 
-	return (<Console logs={props.logs} variant="dark" />)
+	return (<Console class="console" logs={props.logs} variant="dark" />)
 }
 
 export default ConsoleWrapper;

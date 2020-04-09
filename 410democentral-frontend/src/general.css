@@ -65,3 +65,13 @@
 .paraminputs {
     margin-bottom: 15px;
 }
+
+.control-panel{
+    padding-bottom: 25px;
+    padding-top: 25px;
+}
+
+.console{
+    height: 350px;
+    overflow: scroll;
+}

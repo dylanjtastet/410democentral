@@ -71,6 +71,13 @@ export default class ConstControlPanel extends React.Component{
             );
             this.setState({widgets: append(this.state.widgets, writeinWidget)});
         }
+        //Restructure this later. Only one handler so it should be in content
+        //and add to a buffer of object which are transformed into widgets
+        else if(type === "console"){
+            this.props.setConsoleBuffer(consoleBuffer =>
+                [...consoleBuffer, {level: event.data.level, data: event.data.data}]
+            );
+        }
     }
 
     //Maybe move the webworker call to init ui widgets here
@@ -78,15 +85,25 @@ export default class ConstControlPanel extends React.Component{
     componentDidUpdate(prevProps, prevState){
         if(prevProps.code != this.props.code){
             this.setState({widgets: []});
+            this.props.evalWorker.postMessage({
+                type: "EVAL_CONST_INIT",
+                sample: this.props.code
+              });
         }
     }
 
     render(){
-        return(
-            <div class="container">
-                {this.state.widgets}
-            </div>
-        );
+        if(this.state.widgets.length > 0)
+            return(
+                <div class="container control-panel">
+                    <h6 class = "title is-6">Adjust Constants</h6>
+                        <div class ="container">
+                            {this.state.widgets}
+                        </div>
+                </div>
+            );
+        
+        return null;
     }
 
 }
