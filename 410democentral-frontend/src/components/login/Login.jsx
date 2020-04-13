@@ -70,13 +70,13 @@ export default class Login extends React.Component {
         return(
             <div>
             <RegisterModal active={this.state.modalOpen} onClose={this.closeModal}></RegisterModal>
-            <div class="center">
-            <div class="container column is-one-third light-background-cblue">
-                <h1 class="title ">Login</h1>
-                <div class = "field">
-                    <label class="label">Username</label>
-                    <div class="control">
-                        <input class="input"
+            <div className="center">
+            <div className="container column is-one-third light-background-cblue">
+                <h1 className="title ">Login</h1>
+                <div className="field">
+                    <label className="label">Username</label>
+                    <div className="control">
+                        <input className="input"
                             name =  "username"
                             type = "text"
                             value = {this.state.username}
@@ -85,10 +85,10 @@ export default class Login extends React.Component {
                     </div>
                 </div>
 
-                <div class = "field">
-                    <label class="label">Password</label>
-                    <div class="control">
-                        <input class="input"
+                <div className="field">
+                    <label className="label">Password</label>
+                    <div className="control">
+                        <input className="input"
                             name =  "password"
                             type = "password"
                             value = {this.state.password}
@@ -97,11 +97,11 @@ export default class Login extends React.Component {
                     </div>
                 </div>
 
-                <div class= "field">
-                    <div class = "control">
-                        <div class = "buttons">
-                            <button class="button is-link" onClick={this.handleSubmit}>Login</button>
-                            <button class="button is-link" onClick={this.openModal}>Register</button>
+                <div className="field">
+                    <div className="control">
+                        <div className="buttons">
+                            <button className="button is-link" onClick={this.handleSubmit}>Login</button>
+                            <button className="button is-link" onClick={this.openModal}>Register</button>
                         </div>
                     </div>
                 </div>

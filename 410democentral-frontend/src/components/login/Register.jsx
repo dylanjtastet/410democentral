@@ -116,14 +116,14 @@ export default class RegisterModal extends React.Component{
         let errMsg = (this.state.regStatus === submitStatus.FAILUE)? <p>Registration Failed! Something must be broken.</p> : null;
 
         return(
-            <div class = {"modal" + (this.props.active? " is-active": "")}>
-                <div class = "modal-background" onClick = {this.handleClose}></div>
-                <div class = "modal-content">
-                    <div class="box">
-                        <div class = "field">
-                            <label class="label">Username</label>
-                            <div class="control">
-                                <input class={usernameClass}
+            <div className={"modal" + (this.props.active? " is-active": "")}>
+                <div className="modal-background" onClick = {this.handleClose}></div>
+                <div className="modal-content">
+                    <div className="box">
+                        <div className="field">
+                            <label className="label">Username</label>
+                            <div className="control">
+                                <input className={usernameClass}
                                     name =  "username"
                                     type = "text"
                                     value = {this.state.username}
@@ -132,10 +132,10 @@ export default class RegisterModal extends React.Component{
                             </div>
                         </div>
 
-                        <div class = "field">
-                            <label class="label">Email</label>
-                            <div class="control has-icons-right">
-                                <input class = {emailInputClass}
+                        <div className="field">
+                            <label className="label">Email</label>
+                            <div className="control has-icons-right">
+                                <input className={emailInputClass}
                                     name =  "email"
                                     type = "text"
                                     value = {this.state.email}
@@ -144,10 +144,10 @@ export default class RegisterModal extends React.Component{
                             </div>
                         </div>
 
-                        <div class = "field">
-                            <label class="label">Password</label>
-                            <div class="control">
-                                <input class={passwordClass}
+                        <div className="field">
+                            <label className="label">Password</label>
+                            <div className="control">
+                                <input className={passwordClass}
                                     name =  "password"
                                     type = "password"
                                     value = {this.state.password}
@@ -156,10 +156,10 @@ export default class RegisterModal extends React.Component{
                             </div>
                         </div>
 
-                        <div class = "field">
-                            <label class = "label">Confirm Password</label>
-                            <div class="control">
-                                <input class = {confirmPasswordClass}
+                        <div className="field">
+                            <label className="label">Confirm Password</label>
+                            <div className="control">
+                                <input className={confirmPasswordClass}
                                     name = "confirmPassword"
                                     type = "password"
                                     value = {this.state.confirmPassword}
@@ -168,17 +168,17 @@ export default class RegisterModal extends React.Component{
                             </div>
                         </div>
 
-                        <div class= "field">
-                            <div class = "control">
-                                <div class = "buttons">
-                                    <button class="button is-link" disabled={isSubmitDisabled} onClick={this.handleSubmit}>Submit</button>
+                        <div className="field">
+                            <div className="control">
+                                <div className="buttons">
+                                    <button className="button is-link" disabled={isSubmitDisabled} onClick={this.handleSubmit}>Submit</button>
                                 </div>
                             </div>
                         </div>
                         {errMsg}
                     </div>
                 </div>
-                <button class = "modal-close is-large" aria-label="close" onClick={this.handleClose}></button>
+                <button className="modal-close is-large" aria-label="close" onClick={this.handleClose}></button>
             </div>
         );
     }

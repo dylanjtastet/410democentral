@@ -14,22 +14,25 @@ function ConsoleWrapper(props) {
 	}
 
 	const [mockConsole, setMockConsole] = useState(mockConsoleTemplate);
+    const setLogs = props.setLogs;
+    const consoleBuffer = props.consoleBuffer;
+    const setConsoleBuffer = props.setConsoleBuffer;
 
 	useEffect(() => {
-		Hook(mockConsoleTemplate, log => {
-			props.setLogs(logs => [...logs, Decode(log)]);
+		Hook(mockConsole, log => {
+			setLogs(logs => [...logs, Decode(log)]);
 		});
-		setMockConsole(mockConsoleTemplate);
-	}, []);
+		setMockConsole(mockConsole);
+	}, [mockConsole, setLogs]);
 
 	useEffect(() => {
-		if (props.consoleBuffer.length > 0) {
-			props.consoleBuffer.forEach(msg => {
+		if (consoleBuffer.length > 0) {
+			consoleBuffer.forEach(msg => {
 				mockConsole[msg.level](msg.data);
 			});
-			props.setConsoleBuffer([]);
+			setConsoleBuffer([]);
 		}
-	}, [props.consoleBuffer]);
+	}, [mockConsole, consoleBuffer, setConsoleBuffer]);
 
 	return (
 		<div style={{height: "150px", overflow: "scroll"}}>

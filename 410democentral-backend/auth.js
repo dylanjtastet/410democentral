@@ -34,7 +34,12 @@ module.exports.registerUser = async function(username, passwd, email){
 }
 
 module.exports.loginUser = async function(username, passwd){
-    let creds = (await db.getUserCreds(username)).creds;
+    let userCreds = await db.getUserCreds(username);
+    if (userCreds == null) { // user does not exist
+      return false;
+    }
+
+    let creds = userCreds.creds;
     // Mongo stores these as a type called Binary
     creds.salt = creds.salt.buffer;
     creds.hash = creds.hash.buffer;
