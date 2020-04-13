@@ -24,7 +24,7 @@ function Content(props) {
 
   const program = useCode(props.id);
 
-  return (
+    return (
     <div className="container contentbox">
         <CodeSandbox code={program.code} pendingRun={pendingRun} setPendingRun={setPendingRun} 
           setGraph={props.setGraph} setConsoleBuffer={setConsoleBuffer} />

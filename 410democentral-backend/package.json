@@ -6,8 +6,8 @@
   "scripts": {
     "start": "run-script-os",
     "stop": "run-script-os",
-    "stop:darwin:linux": "pkill ~/../../usr/local/opt/mongodb-community@3.6/bin/mongod; pkill node || true",
-    "start:darwin:linux": "mkdir -p data/db; ~/../../usr/local/opt/mongodb-community@3.6/bin/mongod --dbpath data/db > /dev/null & (sleep 1; node init_db_binary_tree_and_heap.js > /dev/null; node app.js > /dev/null & sleep 1)",
+    "stop:darwin:linux": "pkill mongod; pkill node || true",
+    "start:darwin:linux": "mkdir -p data/db; mongod --dbpath data/db > /dev/null & (sleep 1; node init_db_binary_tree_and_heap.js > /dev/null; node app.js > /dev/null & sleep 1)",
     "start:win32": "concurrently --kill-others \"mongod --dbpath data\\db > NUL\" \"node init_db_binary_tree_and_heap.js > NUL && node app.js > NUL\"",
     "stop:win32": "@powershell Stop-Process -Name \"mongod\" -Force; Stop-Process -Name \"node\" -Force"
   },
