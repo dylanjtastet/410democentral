@@ -7,10 +7,6 @@
     color: white;
 }
 
-.console {
-    background-color: #263238;
-}
-
 .graph-filler {
     height: 300px;
 }
@@ -131,6 +127,7 @@
 }
 
 .console{
+    background-color: #263238;
     height: 350px;
     overflow: scroll;
 }

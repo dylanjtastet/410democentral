@@ -35,9 +35,7 @@ function ConsoleWrapper(props) {
 	}, [mockConsole, consoleBuffer, setConsoleBuffer]);
 
 	return (
-		<div style={{height: "150px", overflow: "scroll"}}>
-			<Console class="console" logs={props.logs} variant="dark" />
-		</div>
+		<Console class="console" logs={props.logs} variant="dark" />
 	)
 }
 
