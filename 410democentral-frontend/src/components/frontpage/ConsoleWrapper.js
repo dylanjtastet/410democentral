@@ -31,7 +31,11 @@ function ConsoleWrapper(props) {
 		}
 	}, [props.consoleBuffer]);
 
-	return (<Console logs={props.logs} variant="dark" />)
+	return (
+		<div style={{height: "150px", overflow: "scroll"}}>
+			<Console logs={props.logs} variant="dark" />
+		</div>
+	)
 }
 
 export default ConsoleWrapper;

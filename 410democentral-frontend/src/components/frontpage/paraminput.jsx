@@ -25,7 +25,7 @@ export default function Paraminput(props) {
         param_insert=<span></span>;
     } else if (props.input==="array") {
         param_insert = 
-        <div className="columns">
+        <div className="columns paraminputs">
             <label className="column">Starting Array Length:
                 <input className="input" type="number" value={props.parameters.start_size} onChange={handleStartSizeChange}></input>
             </label>
@@ -41,5 +41,5 @@ export default function Paraminput(props) {
         param_insert = <span></span>
     }
 
-    return <div className="paraminputs">{param_insert}</div>
+    return <div>{param_insert}</div>
 }

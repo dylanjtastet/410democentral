@@ -19,7 +19,7 @@ function myMain() {
   var datapoints = [];
   for (let i=Nstart; i<Nfinal; i+=Math.floor((Nfinal-Nstart)/numSteps)) {
   
-    var elts = genRandomElts(i);
+    var elts = genOrderedElts(i);
 
     //alert(elts);
 

@@ -11,6 +11,7 @@ app.use(parser.json({strict:false}));
 app.use(function(req, res, next){
     res.setHeader("Access-Control-Allow-Origin", "http://localhost:3001");
     res.setHeader("Access-Control-Allow-Headers", "*")
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE")
     next();
 });
 
@@ -77,6 +78,15 @@ app.post('/sample', async function(req,res,next){
 
 
 // body here should include parent if there is one
+app.get('/category', async function(req,res,next) {
+    try {
+        let categories = await db.getAllCategories();
+        res.send(categories);
+    } catch(err) {
+        next(err);
+    }
+})
+
 app.post('/category', async function(req,res,next){
     try{
         await db.createCategory(req.query.name, req.query.parent);
@@ -89,7 +99,7 @@ app.post('/category', async function(req,res,next){
 
 app.delete('/category', async function(req,res,next){
     try{
-        await db.deleteCategory(req.query.name);
+        await db.deleteCategory(req.body.name);
         res.send(true);
     }
     catch(err){
@@ -99,7 +109,7 @@ app.delete('/category', async function(req,res,next){
 
 app.delete('/sample', async function(req, res, next){
     try{
-        await db.deleteSample(req.query.id);
+        await db.deleteSample(req.body.id);
         res.send(true);
     }
     catch(err){

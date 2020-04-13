@@ -79,7 +79,7 @@ function App() {
             <FrontPage sessid={sessid} setSessid={setSessid} />
           </Route>
           <Route path="/admin">
-            <AdminPage />
+            <AdminPage sessid={sessid} setSessid={setSessid}/>
           </Route>
         </Switch>
       </div>

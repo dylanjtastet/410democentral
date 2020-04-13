@@ -65,3 +65,63 @@
 .paraminputs {
     margin-bottom: 15px;
 }
+
+.courseselect {
+    float: right;
+    margin-right: 25px;
+}
+
+.divider {
+    margin-right: 25px;
+}
+
+.bottommargin {
+    margin-bottom: 25px;
+}
+
+.bigbottommargin {
+    margin-bottom: 40px;
+}
+
+.rightmargin {
+    margin-right: 10px;
+}
+
+.studentlist {
+    height: 200px;
+    overflow: scroll;
+    border: 1px;
+    border-style: groove;
+    padding: 3px;
+}
+
+.pointer {
+    cursor:pointer;
+}
+
+.textinput {
+    width: 300px;
+}
+
+.maincode {
+    height: 200px;
+    overflow: scroll;
+    margin-right: 7px;
+    margin-top: 7px;
+    border: 1px;
+    border-style: solid;
+}
+
+.benchcode {
+    height: 150px;
+    overflow: scroll;
+    margin-right: 7px;
+    margin-top: 7px;
+    border: 1px;
+    border-style:solid;
+}
+
+.centered {
+    text-align: center;
+}
+

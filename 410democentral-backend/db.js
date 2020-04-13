@@ -31,7 +31,7 @@ let deleteCategoriesPromise = async(db, categories) => db.collection("categories
 
 let deleteSamplesByCategoriesPromise = async(db, categories) => db.collection("samples").deleteMany({category: {$in: categories}});
 
-let deleteSampleByIdPromise = async(db, id) => db.collection("samples").deleteOne({_id: new MongoClient.ObjectId(id)}, promiseCallback(resolve, reject));
+let deleteSampleByIdPromise = async(db, id) => db.collection("samples").deleteOne({_id: new MongoClient.ObjectId(id)});
 
 ///// Clear collections promises /////
 let clearCollectionPromise = async(db, collectionName) => db.collection(collectionName).deleteMany({});
