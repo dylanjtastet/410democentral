@@ -40,16 +40,18 @@ export default class Login extends React.Component {
                                         "password": this.state.password,
                                     })
                                 });
-            let sessid = (await resp.json()).sessid;
-            if(sessid){
-                Cookies.set("sessid", sessid);
-                this.props.setSessid(sessid);
+            let res = await resp.json();
+            if(res.sessid){
+                Cookies.set("sessid", res.sessid, {expires: new Date(res.exp)});
+                console.log(Cookies.get("sessid"));
+                this.props.setSessid(res.sessid);
             }
             else{
                 this.setState({status: loginStatus.FAILURE});
             }
         }
         catch(err){
+            console.log(err);
             this.setState({status: loginStatus.FAILURE});
         }
     }

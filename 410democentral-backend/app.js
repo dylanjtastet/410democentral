@@ -69,7 +69,7 @@ app.get('/sample', async function(req,res,next){
 
 app.post('/sample', async function(req,res,next){
     try{
-        res.send({newId: (await db.putCodeSample(req.query.category, req.body)).ops[0]._id});
+        res.send({newId: await db.putCodeSample(req.query.category, req.body)});
     }
     catch(err){
         next(err);
@@ -89,11 +89,10 @@ app.get('/category', async function(req,res,next) {
 
 app.post('/category', async function(req,res,next){
     try{
-        await db.createCategory(req.query.name, req.query.parent);
-        res.send(true);
+        res.send({newId: await db.createCategory(req.query.name, req.query.parent, req.query.group)});
     }
     catch(err){
-        next(err)
+        next(err);
     }
 });
 
@@ -127,6 +126,7 @@ app.get("/user/:username", async function(req, res, next){
         next(err);
     }
 });
+
 app.post('/register', async function(req, res, next){
     try{
         if(!(await db.checkUserExists(req.body.username))){
@@ -142,10 +142,19 @@ app.post('/register', async function(req, res, next){
     }
 });
 
+app.get('/addInstructor', async function(req, res, next){
+    try{
+        let user = await db.getUserForSession()
+    }
+    catch(err){
+        next(err);
+    }
+});
+
 app.post('/login', async function(req, res, next){
     try{
-        let sessid = await auth.loginUser(req.body.username, req.body.password);
-        res.send({sessid: sessid});
+        let ret = await auth.loginUser(req.body.username, req.body.password);
+        res.send(ret);
     }
     catch(err){
         next(err);
@@ -154,7 +163,7 @@ app.post('/login', async function(req, res, next){
 
 app.get('/logout', async function(req, res, next){
     try{
-        await auth.logoutUser(req.body.sessid);
+        await auth.logoutUser(req.cookies.sessid);
         return true;
     }
     catch(err){

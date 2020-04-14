@@ -39,7 +39,7 @@ export default function Catselect(props) {
   return (
     <li>
     <ContextMenuTrigger id={props.cat._id}>
-      <a onClick={handleClick} href="#category">{props.cat._id}</a>
+      <a onClick={handleClick} href="#category">{props.cat.name}</a>
     </ContextMenuTrigger>
 
     <ContextMenu id={props.cat._id}>

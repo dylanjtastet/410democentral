@@ -7,6 +7,7 @@ const RANDLEN = 64;
 const HASHLEN = RANDLEN; //In bytes
 const SALTLEN = RANDLEN;
 const HASH_FN = "sha512";
+const TTL = 5; //Days
 
 const randomBytes = util.promisify(crypto.randomBytes);
 const pbkdf2 = util.promisify(crypto.pbkdf2);
@@ -46,8 +47,12 @@ module.exports.loginUser = async function(username, passwd){
     if(await verifyPasswd(passwd, creds)){
         await db.deleteSessionByUser(username);
         let sessid = (await randomBytes(RANDLEN)).toString("hex");
-        await db.insertUserSession(sessid, username);
-        return sessid;
+        let exp = new Date(Date.now() + TTL * 24 * 60 * 60 * 1000); //days, hours, minutes, seconds, milliseconds (since epoch)
+        await db.insertUserSession(sessid, username, exp);
+        return {
+            sessid: sessid,
+            exp: exp
+        };
     }
     return false;
 }

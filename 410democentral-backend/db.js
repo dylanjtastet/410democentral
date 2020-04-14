@@ -9,7 +9,7 @@ let codeSamplePromise = async(db, id) => db.collection("samples").findOne({_id: 
 
 let codeSampleInsertPromise = async(db, category, sample) => db.collection("samples").insertOne({...sample, category:category});
 
-let createCategoryPromise = async(db, name, parent) => db.collection("categories").insertOne({_id:name, parent:parent});
+let createCategoryPromise = async(db, name, parent, group) => db.collection("categories").insertOne({name:name, parent:parent, group: group});
 
 let getAllCategoriesPromise = async(db) => db.collection("categories").find({}).toArray();
 
@@ -47,13 +47,13 @@ module.exports.getCodeSample = async function(id){
 module.exports.putCodeSample = async function(category, sample){
     //Todo: check ref integrity of category
     let db = await dbPromise;
-    return codeSampleInsertPromise(db, category, sample);
+    return (await codeSampleInsertPromise(db, category, sample)).ops[0]._id;
 };
 
-module.exports.createCategory = async function(name, parent){
+module.exports.createCategory = async function(name, parent, group){
     //Todo: check ref integrity of parent
     let db = await dbPromise;
-    return createCategoryPromise(db, name, parent)
+    return (await createCategoryPromise(db, name, parent, group)).ops[0]._id;
 };
 
 module.exports.getAllCategories = async function(){
@@ -64,6 +64,11 @@ module.exports.getAllCategories = async function(){
 module.exports.getAllSampleStubs = async function(){
     let db = await dbPromise;
     return getAllSamplesPromise(db);
+}
+
+module.exports.getUserSampleStubs = async function(user){
+    let db = await dbPromise;
+    return db.collection("samples").find({group: {$in: user.groups}}, {projection:{category:1, name:1, _id:1}}).toArray();
 }
 
 module.exports.deleteCategory = async function(category){
@@ -83,8 +88,20 @@ module.exports.insertUser = async function(username, creds, email){
         _id: username,
         creds: creds,
         email: email,
-        groups: [username]
+        groups: [username],
+        instructorFor: [],
+        isRoot: false
     });
+}
+
+module.exports.makeUserInstructorFor = async function(group){
+    let db = await dbPromise;
+    return db.collection("users").update(
+        {_id: username},
+        {
+            $push: {instructorFor: group}
+        }
+    );
 }
 
 module.exports.getUserCreds = async function(username){
@@ -100,11 +117,12 @@ module.exports.checkUserExists = async function(username){
     }
     return false;
 }
-module.exports.insertUserSession = async function(sessid, username){
+module.exports.insertUserSession = async function(sessid, username, exp){
     let db = await dbPromise;
     return db.collection("sessions").insertOne({
         _id: sessid,
-        user: username
+        user: username,
+        exp: exp
     });
 }
 
@@ -125,6 +143,22 @@ module.exports.deleteSessionByUser = async function(username){
 module.exports.test_getCatsInSubtree = async function(category){
     let db = await dbPromise;
     return recursiveDeleteListPromise(db, [category]);
+}
+
+module.exports.getUserForSession = async function(sessid){
+    let db = await dbPromise;
+    let session = await db.collection("sessions").findOne({
+        _id: sessid
+    });
+    if(new Date(session.exp) < new Date(Date.now())){
+        await db.collection("sessions").deleteOne({
+            _id: sessid
+        });
+        return false;
+    }
+    return db.collection("users").findOne({
+        _id:session.username
+    });
 }
 
 

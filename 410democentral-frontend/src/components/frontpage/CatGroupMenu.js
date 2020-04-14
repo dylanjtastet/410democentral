@@ -30,7 +30,7 @@ function CatGroupMenu(props) {
 				return (
 					<aside className="menu" key={i}>
 						<p className="menu-label titletext">
-								{groupcat._id}
+								{groupcat.name}
 						</p>
 						<ul className="menu-list">
 							{groupcat.children.map((item, j) => {

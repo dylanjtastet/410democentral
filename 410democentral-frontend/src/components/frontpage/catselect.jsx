@@ -11,7 +11,7 @@ export default function Catselect(props) {
   
   return (
     <li>
-    <a onClick={handleClick} href="#category">{props.cat._id}</a>
+    <a onClick={handleClick} href="#category">{props.cat.name}</a>
     {opened ?
       <ul>
         {props.cat.children.map((item, i) => {
