@@ -26,7 +26,7 @@ function StudentsTab(props) {
           <div className="studentlist">
             <ul>
                 {props.students.map(function(name,index) {
-                    if (name==student) {
+                    if (name === student) {
                         return <li className="selected" onClick={selectStudent(name)} key={index}>{name}</li> 
                     } else {
                         return <li className="pointer" onClick={selectStudent(name)} key={index}>{name}</li> 

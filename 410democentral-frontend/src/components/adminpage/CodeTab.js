@@ -30,7 +30,7 @@ function CodeTab(props) {
                     <button className="button is-info" onClick={handleStartAdd}>Add Code</button>
                 </span>
                 <span>
-                    {(props.id != "") ?
+                    {(props.id !== "") ?
                     <button className="button" onClick={handleStartEdit()}>Edit Selected Code</button>
                     :
                     <button className="button is-static">Edit Selected Code</button>
