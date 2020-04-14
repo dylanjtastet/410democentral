@@ -8,7 +8,7 @@ export default function Courseselect(props) {
     }
 
     return( 
-        <a className="dropdown-item" onClick={handleClick}>
+        <a href="#coursebutton" className="dropdown-item" onClick={handleClick}>
             {props.course}
         </a>
     )

@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
 import Codeselect from './codeselect.jsx';
-
-import ReactDOM from "react-dom";
 import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
-import { checkPropTypes } from 'prop-types';
 
 export default function Catselect(props) {
   const [opened, setOpened] = useState(props.startOpen);
@@ -44,7 +41,7 @@ export default function Catselect(props) {
 
     <ContextMenu id={props.cat._id}>
 				<MenuItem onClick={handleCatDelete(props.cat._id)}>
-						<a className="box">Delete</a>
+						<a href="#deletebutton" className="box">Delete</a>
 				</MenuItem>
 		</ContextMenu>
 

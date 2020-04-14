@@ -83,7 +83,7 @@ export default class ConstControlPanel extends React.Component{
     //Maybe move the webworker call to init ui widgets here
     //To avoid races
     componentDidUpdate(prevProps, prevState){
-        if(prevProps.code != this.props.code){
+        if(prevProps.code !== this.props.code){
             this.setState({widgets: []});
             this.props.evalWorker.postMessage({
                 type: "EVAL_CONST_INIT",
