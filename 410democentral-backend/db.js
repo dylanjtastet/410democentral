@@ -27,7 +27,7 @@ let recursiveDeleteListPromise = async(db,parents) => {
     return parents.concat(subList);
 }
 
-let deleteCategoriesPromise = async(db, categories) => db.collection("categories").deleteOne({_id: {$in: categories}});
+let deleteCategoriesPromise = async(db, categories) => db.collection("categories").deleteMany({_id: {$in: categories}});
 
 let deleteSamplesByCategoriesPromise = async(db, categories) => db.collection("samples").deleteMany({category: {$in: categories}});
 
@@ -53,7 +53,7 @@ module.exports.putCodeSample = async function(category, group, sample, user=fals
 
 module.exports.updateCodeSample = async function(id, newFields){
     let db = await dbPromise;
-    return db.collection("sample").update({_id: id}, newFields);
+    return db.collection("sample").update({_id: new MongoClient.ObjectId(id)}, {$set: newFields});
 }
 
 module.exports.createCategory = async function(name, parent, group){
@@ -77,9 +77,9 @@ module.exports.getUserSampleStubs = async function(user){
     return db.collection("samples").find({group: {$in: user.groups}}, {projection:{category:1, user:1, name:1, _id:1}}).toArray();
 }
 
-module.exports.deleteCategory = async function(category){
+module.exports.deleteCategory = async function(id){
     let db = await dbPromise;
-    let categories = await recursiveDeleteListPromise(db, [category]);
+    let categories = await recursiveDeleteListPromise(db, [new MongoClient.ObjectId(id)]);
     return Promise.all([deleteSamplesByCategoriesPromise(db, categories), deleteCategoriesPromise(db, categories)]);
 }
 
@@ -182,7 +182,7 @@ module.exports.getGroup = async function(name){
     });
 }
 
-module.exports.getAllGroups = async function(name){
+module.exports.getAllGroups = async function(){
     let db = await dbPromise;
     return db.collection("groups").find({}).toArray();
 }
@@ -190,7 +190,7 @@ module.exports.getAllGroups = async function(name){
 module.exports.getCategory = async function(id){
     let db = await dbPromise;
     return db.collection("categories").findOne({
-        _id: id
+        _id: new MongoClient.ObjectId(id)
     });
 }
 
@@ -201,7 +201,7 @@ module.exports.getCategoriesForUser = async function(user){
     }).toArray();
 }
 
-module.exports.getAllNonUserSamples = async function(user){
+module.exports.getAllNonUserSamples = async function(){
     let db = await dbPromise;
     return db.collection("samples").find({
         user: false
@@ -213,6 +213,17 @@ module.exports.getAllNonUserSamples = async function(user){
             name: 1
         }
     }).toArray();
+}
+
+module.exports.checkGroupExists = async function(name){
+    let db = await dbPromise;
+    let group = await db.collection("groups").findOne({_id: name});
+    return !!group;
+}
+
+module.exports.removeUserAsInstructor = async function(group, username){
+    let db = await dbPromise;
+    db.collection("groups").update({_id: group}, {$pull: {instructors: username}});
 }
 
 ///// For testing. Clear the database. Expand when adding new collections

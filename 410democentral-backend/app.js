@@ -103,7 +103,7 @@ app.get('/dir', async function(req,res, next){
 app.get('/sample', async function(req,res,next){
     try{
         if(req.cookies.sessid){
-            if(auth.canViewSample(req.cookies.sessid, req.query.id)){
+            if(await auth.canViewSample(req.cookies.sessid, req.query.id)){
                 let sample = await db.getCodeSample(req.query.id);
                 res.send({
                     ...sample,
@@ -131,18 +131,14 @@ app.post('/sample', async function(req,res,next){
         }
         if(req.cookies.sessid){
             let sessid = req.cookies.sessid;
-            // required params
             let group = req.query.group;
-            if(!group){
-                res.sendStatus(400);
-                return;
-            }
             if(req.query.sample){
-                if(auth.hasSampleEditPermission(sessid, req.query.sample)){
+                if(await auth.hasSampleEditPermission(sessid, req.query.sample)){
+                    let sample = await db.getCodeSample(req.query.sample);
                     let newFields = req.body;
                     if(req.query.category){
                         let category = await db.getCategory(req.query.category);
-                        if(!category || category.group == group){
+                        if(!category || category.group == sample.group){
                             newFields["category"] = req.query.category;
                         }
                     }
@@ -153,16 +149,16 @@ app.post('/sample', async function(req,res,next){
                     res.sendStatus(403);
                 }
             }
-            else if(auth.checkGroupPermissionsForSession(sessid, group) || req.query.user){
+            else if((await auth.checkGroupPermissionsForSession(sessid, group)) || req.query.user == "true"){
                 let category = await db.getCategory(req.query.category);
                 if(!category || category.group === group){
-                    if(req.query.user){
+                    if(req.query.user == "true"){
                         let user = await db.getUserForSession(sessid);
-                        if(user){
+                        if(user && await db.checkGroupExists(group)){
                             res.send({newId: await db.putCodeSample(req.query.category, group, req.body, user._id)});
                         }
                         else{
-                            res.send(404);
+                            res.sendStatus(404);
                         }
                     }
                     else{
@@ -189,19 +185,30 @@ app.post('/sample', async function(req,res,next){
 
 
 // body here should include parent if there is one
-app.get('/category', async function(req,res,next) {
+app.get('/allcategories', async function(req,res,next) {
     try {
-        let categories = await db.getAllCategories();
-        res.send(categories);
+        if(req.cookies.sessid){
+            let categories;
+            if(user.isroot){
+                categories = await db.getAllCategories();
+            }
+            else{
+                categories = await db.getCategoriesForUser(user);
+            }
+            res.send(categories);
+        }
+        else{
+            res.sendStatus(401);
+        }
     } catch(err) {
         next(err);
     }
-})
+});
 
 app.post('/category', async function(req,res,next){
     try{
         if(req.cookies.sessid){
-            if(auth.checkGroupPermissionsForSession(req.query.group)){
+            if(await auth.checkGroupPermissionsForSession(req.cookies.sessid, req.query.group)){
                 res.send({newId: await db.createCategory(req.query.name, req.query.parent, req.query.group)});
             }
             else{
@@ -220,8 +227,10 @@ app.post('/category', async function(req,res,next){
 app.delete('/category', async function(req,res,next){
     try{
         if(req.cookies.sessid){
-            if(auth.checkGroupPermissionsForSession(req.cookies.sessid)){
-                await db.deleteCategory(req.body.name);
+            let cat = await db.getCategory(req.body.id);
+            console.log(req.body.id, cat);
+            if(await auth.checkGroupPermissionsForSession(req.cookies.sessid, cat.group)){
+                await db.deleteCategory(req.body.id);
                 res.sendStatus(200);
             }
             else{
@@ -240,7 +249,8 @@ app.delete('/category', async function(req,res,next){
 app.delete('/sample', async function(req, res, next){
     try{
         if(req.cookies.sessid){
-            if(user){
+            //change this to a query param if you want. Kept for consistency with frontend
+            if(await auth.hasSampleEditPermission(req.cookies.sessid, req.body.id)){
                 await db.deleteSample(req.body.id);
                 res.sendStatus(200);
             }
@@ -286,8 +296,28 @@ app.post('/register', async function(req, res, next){
 app.get('/addInstructor', async function(req, res, next){
     try{
         if(req.cookies.sessid){
-            if(isRootSession(req.cookies.sessid)){
+            if(await auth.isRootSession(req.cookies.sessid)){
                 await db.makeUserInstructorFor(req.query.username, req.query.groupid);
+                res.sendStatus(200);
+            }
+            else{
+                res.sendStatus(403);
+            }
+        }
+        else{
+            res.sendStatus(401);
+        }
+    }
+    catch(err){
+        next(err);
+    }
+});
+
+app.get("/removeInstructor", async function(req, res, next){
+    try{
+        if(req.cookies.sessid){
+            if(await auth.isRootSession(req.cookies.sessid)){
+                await db.removeUserAsInstructor(req.query.groupid, req.query.username);
                 res.sendStatus(200);
             }
             else{
@@ -323,11 +353,11 @@ app.get('/logout', async function(req, res, next){
     }
 });
 
-app.post("/group", async function(req, res, next){
+app.get("/group", async function(req, res, next){
     try{
         if(req.cookies.sessid){
             //Only root accts can create new groups
-            if(auth.isRootSession(sessid)){
+            if(await auth.isRootSession(req.cookies.sessid)){
                 await db.createGroup(req.query.name);
                 res.sendStatus(200);
             }

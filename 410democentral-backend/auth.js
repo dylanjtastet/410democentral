@@ -68,7 +68,7 @@ module.exports.isRootSession = async function(sessid){
 
 module.exports.checkGroupPermissionsForSession = async function(sessid, groupName){
     let user = await db.getUserForSession(sessid);
-    this.checkGroupPermissions(user, groupName);
+    return this.checkGroupPermissions(user, groupName);
 }
 
 module.exports.checkGroupPermissions = async function(user, groupName){
@@ -79,7 +79,6 @@ module.exports.checkGroupPermissions = async function(user, groupName){
     if(user.isroot){
         return true;
     }
-    console.log(typeof user._id, typeof group.instructors[0]);
     return group.instructors.indexOf(user._id)>=0;
 }
 
