@@ -13,7 +13,7 @@ export default function useCode(id, setLogs) {
     if (id === "") return;
     let sampleURL = new URL("http://localhost:3009/sample");
     sampleURL.searchParams.append("id", id);
-    fetch(sampleURL)
+    fetch(sampleURL, {credentials:"include"})
     .then(res => res.json())
     .then(data => {
       setCode(data.code);
