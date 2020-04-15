@@ -1,7 +1,14 @@
 import React, {useState} from 'react';
+import {connect} from 'react-redux';
+
 import 'bulma/css/bulma.css';
 import 'bulma-slider/dist/css/bulma-slider.min.css'
 import 'bulma-switch/dist/css/bulma-switch.min.css'
+
+import ToggleButton from '@material-ui/lab/ToggleButton';
+import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
+import {Controlled as CodeMirror} from 'react-codemirror2';
+
 import '../../general.css';
 import ConsoleWrapper from './ConsoleWrapper.js'
 import Graphbox from './graphbox.jsx';
@@ -10,9 +17,16 @@ import CodeSandbox from './CodeSandbox.js'
 import ConstControlPanel from './ConstControlPanel.js'
 import worker_script from "../../scripts/eval_worker.js"
 import WorkerWrapper from "../../scripts/workerWrapper.js"
-import {Controlled as CodeMirror} from 'react-codemirror2';
-
-import useCode from './useCode';
+import CopySample from './CopySample';
+import {
+  fetchActiveProgram,
+  pushCurrentLocalChanges,
+  checkoutRemoteCode,
+  addNewProgram,
+  editCheckpoint,
+  performEdit,
+  finishEditing
+} from '../../redux/actions/programActions.js';
 
 require('codemirror/mode/xml/xml');
 require('codemirror/mode/javascript/javascript');
@@ -21,6 +35,7 @@ const evalWorker = new WorkerWrapper(worker_script);
 
 function Content(props) {
   
+  const [showCopyModal, setShowCopyModal] = useState(false);
 
   const [consoleBuffer, setConsoleBuffer] = useState([]);
 
@@ -30,112 +45,92 @@ function Content(props) {
   // flag for code sandbox to indicate that code should be run
   const [pendingRun, setPendingRun] = useState(false);
 
-  const program = useCode(props.id, setLogs);
-
-  //Below are the functions associated with the old version of graphing.
-  /*
-
-  const getFunction = function() {
-      let func = new Function("return " + program.code)();
-      return func;
-  }
-  
-    const getDataOneInputSize = async function(timed_func, start_size, end_size, num_steps) {
-        let data = [];
-        if ((typeof start_size)=="string") {
-            start_size = parseInt(start_size);
-        }
-        let step_size = Math.floor((end_size-start_size)/num_steps)
-        console.log(typeof start_size)
-        console.log(end_size)
-        console.log(num_steps)
-        console.log(step_size)
-        for (let i = start_size; i <= end_size; i += step_size) {
-            let y = await timed_func(i);
-            console.log(data)
-            data.push({x: i, y: y});
-        }
-        return data;
-    }
-   
-
-  const generateList = function(n) {
-    let array = [];
-    for (let i = 0; i < n; i++) {
-        array.push(Math.floor(1000*Math.random()))
-    }
-    return array;
-  }
-
-  const passList = function(n) {
-        let func = getFunction();
-        let array = generateList(n);
-
-        let start_time = Date.now();
-        func(array);
-        return Date.now() - start_time;
-  }
-
-  const getGraph = function() {
-    if (program.input === "array") {
-        return async (event) => {
-            event.preventDefault();
-            let data = await getDataOneInputSize(
-              passList, program.parameters.start_size, 
-              program.parameters.end_size, program.parameters.num_steps);
-            console.log(data)
-            props.setGraph({show: true, data: data});
-        }
-    }
-    if (program.input === "none" || program.input === "") {
-        return async (event) => {
-            return;
-        }
-    }
-  }
-  */
-
   function sendRun(){
-      evalWorker.postMessage({type: "EVAL_ALL", sample: program.code});
+      evalWorker.postMessage({type: "EVAL_ALL", sample: props.program.localCode});
   }
 
+  const handleEditToggle = (event, newState) => {
+    if (newState == props.program.editState.editing) return;
+    if (newState) {
+      console.log("yeet");
+      props.editCheckpoint();
+    }
+    else props.finishEditing();
+  }
 
   return (
     <div className="container contentbox">
-        <CodeSandbox code={program.code} pendingRun={pendingRun} setPendingRun={setPendingRun} 
+        <CodeSandbox code={props.program.localCode} pendingRun={pendingRun} setPendingRun={setPendingRun} 
           setGraph={props.setGraph} setConsoleBuffer={setConsoleBuffer} />
 
         <h1 className="subtitle">
-            {program.name ? program.name : "No code selected"}
+            {props.program.name ? props.program.name : "No code selected"}
         </h1>
 
-        
+        {//<Paraminput input={program.input} setParameters={program.setParameters} parameters={program.parameters}></Paraminput>
+        }
 
-        <Paraminput input={program.input} setParameters={program.setParameters} parameters={program.parameters}></Paraminput>
+        {props.program.isEditable ?
+        <ToggleButtonGroup value={props.program.editState.editing} 
+            exclusive onChange={handleEditToggle}>
+          <ToggleButton key={0} value={false}>View</ToggleButton>
+          <ToggleButton key={1} value={true}>Edit</ToggleButton>
+        </ToggleButtonGroup>
 
+        :
+        <span></span>
+        }
+        <button className="button runbutton" onClick={() => {setShowCopyModal(true)}}>
+        Make a copy
+        </button>
+
+        {showCopyModal ?
+        <CopySample name={props.program.name} code={props.program.localCode} 
+          addNewProgram={props.addNewProgram} setShowCopyModal={setShowCopyModal}
+          category={props.program.category} />
+        : <span></span>
+        }
+        {props.program.editState.editing ?
         <CodeMirror
-            value={program.code}
+            value={props.program.localCode}
             options={{
                 mode: 'javascript',
                 theme: 'material',
-                lineNumbers: true
+                lineNumbers: true,
+                readOnly: false
             }}
             onBeforeChange={(editor, data, value) => {
               // commented out due to current implementation
               // need to revisit structure here
-              program.setCode(value);
+              props.performEdit(value);
             }}
             onChange={(editor, data, value) => {
             }}
         />
+        :
+        <CodeMirror
+            value={props.program.remoteCode}
+            options={{
+                mode: 'javascript',
+                theme: 'material',
+                lineNumbers: true,
+                readOnly: true
+            }}
+            onBeforeChange={(editor, data, value) => {
+            }}
+            onChange={(editor, data, value) => {
+            }}
+        />
+        }
 
         <br>
         </br>
         <div className="container columns">
             <div className="column is-2">
-                <ConstControlPanel setConsoleBuffer = {setConsoleBuffer} code={program.code} evalWorker = {evalWorker}/>
+                <ConstControlPanel setConsoleBuffer = {setConsoleBuffer} code={props.program.localCode} evalWorker = {evalWorker}/>
                 <p>
-                    <button className="button runbutton" onClick={program.pullFromServer}>Reload</button>
+                    <button className="button runbutton" 
+                      onClick={props.fetchActiveProgram}>Reload</button>
                 </p>
                 <br></br>
                 <p>
@@ -176,4 +171,23 @@ function Content(props) {
   );
 }
 
-export default Content;
+/*
+const mapStateToProps = state => ({
+  program: state.programs.progs[state.programs.activeProgId]
+});*/
+
+const mapStateToProps = state => {
+  console.log(JSON.stringify(state));
+  console.log(JSON.stringify(state.programs));
+  return {program: state.programs.progs[state.programs.activeProgId]};
+}
+
+export default connect(mapStateToProps, {
+  fetchActiveProgram,
+  pushCurrentLocalChanges,
+  addNewProgram,
+  checkoutRemoteCode,
+  editCheckpoint,
+  performEdit,
+  finishEditing
+})(Content);

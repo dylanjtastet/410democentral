@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import 'bulma/css/bulma.css';
-import CatGroupMenu from './CatGroupMenu';
+import CategoryMenu from '../catmenu';
 import Content from './Content';
 import Login from '../login/Login';
 
@@ -13,10 +13,10 @@ function FrontPage(props) {
       <div>
         <div className="columns">
           <div className="column is-one-fifth section">
-            <CatGroupMenu id={id} setId={setId} setGraph={setGraph} />
+            <CategoryMenu isAdmin={false} setGraph={setGraph} />
           </div>
           <div className="column section">
-            <Content id={id} graph={graph} setGraph={setGraph} />
+            <Content graph={graph} setGraph={setGraph} />
           </div>
         </div>
       </div>

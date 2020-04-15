@@ -1,113 +1,91 @@
 import React, { useState } from 'react';
+import {connect} from 'react-redux';
+
+import {
+    addNewProgram,
+    pushCurrentLocalChanges,
+    editCheckpoint,
+    performEdit,
+    finishEditing
+} from '../../redux/actions/programActions';
+import {
+    createCategory
+} from '../../redux/actions/categoryActions';
+
 import 'bulma/css/bulma.css';
 import '../../../node_modules/@fortawesome/fontawesome-free/css/all.css'
 
 import {Controlled as CodeMirror} from 'react-codemirror2';
 
-function CodeEdit(props) {
+function CodeEdit({
+    showCodeModal,
+    setShowCodeModal,
+    catIDs,
+    cats,
+    program,
+    addNewProgram,
+    pushCurrentLocalChanges,
+    editCheckpoint,
+    performEdit,
+    finishEditing
+}) {
     const [cat, setCat] = useState("");
-    const [newcat, setNewcat] = useState("")
-    const [newparent, setNewparent] = useState("")
-    const [code1, setCode1] = useState("")
-    const [code2, setCode2] = useState("")
-    
-    const [codename, setCodename] = useState("")
-    const [pasting, setPasting] = useState(false);
+    const [code2, setCode2] = useState("");
+    const [newcat, setNewcat] = useState("");
+    const [newparent, setNewparent] = useState("");
 
-    React.useEffect(() => {
-        setCat(props.parent);
-        setCode1(props.program.code);
-        setCode2(props.program.code2);
-        setCodename(props.program.name);
-    }, [props.parent, props.program])
-   
-    let insert
-    if (props.editing) {
+
+    let insert;
+    if (showCodeModal) {
         insert = "modal is-active"
     } else {
         insert = "modal"
     }
 
-
-    const handleCancel = function(event) {
-        props.setEditing(false);
+    const handleCancel = event => {
+        setShowCodeModal(false);
     }
 
-    const handleStartPaste = function() {
-        setPasting(true);
+    const handleStartEdit = () => {
+        editCheckpoint();
     }
 
-    const handleCancelPaste = function() {
-        setPasting(false)
+    const handleCancelEdit = () => {
+        finishEditing();
     }
 
-    const handleCatSelect = function(event) {
+    const handleCatSelect = event => {
         setCat(event.target.value);
     }
 
-    const handleParentSelect = function(event) {
+    const handleParentSelect = event => {
         setNewparent(event.target.value);
     }
 
-    const handleCatChange = function(event) {
+    const handleCatChange = event => {
         event.preventDefault();
         setNewcat(event.target.value);
     }
 
     const handleCodeNameChange = function(event) {
-        setCodename(event.target.value);
+        console.log("rename program action not yet implemented.");
     }
 
-    const handleAddCode = function(event) {
-        return async () => {
-            if (codename==="") return;
-            let sample = {
-                name: codename,
-                code: code1,
-                code2: code2,
-            };
 
-            let sampleURL = new URL("http://localhost:3009/sample");
-
-            await fetch(sampleURL, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-            },    
-                body: JSON.stringify({id: props.id})
-			});
-
-            sampleURL.searchParams.append("category", cat);
-
-            await fetch(sampleURL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                    // 'Content-Type': 'application/x-www-form-urlencoded',
-                  },
-                body: JSON.stringify(sample)
-            });
-            await props.refreshcats();
-            props.setEditing(false);
+    const handleAddCode = event => {
+        if (program._id == "") addNewProgram(program, cat, true);
+        else {
+            pushCurrentLocalChanges();
+            finishEditing();
         }
     }
 
     const handleAddCat = function(event) {
-        return async () => {
-            if (newcat==="") return;
-            let sampleURL = new URL("http://localhost:3009/category");
-            sampleURL.searchParams.append("name", newcat);
-            sampleURL.searchParams.append("parent", newparent);
-
-            await fetch(sampleURL, {
-                method:'POST'
-            });
-            await props.refreshcats();
-            setCat(newcat)
-            setNewcat("");
-            setNewparent("");
-            
-        }
+        // TODO add logic to check for result of createCategory
+        createCategory(newcat, newparent, "dummy group");
+        setCat(newcat);
+        setNewcat("");
+        setNewparent("");
     }
   
     return (
@@ -126,8 +104,8 @@ function CodeEdit(props) {
                             <div className="select">
                                 <select value={cat} onChange={handleCatSelect}>
                                     <option value="">None selected</option>
-                                    {props.cats.map(function(cat, index) {
-                                        return <option value={cat._id} key={index}>{cat._id}</option>
+                                    {catIDs.map((catID, index) => {
+                                        return <option value={catID} key={index}>{cats[catID].name}</option>
                                     })}
                                 </select>
                             </div>
@@ -153,8 +131,8 @@ function CodeEdit(props) {
                                 <div className="select">
                                     <select value={newparent} onChange={handleParentSelect}>
                                         <option value="">None selected</option>
-                                        {props.cats.map(function(cat, index) {
-                                            return <option value={cat._id} key={index}>{cat._id}</option>
+                                        {catIDs.map((catID, index) => {
+                                            return <option value={catID} key={index}>{cats[catID].name}</option>
                                         })}
                                     </select>
                                 </div>
@@ -164,16 +142,16 @@ function CodeEdit(props) {
 
                     <div className="bottommargin">
                         <label className="subtitle paraminputs">Sample Name</label>  
-                        <input className="input" type="text" placeholder="e.g. - Bubble Sort" value={codename} onChange={handleCodeNameChange}></input>
+                        <input className="input" type="text" placeholder="e.g. - Bubble Sort" value={program.name} onChange={handleCodeNameChange}></input>
                     </div>
 
-                    {pasting ?
+                    {program.editState.editing ?
                     <div>
                         <label className="subtitle paraminputs"> Code body</label>
                         <p>Type in the visible part of the code sample here.</p>
                             <div className="bottommargin maincode paraminputs">
                                 <CodeMirror
-                                    value={code1}
+                                    value={program.localCode}
                                     options={{
                                         mode: 'javascript',
                                         theme: 'neo',
@@ -182,7 +160,7 @@ function CodeEdit(props) {
                                     onBeforeChange={(editor, data, value) => {
                                     // commented out due to current implementation
                                     // need to revisit structure here
-                                        setCode1(value);
+                                        performEdit(value);
                                     }}
                                     onChange={(editor, data, value) => {
                                     }}
@@ -208,7 +186,7 @@ function CodeEdit(props) {
                                 />
                             </div>
                             <div>
-                                <button className="button is-small" onClick={handleCancelPaste}>Return</button>
+                                <button className="button is-small" onClick={finishEditing}>Return</button>
                             </div>
                         </div>
                         :
@@ -217,7 +195,7 @@ function CodeEdit(props) {
                             <div className="columns centered">
                                 <div className="column"></div>
                                 <div className="column is-one-fourth">
-                                    <button className="button is-info" onClick={handleStartPaste}>Paste</button>
+                                    <button className="button is-info" onClick={editCheckpoint}>Paste</button>
                                 </div>
                                 <div className="is-divider-vertical" data-content="OR"></div>
                                 <div className="column is-one-third">
@@ -243,12 +221,25 @@ function CodeEdit(props) {
 
                 </section>
                 <footer className="modal-card-foot">
-                    <button className="button is-success" onClick={handleAddCode()}>Save Code</button>
+                    <button className="button is-success" onClick={handleAddCode}>Save Code</button>
                     <button className="button" onClick={handleCancel}>Cancel</button>
                 </footer>
             </div>
         </div>
     );
 }
-  
-  export default CodeEdit;
+
+
+const mapStateToProps = state => ({
+    catIDs: state.categories.catIDs,
+    cats: state.categories.cats,
+    program: state.programs.progs[state.programs.activeProgId]
+});
+
+export default connect(mapStateToProps, {
+    addNewProgram,
+    pushCurrentLocalChanges,
+    editCheckpoint,
+    performEdit,
+    finishEditing
+})(CodeEdit);
