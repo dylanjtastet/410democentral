@@ -374,6 +374,40 @@ app.get("/group", async function(req, res, next){
     }
 });
 
+app.get("/addto/:group", async function(req, res, next){
+    try{
+        if(req.cookies.sessid){
+            let user = await db.getUserForSession(req.cookies.sessid);
+            await addUserToGroup(user.username, req.params.group);
+            res.sendStatus(200);
+        }
+        else{
+            res.sendStatus(401);
+        }
+    }
+    catch(err){
+        next(err);
+    }
+});
+
+app.get("/removefrom/:group", async function(req, res, next){
+    try{
+        if(req.cookies.sessid){
+            let user = await db.getUserForSession(req.cookies.sessid);
+            await removeUserFromGroup(user.username, req.params.group);
+            res.sendStatus(200);
+        }
+        else{
+            res.sendStatus(401);
+        }
+    }
+    catch(err){
+        next(err);
+    }
+});
+
+
+
 app.listen(port, function () {
     console.log('Example app listening on port '+port);
 });
