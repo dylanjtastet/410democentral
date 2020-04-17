@@ -226,6 +226,26 @@ module.exports.removeUserAsInstructor = async function(group, username){
     db.collection("groups").update({_id: group}, {$pull: {instructors: username}});
 }
 
+module.exports.addUserToGroup = async function(username, group){
+    let db = await dbPromise;
+    return db.collection("users").update(
+        {_id: username},
+        {
+            $push: {groups: group}
+        }
+    );
+}
+
+module.exports.removeUserFromGroup = async function(username, group){
+    let db = await dbPromise;
+    return db.collection("users").update(
+        {_id: username},
+        {
+            $pull: {groups: group}
+        }
+    );
+}
+
 ///// For testing. Clear the database. Expand when adding new collections
 module.exports.clearDB = async function(){
     let db = await dbPromise;
