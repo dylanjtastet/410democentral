@@ -23,7 +23,7 @@ DELETE_CATEGORY_FAILURE
 const initState = {
 	catIDs: [],
 	cats: {},
-	catTree: [],
+	catTree: {},
 	fetchArrayState: {
 		inProgress: false,
 		error: null

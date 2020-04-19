@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import 'bulma/css/bulma.css';
-import '../../../node_modules/@fortawesome/fontawesome-free/css/all.css'
+import '../../../../node_modules/@fortawesome/fontawesome-free/css/all.css'
 
 import Studentadd from './studentadd.jsx';
 

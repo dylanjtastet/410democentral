@@ -6,14 +6,13 @@ import Courseselect from './courseselect.jsx';
 import {
     fetchGroups,
     setActiveGroup
-} from '../redux/actions/groupActions';
+} from '../../redux/actions/groupActions';
 
 const Dropdown = ({fetchState, groups, activeGroup, fetchGroups, setActiveGroup}) => {
     useEffect(() => {
 	   fetchGroups();
+       setActiveGroup("")
     }, []);
-
-    groups = [...groups, "My Code"];
 
     const [opened, setOpened] = useState(false);
 	const handleClick = function(event) {
@@ -27,7 +26,7 @@ const Dropdown = ({fetchState, groups, activeGroup, fetchGroups, setActiveGroup}
 	}
 	
 	return( 
-		<div className={"dropdown " + insert + " courseselect is-right"}>
+		<div className={"dropdown " + insert}>
             <div className="dropdown-trigger">
                 <button className="button" aria-haspopup="true" aria-controls="dropdown-menu" onClick={handleClick}>
 				    <span>{activeGroup}</span>

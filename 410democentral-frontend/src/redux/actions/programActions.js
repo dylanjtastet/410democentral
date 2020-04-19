@@ -58,9 +58,6 @@ export const fetchProgram = (id) => {
 		.then(res => res.json())
 		.then(data => {
 			dispatch(fetchProgramSuccess(id, data));
-			let activeProgId = getActiveProgramID(getState());
-			// If equality check isn't performed first, infinite
-			// re-render occurs. I'm not sure why.
 			return data;
 		})
 		.catch(error => dispatch(fetchProgramFailure(error)));
@@ -132,12 +129,13 @@ export const pushCurrentLocalChanges = () => {
 	};
 }
 
-export const addNewProgram = (program, category, setCurrent) => {
+export const addNewProgram = (program, category, group, user, setCurrent) => {
 	return dispatch => {
 		dispatch(pushProgramBegin(null));
 		let sampleURL = new URL("http://localhost:3009/sample");
 		sampleURL.searchParams.append("category", category);
-
+		sampleURL.searchParams.append("group", group);
+		sampleURL.searchParams.append("user", user);
 		fetch(sampleURL, {
 			credentials: "include",
 			method: "POST",
@@ -153,7 +151,8 @@ export const addNewProgram = (program, category, setCurrent) => {
 		.then(res => res.json())
 		.then(data => {
 			dispatch(pushProgramSuccess(data.newId, program.code));
-			dispatch(fetchProgram(data.newId, setCurrent));
+			dispatch(fetchProgram(data.newId));
+			if (setCurrent) dispatch(setActiveProgram(data.newId));
 			return data;
 		})
 		.catch(error => dispatch(pushProgramFailure(error)));

@@ -4,7 +4,7 @@ import 'bulma/css/bulma.css';
 import Catselect from './catselect.jsx';
 import Codeselect from './codeselect.jsx';
 
-import {fetchCategories} from '../redux/actions/categoryActions'
+import {fetchCategories} from '../../../redux/actions/categoryActions'
 
 function CategoryMenu({
 	setGraph,
@@ -18,14 +18,19 @@ function CategoryMenu({
 		fetchCategories();
 	}, []);
 
-	if (activeGroup === "" || catFetchState.inProgress) {
+	if (Object.keys(dir).length === 0 
+	    || activeGroup === "" 
+		|| catFetchState.inProgress) {
 		return (<div className="container choices">Loading menu...</div>);
-	} else if (catFetchState.error != null) {
+	} else if (catFetchState.error !== null) {
 		return (
 			<div className="container choices">
 				Error loading categories: {catFetchState.error.message}
 			</div>);
 	}
+
+	console.error("dir = " + JSON.stringify(dir));
+	console.error("activeGroup = " + activeGroup);
 
 	dir = dir[activeGroup];
 
@@ -51,14 +56,14 @@ function CategoryMenu({
 								if (item.type === "category") {
 									return (
 										<div key={j}>											
-											<Catselect cat={item} isAdmin={isAdmin} setGraph={setGraph} startOpen={true} key={j} />											
+											<Catselect cat={item} isAdmin={isAdmin} startOpen={true} key={j} />											
 										</div>
 										)
 								}
 								else if (item.type === "sample") {
 									return (
 										<div key={j}>				
-											<Codeselect progID={item._id} progName={item.name} isAdmin={isAdmin} setGraph={setGraph} parent={groupcat._id} key={j} />	
+											<Codeselect progID={item._id} progName={item.name} isAdmin={isAdmin} parent={groupcat._id} key={j} />	
 										</div>
 										)
 								} else {

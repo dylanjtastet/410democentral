@@ -1,13 +1,12 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {fetchProgram, deleteProgram, setActiveProgram} from '../redux/actions/programActions';
+import {fetchProgram, deleteProgram, setActiveProgram} from '../../../redux/actions/programActions';
 import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
 
 const Codeselect = ({
     progID,
     progName,
     isAdmin,
-    setGraph,
     parent,
     activeProgId,
     fetchProgram,
@@ -30,7 +29,6 @@ const Codeselect = ({
             fetchProgram(progID);
             setActiveProgram(progID);
         }
-        //setGraph({show: false, data: []});
     }
 
     const handleCodeDelete = event => {

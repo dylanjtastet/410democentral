@@ -7,7 +7,8 @@ import {
 	CREATE_GROUP_SUCCESS,
 	CREATE_GROUP_FAILURE,
 
-	SET_ACTIVE_GROUP
+	SET_ACTIVE_GROUP,
+	SET_GROUP_VIEW_MODE
 } from './actionTypes';
 
 /* FETCHING ACTIONS */
@@ -39,6 +40,11 @@ export const fetchGroups = () => {
 		})
 		.then(res => res.json())
 		.then(data => {
+			data = [...data, {
+				_id: "My Code",
+				isInstructor: false,
+				adminMode: false
+			}];
 			dispatch(fetchGroupsSuccess(data));
 			dispatch(setActiveGroup("My Code"));
 			return data;
@@ -91,4 +97,9 @@ export const createGroup = name => {
 export const setActiveGroup = name => ({
 	type: SET_ACTIVE_GROUP,
 	payload: {name: name}
+});
+
+export const setGroupViewMode = (name, mode) => ({
+	type: SET_GROUP_VIEW_MODE,
+	payload: {group: name, mode: mode}
 });

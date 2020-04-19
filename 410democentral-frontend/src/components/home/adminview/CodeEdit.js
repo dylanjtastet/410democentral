@@ -7,13 +7,13 @@ import {
     editCheckpoint,
     performEdit,
     finishEditing
-} from '../../redux/actions/programActions';
+} from '../../../redux/actions/programActions';
 import {
     createCategory
-} from '../../redux/actions/categoryActions';
+} from '../../../redux/actions/categoryActions';
 
 import 'bulma/css/bulma.css';
-import '../../../node_modules/@fortawesome/fontawesome-free/css/all.css'
+import '../../../../node_modules/@fortawesome/fontawesome-free/css/all.css'
 
 import {Controlled as CodeMirror} from 'react-codemirror2';
 

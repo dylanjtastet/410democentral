@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {connect} from 'react-redux';
-import {deleteCategory} from '../redux/actions/categoryActions';
+import {deleteCategory} from '../../../redux/actions/categoryActions';
 
 import Codeselect from './codeselect.jsx';
 import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
@@ -8,7 +8,6 @@ import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
 const Catselect = ({
   cat,
   isAdmin,
-  setGraph,
   startOpen,
   deleteCategory
 }) => {
@@ -50,12 +49,12 @@ const Catselect = ({
             {cat.children.map((item, i) => {
               if (item.type === "category") {
                 return (
-                  <Catselect cat={item} isAdmin={isAdmin} setGraph={setGraph} startOpen={false} key={i} />
+                  <Catselect cat={item} isAdmin={isAdmin} startOpen={false} key={i} />
                   )
               }
               else if (item.type === "sample") {
                 return (
-                  <Codeselect progID={item._id} progName={item.name} isAdmin={isAdmin} setGraph={setGraph} parent={cat._id} key={i} />
+                  <Codeselect progID={item._id} progName={item.name} isAdmin={isAdmin} parent={cat._id} key={i} />
                   )
               } else {
                 return undefined; // could also do some error handling

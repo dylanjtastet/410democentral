@@ -5,18 +5,19 @@ import 'bulma/css/bulma.css';
 import 'bulma-slider/dist/css/bulma-slider.min.css'
 import 'bulma-switch/dist/css/bulma-switch.min.css'
 
+import Button from '@material-ui/core/Button';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import {Controlled as CodeMirror} from 'react-codemirror2';
 
-import '../../general.css';
+import '../../../general.css';
 import ConsoleWrapper from './ConsoleWrapper.js'
 import Graphbox from './graphbox.jsx';
 import Paraminput from './paraminput.jsx';
 import CodeSandbox from './CodeSandbox.js'
 import ConstControlPanel from './ConstControlPanel.js'
-import worker_script from "../../scripts/eval_worker.js"
-import WorkerWrapper from "../../scripts/workerWrapper.js"
+import worker_script from "../../../scripts/eval_worker.js"
+import WorkerWrapper from "../../../scripts/workerWrapper.js"
 import CopySample from './CopySample';
 import {
   fetchActiveProgram,
@@ -26,7 +27,7 @@ import {
   editCheckpoint,
   performEdit,
   finishEditing
-} from '../../redux/actions/programActions.js';
+} from '../../../redux/actions/programActions.js';
 
 require('codemirror/mode/xml/xml');
 require('codemirror/mode/javascript/javascript');
@@ -36,6 +37,8 @@ const evalWorker = new WorkerWrapper(worker_script);
 function Content(props) {
 
   console.error(props.activeProgId);
+
+  const [graph, setGraph] = useState({show: false, data: []});
   
   const [showCopyModal, setShowCopyModal] = useState(false);
 
@@ -74,11 +77,9 @@ function Content(props) {
   return (
     <div className="container contentbox">
         <CodeSandbox code={props.program.localCode} pendingRun={pendingRun} setPendingRun={setPendingRun} 
-          setGraph={props.setGraph} setConsoleBuffer={setConsoleBuffer} />
+          setGraph={setGraph} setConsoleBuffer={setConsoleBuffer} />
 
-        <h1 className="subtitle">
-            {props.program.name ? props.program.name : "No code selected"}
-        </h1>
+
 
         {//<Paraminput input={program.input} setParameters={program.setParameters} parameters={program.parameters}></Paraminput>
         }
@@ -93,14 +94,14 @@ function Content(props) {
         :
         <span></span>
         }
-        <button className="button runbutton" onClick={() => {setShowCopyModal(true)}}>
+        <Button variant="contained" className="button runbutton" onClick={() => {setShowCopyModal(true)}}>
         Make a copy
-        </button>
+        </Button>
 
         {showCopyModal ?
         <CopySample name={props.program.name} code={props.program.localCode} 
           addNewProgram={props.addNewProgram} setShowCopyModal={setShowCopyModal}
-          category={props.program.category} />
+          category={props.program.category} group={props.group} />
         : <span></span>
         }
         {props.program.editState.editing ?
@@ -160,7 +161,7 @@ function Content(props) {
             </div>
         </div>
 
-        {props.graph.show ?
+        {graph.show ?
         <div className="container columns">
                 <div className="column is-2"> 
                     <p>
@@ -169,7 +170,7 @@ function Content(props) {
                 </div>
                 
                 <div className="column">
-                  <Graphbox data={props.graph.data} />
+                  <Graphbox data={graph.data} />
                 </div>
         </div>
         :
@@ -186,6 +187,7 @@ function Content(props) {
 
 
 const mapStateToProps = state => ({
+  group: state.groups.activeGroup,
   progFetchState: state.programs.fetchState,
   program: state.programs.progs[state.programs.activeProgId]
 });

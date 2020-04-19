@@ -62,13 +62,12 @@
     margin-bottom: 15px;
 }
 
-.courseselect {
-    float: right;
+.divider {
     margin-right: 25px;
 }
 
-.divider {
-    margin-right: 25px;
+.mode-toggle {
+    float: right;
 }
 
 .bottommargin {

@@ -13,11 +13,13 @@ app.use(cookieParser());
 
 app.use(function(req, res, next){
     res.setHeader("Access-Control-Allow-Origin", "http://localhost:3001");
-    res.setHeader("Access-Control-Allow-Headers", "*");
+    res.setHeader("Access-Control-Allow-Headers", "content-type");
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
     res.setHeader("Access-Control-Allow-Credentials", "true");
     next();
 });
+
+app.options('*');
 
 app.get('/', function (req, res) {
     res.send(JSON.stringify({ Hello: 'World'}));

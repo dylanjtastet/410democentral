@@ -10,7 +10,7 @@ const loginStatus = {
     FAILURE: 1
 }
 
-export default class Login extends React.Component {
+export default class LoginPage extends React.Component {
     constructor(props){
         super(props);
         this.state = {username: '', password: '', modalOpen: false, status: loginStatus.DEFAULT};

@@ -7,7 +7,8 @@ import {
 	CREATE_GROUP_SUCCESS,
 	CREATE_GROUP_FAILURE,
 
-	SET_ACTIVE_GROUP
+	SET_ACTIVE_GROUP,
+	SET_GROUP_VIEW_MODE
 } from '../actions/actionTypes';
 
 const initState = {
@@ -131,6 +132,20 @@ const groups = (state = initState, action) => {
 				...state,
 				activeGroup: action.payload.name
 			}
+
+		case SET_GROUP_VIEW_MODE: {
+			const {group, mode} = action.payload;
+			return {
+				...state,
+				groups: {
+					...state.groups,
+					[group]: {
+						...state.groups[group],
+						adminMode: mode
+					}
+				}
+			}
+		}
 
 		default:
 			return state;
