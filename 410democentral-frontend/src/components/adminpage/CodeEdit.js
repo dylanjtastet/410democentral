@@ -63,7 +63,7 @@ function CodeEdit({
     }
 
     const handleCatChange = event => {
-        event.preventDefault();
+        event.preventDefault()
         setNewcat(event.target.value);
     }
 
@@ -118,7 +118,6 @@ function CodeEdit({
                                     <input className="input" type="text" placeholder="e.g. - Sorting" value={newcat} onChange={handleCatChange}></input>
                                 </div>
                                 <div className="control">
-
                                     {(newcat === "") ?
                                     <button className="button is-info is-static">Add</button>
                                     :

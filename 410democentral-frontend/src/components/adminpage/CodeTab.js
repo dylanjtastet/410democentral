@@ -12,9 +12,9 @@ function CodeTab({activeProgId, setActiveProgram}) {
 
     const handleStartAdd = () => {
         if (activeProgId != "") {
-            setActiveProgram("");
-            setShowCodeModal(true);
+            setActiveProgram("");    
         }
+        setShowCodeModal(true);
     }
   
     return (

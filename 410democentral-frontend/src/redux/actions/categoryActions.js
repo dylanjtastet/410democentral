@@ -42,10 +42,11 @@ export const fetchCategoriesFailure = error => ({
 export const fetchCategoriesAsArray = () => {
 	return dispatch => {
 		dispatch(fetchCategoriesBegin());
-		let categoryURL = new URL("http://localhost:3009/category");
-		fetch(categoryURL)
+		let categoryURL = new URL("http://localhost:3009/allcategories");
+		fetch(categoryURL,{credentials: "include"})
 		.then(res => {
 			if (!res.ok) throw Error(res.statusText);
+			console.log(res)
 			return res;
 		})
 		.then(res => res.json())
@@ -53,7 +54,9 @@ export const fetchCategoriesAsArray = () => {
 			dispatch(fetchCategoryArraySuccess(data));
 			return data;
 		})
-		.catch(error => dispatch(fetchCategoriesFailure(error)));
+		.catch(error => {
+			console.log(error)
+			dispatch(fetchCategoriesFailure(error))});
 	};
 }
 
@@ -61,7 +64,7 @@ export const fetchCategoriesAsTree = () => {
 	return dispatch => {
 		dispatch(fetchCategoriesBegin());
 		let dirURL = new URL("http://localhost:3009/dir");
-		fetch(dirURL)
+		fetch(dirURL, {credentials: "include"})
 		.then(res => {
 			if (!res.ok) throw Error(res.statusText);
 			return res;
@@ -108,6 +111,7 @@ export const createCategory = (name, parent, group) => {
 			headers: {
 				"Content-Type" : "application/json"
 			},
+			credentials: "include",
 			body: JSON.stringify({name: name, parent: parent, group: group})
 		})
 		.then(res => {
@@ -153,6 +157,7 @@ export const updateCategory = (id, name, parent, group) => {
 			headers: {
 				"Content-Type" : "application/json"
 			},
+			credentials: "include",
 			body: JSON.stringify({name: name, parent: parent, group: group})
 		})
 		.then(res => {
@@ -195,6 +200,7 @@ export const deleteCategory = id => {
 			headers: {
 				"Content-Type" : "application/json"
 			},
+			credentials: "include",
 			body: JSON.stringify({id: id})
 		})
 		.then(res => {
