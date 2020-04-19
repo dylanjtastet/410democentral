@@ -6,19 +6,28 @@ import Codeselect from './codeselect.jsx';
 
 import {fetchCategories} from '../redux/actions/categoryActions'
 
-function CategoryMenu({setGraph, isAdmin, fetchState, dir, fetchCategories}) {
+function CategoryMenu({
+	setGraph,
+	isAdmin,
+	catFetchState,
+	dir,
+	activeGroup,
+	fetchCategories
+}) {
 	useEffect(() => {
 		fetchCategories();
-	}, [])
+	}, []);
 
-	if (fetchState.inProgress) {
+	if (activeGroup === "" || catFetchState.inProgress) {
 		return (<div className="container choices">Loading menu...</div>);
-	} else if (fetchState.error != null) {
+	} else if (catFetchState.error != null) {
 		return (
 			<div className="container choices">
-				Error loading categories: {fetchState.error.message}
+				Error loading categories: {catFetchState.error.message}
 			</div>);
 	}
+
+	dir = dir[activeGroup];
 
 	return (
 		<div className="container choices">
@@ -68,8 +77,9 @@ function CategoryMenu({setGraph, isAdmin, fetchState, dir, fetchCategories}) {
 
 
 const mapStateToProps = state => ({
-	fetchState: state.categories.fetchState,
-	dir: state.categories.catTree
+	catFetchState: state.categories.fetchTreeState,
+	dir: state.categories.catTree,
+	activeGroup: state.groups.activeGroup
 });
 
 

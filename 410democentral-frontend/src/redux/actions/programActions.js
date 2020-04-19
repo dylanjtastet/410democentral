@@ -40,15 +40,17 @@ export const fetchProgramFailure = error => ({
 	payload: {error: error}
 });
 
-export const fetchProgram = (id, setCurrent = true) => {
+export const fetchProgram = (id) => {
 	return (dispatch, getState) => {
 		dispatch(fetchProgramBegin(id));
-		if (id === null) {
-			dispatch(fetchProgramFailure(Error("Cannot fetch program with null ID")));
+		if (id === "") {
+			dispatch(fetchProgramFailure(Error("Cannot fetch program without ID")));
 		}
 		let sampleURL = new URL("http://localhost:3009/sample");
 		sampleURL.searchParams.append("id", id);
-		fetch(sampleURL)
+		fetch(sampleURL, {
+			credentials: "include"
+		})
 		.then(res => {
 			if (!res.ok) throw Error(res.statusText);
 			return res;
@@ -56,7 +58,9 @@ export const fetchProgram = (id, setCurrent = true) => {
 		.then(res => res.json())
 		.then(data => {
 			dispatch(fetchProgramSuccess(id, data));
-			if (setCurrent) dispatch(setActiveProgram(id));
+			let activeProgId = getActiveProgramID(getState());
+			// If equality check isn't performed first, infinite
+			// re-render occurs. I'm not sure why.
 			return data;
 		})
 		.catch(error => dispatch(fetchProgramFailure(error)));
@@ -102,6 +106,7 @@ export const pushLocalChanges = id => {
 		let locCode = getProgramLocalCodeFromID(getState(), id);
 
 		fetch(sampleURL, {
+			credentials: "include",
 			method: "POST",
 			headers: {
 				"Content-Type" : "application/json"
@@ -134,6 +139,7 @@ export const addNewProgram = (program, category, setCurrent) => {
 		sampleURL.searchParams.append("category", category);
 
 		fetch(sampleURL, {
+			credentials: "include",
 			method: "POST",
 			headers: {
 				"Content-Type" : "application/json"
@@ -184,6 +190,7 @@ export const deleteProgram = id => {
 		let sampleURL = new URL("http://localhost:3009/sample");
 
 		fetch(sampleURL, {
+			credentials: "include",
 			method: "DELETE",
 			headers: {
 				"Content-Type" : "application/json"

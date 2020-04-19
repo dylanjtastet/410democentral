@@ -5,7 +5,6 @@ import Content from './Content';
 import Login from '../login/Login';
 
 function FrontPage(props) {
-  const [id, setId] = useState("");
   const [graph, setGraph] = useState({show: false, data: []});
 
   if(props.sessid){

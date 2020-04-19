@@ -34,6 +34,8 @@ require('codemirror/mode/javascript/javascript');
 const evalWorker = new WorkerWrapper(worker_script);
 
 function Content(props) {
+
+  console.error(props.activeProgId);
   
   const [showCopyModal, setShowCopyModal] = useState(false);
 
@@ -56,6 +58,17 @@ function Content(props) {
       props.editCheckpoint();
     }
     else props.finishEditing();
+  }
+
+  //TODO: Clear content when activeGroup changes
+
+  if (props.progFetchState.inProgress) {
+    return (<div className="container contentbox">Loading program...</div>);
+  } else if (props.progFetchState.error !== null) {
+    return (
+      <div className="container contentbox">
+        Error loading program: {props.progFetchState.error.message}
+      </div>);
   }
 
   return (
@@ -171,16 +184,11 @@ function Content(props) {
   );
 }
 
-/*
-const mapStateToProps = state => ({
-  program: state.programs.progs[state.programs.activeProgId]
-});*/
 
-const mapStateToProps = state => {
-  console.log(JSON.stringify(state));
-  console.log(JSON.stringify(state.programs));
-  return {program: state.programs.progs[state.programs.activeProgId]};
-}
+const mapStateToProps = state => ({
+  progFetchState: state.programs.fetchState,
+  program: state.programs.progs[state.programs.activeProgId]
+});
 
 export default connect(mapStateToProps, {
   fetchActiveProgram,

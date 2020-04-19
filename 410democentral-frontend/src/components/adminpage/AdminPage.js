@@ -5,7 +5,7 @@ import '../../../node_modules/bulma-divider/dist/css/bulma-divider.min.css';
 
 import CategoryMenu from '../catmenu.js';
 import Login from '../login/Login';
-import Dropdown from './dropdown.jsx';
+import Dropdown from '../dropdown.jsx';
 import StudentsTab from './StudentsTab';
 import CodeTab from './CodeTab';
 

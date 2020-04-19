@@ -1,8 +1,11 @@
 import {
-FETCH_CATEGORIES_BEGIN,
+FETCH_CATEGORY_ARRAY_BEGIN,
 FETCH_CATEGORY_ARRAY_SUCCESS,
+FETCH_CATEGORY_ARRAY_FAILURE,
+
+FETCH_CATEGORY_TREE_BEGIN,
 FETCH_CATEGORY_TREE_SUCCESS,
-FETCH_CATEGORIES_FAILURE,
+FETCH_CATEGORY_TREE_FAILURE,
 
 CREATE_CATEGORY_BEGIN,
 CREATE_CATEGORY_SUCCESS,
@@ -20,8 +23,8 @@ DELETE_CATEGORY_FAILURE
 
 /* FETCHING ACTIONS */
 
-export const fetchCategoriesBegin = () => ({
-	type: FETCH_CATEGORIES_BEGIN
+export const fetchCategoryArrayBegin = () => ({
+	type: FETCH_CATEGORY_ARRAY_BEGIN
 });
 
 export const fetchCategoryArraySuccess = catArray => ({
@@ -29,21 +32,33 @@ export const fetchCategoryArraySuccess = catArray => ({
 	payload: {catArray: catArray}
 });
 
+export const fetchCategoryArrayFailure = error => ({
+	type: FETCH_CATEGORY_ARRAY_FAILURE,
+	payload: {error: error}
+});
+
+export const fetchCategoryTreeBegin = () => ({
+	type: FETCH_CATEGORY_TREE_BEGIN
+});
+
+
 export const fetchCategoryTreeSuccess = catTree => ({
 	type: FETCH_CATEGORY_TREE_SUCCESS,
 	payload: {catTree: catTree}
 });
 
-export const fetchCategoriesFailure = error => ({
-	type: FETCH_CATEGORIES_FAILURE,
+export const fetchCategoryTreeFailure = error => ({
+	type: FETCH_CATEGORY_TREE_FAILURE,
 	payload: {error: error}
 });
 
-export const fetchCategoriesAsArray = () => {
+export const fetchCategoryArray = () => {
 	return dispatch => {
-		dispatch(fetchCategoriesBegin());
-		let categoryURL = new URL("http://localhost:3009/category");
-		fetch(categoryURL)
+		dispatch(fetchCategoryArrayBegin());
+		let categoryURL = new URL("http://localhost:3009/allcategories");
+		fetch(categoryURL, {
+			credentials: "include"
+		})
 		.then(res => {
 			if (!res.ok) throw Error(res.statusText);
 			return res;
@@ -53,33 +68,42 @@ export const fetchCategoriesAsArray = () => {
 			dispatch(fetchCategoryArraySuccess(data));
 			return data;
 		})
-		.catch(error => dispatch(fetchCategoriesFailure(error)));
+		.catch(error => dispatch(fetchCategoryArrayFailure(error)));
 	};
 }
 
-export const fetchCategoriesAsTree = () => {
+export const fetchCategoryTree = () => {
 	return dispatch => {
-		dispatch(fetchCategoriesBegin());
+		dispatch(fetchCategoryTreeBegin());
 		let dirURL = new URL("http://localhost:3009/dir");
-		fetch(dirURL)
+		fetch(dirURL, {
+			credentials: "include"
+		})
 		.then(res => {
 			if (!res.ok) throw Error(res.statusText);
 			return res;
 		})
 		.then(res => res.json())
 		.then(data => {
-			dispatch(fetchCategoryTreeSuccess(data));
+			let catTree = data.reduce((cats, cat) => {
+				if (cat.type === "usercode") {
+					cat._id = "My Code";
+				}
+				cats[cat._id] = cat.children;
+				return cats;
+			}, {});
+			dispatch(fetchCategoryTreeSuccess(catTree));
 			return data;
 		})
-		.catch(error => dispatch(fetchCategoriesFailure(error)));
+		.catch(error => dispatch(fetchCategoryTreeFailure(error)));
 	};
 }
 
 // This is redundant ofc but gonna keep for now
 export const fetchCategories = () => {
 	return dispatch => {
-		dispatch(fetchCategoriesAsArray());
-		dispatch(fetchCategoriesAsTree());
+		dispatch(fetchCategoryArray());
+		dispatch(fetchCategoryTree());
 	};
 }
 
@@ -104,6 +128,7 @@ export const createCategory = (name, parent, group) => {
 		dispatch(createCategoryBegin());
 		let categoryURL = new URL("http://localhost:3009/category");
 		fetch(categoryURL, {
+			credentials: "include",
 			method: "POST",
 			headers: {
 				"Content-Type" : "application/json"
@@ -119,7 +144,7 @@ export const createCategory = (name, parent, group) => {
 			dispatch(createCategorySuccess(data.newId, name, parent, group));
 			// Create function fetches tree after completion as
 			// it's easier to do so than try to place the node manually
-			dispatch(fetchCategoriesAsTree());
+			dispatch(fetchCategoryTree());
 			return data;
 		})
 		.catch(error => dispatch(createCategoryFailure(error)));
@@ -149,6 +174,7 @@ export const updateCategory = (id, name, parent, group) => {
 		let categoryURL = new URL("http://localhost:3009/category");
 		categoryURL.searchParams.append("id", id);
 		fetch(categoryURL, {
+			credentials: "include",
 			method: "POST",
 			headers: {
 				"Content-Type" : "application/json"
@@ -191,6 +217,7 @@ export const deleteCategory = id => {
 		let categoryURL = new URL("http://localhost:3009/category");
 		categoryURL.searchParams.append("id", id);
 		fetch(categoryURL, {
+			credentials: "include",
 			method: "DELETE",
 			headers: {
 				"Content-Type" : "application/json"

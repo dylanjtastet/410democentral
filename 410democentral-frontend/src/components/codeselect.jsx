@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {fetchProgram, deleteProgram} from '../redux/actions/programActions';
+import {fetchProgram, deleteProgram, setActiveProgram} from '../redux/actions/programActions';
 import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
 
 const Codeselect = ({
@@ -11,7 +11,8 @@ const Codeselect = ({
     parent,
     activeProgId,
     fetchProgram,
-    deleteProgram
+    deleteProgram,
+    setActiveProgram
 }) => {
 
     let background;
@@ -23,7 +24,12 @@ const Codeselect = ({
 
     const handleCodeGet = event => {
         event.preventDefault();
-        fetchProgram(progID);
+        // If equality check isn't performed first, infinite
+        // re-render occurs. I'm not sure why.
+        if (progID !== activeProgId) {
+            fetchProgram(progID);
+            setActiveProgram(progID);
+        }
         //setGraph({show: false, data: []});
     }
 
@@ -59,5 +65,6 @@ const mapStateToProps = state => ({
 
 export default connect(mapStateToProps, {
     fetchProgram,
-    deleteProgram
+    deleteProgram,
+    setActiveProgram
 })(Codeselect);

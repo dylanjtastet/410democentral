@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './App.css';
 import FrontPage from './components/frontpage/FrontPage';
 import AdminPage from './components/adminpage/AdminPage';
+import Dropdown from './components/dropdown'
 import Cookies from 'js-cookie';
 
 import {
@@ -39,16 +40,20 @@ function App() {
     <Router>
       <div>
         <nav className="navbar is-info" role="navigation" aria-label="main navigation">
+          <div className="navbar-brand">
+            <a className="title titletext choices" href="#title">210 Demo Central</a>
+          </div>
+          
           <div className="navbar-menu">
-            <div className="navbar-brand">
-              <a className="title titletext choices" href="#title">210 Demo Central</a>
-            </div>
 
             <div className="navbar-start navlinks is-tab">
-                <Link to="/" className="navbar-item navtab">Home
-                </Link>
-                <Link to="/admin" className="navbar-item navtab">Admin
-                </Link>
+              <Link to="/" className="navbar-item navtab">Home
+              </Link>
+              <Link to="/admin" className="navbar-item navtab">Admin
+              </Link>
+              <div className="navbar-item">
+                <Dropdown />
+              </div>
             </div>
 
             <div className="navbar-end">

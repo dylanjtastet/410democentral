@@ -13,10 +13,10 @@ function CodeTab({activeProgId, setActiveProgram}) {
     const handleStartAdd = () => {
         if (activeProgId != "") {
             setActiveProgram("");
-            setShowCodeModal(true);
         }
+        setShowCodeModal(true);
     }
-  
+
     return (
         <div>
             <div className="subtitle">Manage Code</div>
@@ -26,7 +26,7 @@ function CodeTab({activeProgId, setActiveProgram}) {
                 </span>
                 <span>
                     {(activeProgId != "") ?
-                    <button className="button" onClick={setShowCodeModal(true)}>Edit Selected Code</button>
+                    <button className="button" onClick={() => setShowCodeModal(true)}>Edit Selected Code</button>
                     :
                     <button className="button is-static">Edit Selected Code</button>
                     }
@@ -43,7 +43,8 @@ function CodeTab({activeProgId, setActiveProgram}) {
 }
 
 const mapStateToProps = state => ({
-  activeProgId: state.programs.activeProgId
+    progFetchState: state.programs.fetchState,
+    activeProgId: state.programs.activeProgId
 }); 
 
 export default connect(mapStateToProps, {setActiveProgram})(CodeTab);

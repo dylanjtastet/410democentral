@@ -361,6 +361,31 @@ app.get('/logout', async function(req, res, next){
 });
 
 app.get("/group", async function(req, res, next){
+    try {
+        if (req.cookies.sessid) {
+            let groups;
+            let user = await db.getUserForSession(req.cookies.sessid);
+            if (await auth.isRootSession(req.cookies.sessid)) {
+                groups = await db.getAllGroups();
+            } else {
+                groups = user.groups;
+            }
+            groups = await Promise.all(groups.map(async name => ({
+                _id: name,
+                isInstructor: await auth.checkGroupPermissions(user, name)
+            })));
+            res.send(groups);
+        }
+        else {
+            res.sendStatus(401);
+        }
+    }
+    catch (err) {
+        next(err);
+    }
+});
+
+app.post("/group", async function(req, res, next){
     try{
         if(req.cookies.sessid){
             //Only root accts can create new groups
