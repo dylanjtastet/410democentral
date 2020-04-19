@@ -12,11 +12,7 @@ function CodeTab({activeProgId, setActiveProgram}) {
 
     const handleStartAdd = () => {
         if (activeProgId != "") {
-<<<<<<< HEAD:410democentral-frontend/src/components/adminpage/CodeTab.js
-            setActiveProgram("");    
-=======
             setActiveProgram("");
->>>>>>> d6e40d2e15357d38e5730a1428b349ca5f07e632:410democentral-frontend/src/components/home/adminview/CodeTab.js
         }
         setShowCodeModal(true);
     }

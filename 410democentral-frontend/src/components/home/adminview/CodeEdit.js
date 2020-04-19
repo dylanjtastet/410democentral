@@ -33,6 +33,7 @@ function CodeEdit({
     const [code2, setCode2] = useState("");
     const [newcat, setNewcat] = useState("");
     const [newparent, setNewparent] = useState("");
+    const [codename, setCodename] = useState("");
 
 
     let insert;
@@ -68,7 +69,7 @@ function CodeEdit({
     }
 
     const handleCodeNameChange = function(event) {
-        console.log("rename program action not yet implemented.");
+        setCodename(event.target.value);
     }
 
 
