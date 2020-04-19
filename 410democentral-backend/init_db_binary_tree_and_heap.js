@@ -7,6 +7,7 @@ let promises = [];
 async function init(){
         await db.clearDB();
         let comp210 = await db.createGroup("comp210");
+        await db.addUserToGroup("test", "comp210");
         await db.makeUserInstructorFor("test", "comp210");
         let algos = await db.createCategory("Algorithms", null, "comp210");
         let dstructures = await db.createCategory("Data Structures", null, "comp210");

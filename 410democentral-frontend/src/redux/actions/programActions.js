@@ -40,15 +40,17 @@ export const fetchProgramFailure = error => ({
 	payload: {error: error}
 });
 
-export const fetchProgram = (id, setCurrent = true) => {
+export const fetchProgram = (id) => {
 	return (dispatch, getState) => {
 		dispatch(fetchProgramBegin(id));
-		if (id === null) {
-			dispatch(fetchProgramFailure(Error("Cannot fetch program with null ID")));
+		if (id === "") {
+			dispatch(fetchProgramFailure(Error("Cannot fetch program without ID")));
 		}
 		let sampleURL = new URL("http://localhost:3009/sample");
 		sampleURL.searchParams.append("id", id);
-		fetch(sampleURL)
+		fetch(sampleURL, {
+			credentials: "include"
+		})
 		.then(res => {
 			if (!res.ok) throw Error(res.statusText);
 			return res;
@@ -56,7 +58,6 @@ export const fetchProgram = (id, setCurrent = true) => {
 		.then(res => res.json())
 		.then(data => {
 			dispatch(fetchProgramSuccess(id, data));
-			if (setCurrent) dispatch(setActiveProgram(id));
 			return data;
 		})
 		.catch(error => dispatch(fetchProgramFailure(error)));
@@ -102,6 +103,7 @@ export const pushLocalChanges = id => {
 		let locCode = getProgramLocalCodeFromID(getState(), id);
 
 		fetch(sampleURL, {
+			credentials: "include",
 			method: "POST",
 			headers: {
 				"Content-Type" : "application/json"
@@ -127,13 +129,15 @@ export const pushCurrentLocalChanges = () => {
 	};
 }
 
-export const addNewProgram = (program, category, setCurrent) => {
+export const addNewProgram = (program, category, group, user, setCurrent) => {
 	return dispatch => {
 		dispatch(pushProgramBegin(null));
 		let sampleURL = new URL("http://localhost:3009/sample");
 		sampleURL.searchParams.append("category", category);
-
+		sampleURL.searchParams.append("group", group);
+		sampleURL.searchParams.append("user", user);
 		fetch(sampleURL, {
+			credentials: "include",
 			method: "POST",
 			headers: {
 				"Content-Type" : "application/json"
@@ -148,7 +152,8 @@ export const addNewProgram = (program, category, setCurrent) => {
 		.then(res => res.json())
 		.then(data => {
 			dispatch(pushProgramSuccess(data.newId, program.code));
-			dispatch(fetchProgram(data.newId, setCurrent));
+			dispatch(fetchProgram(data.newId));
+			if (setCurrent) dispatch(setActiveProgram(data.newId));
 			return data;
 		})
 		.catch(error => dispatch(pushProgramFailure(error)));
@@ -185,6 +190,7 @@ export const deleteProgram = id => {
 		let sampleURL = new URL("http://localhost:3009/sample");
 
 		fetch(sampleURL, {
+			credentials: "include",
 			method: "DELETE",
 			headers: {
 				"Content-Type" : "application/json"

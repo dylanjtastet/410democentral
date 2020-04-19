@@ -231,7 +231,7 @@ module.exports.addUserToGroup = async function(username, group){
     return db.collection("users").update(
         {_id: username},
         {
-            $push: {groups: group}
+            $addToSet: {groups: group}
         }
     );
 }

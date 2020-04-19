@@ -5,7 +5,9 @@ const CopySample = (props) => {
 	const [name, setName] = useState(props.name + " (Copy)");
 
 	const makeCopy = () => {
-		props.addNewProgram({name: name, code: props.code}, props.category, true);
+		props.addNewProgram(
+		{name: name, code: props.code}, 
+		props.category, props.group, true,  true);
 		props.setShowCopyModal(false);
 	}
 

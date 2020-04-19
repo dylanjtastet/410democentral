@@ -1,8 +1,11 @@
 import {
-FETCH_CATEGORIES_BEGIN,
+FETCH_CATEGORY_ARRAY_BEGIN,
 FETCH_CATEGORY_ARRAY_SUCCESS,
+FETCH_CATEGORY_ARRAY_FAILURE,
+
+FETCH_CATEGORY_TREE_BEGIN,
 FETCH_CATEGORY_TREE_SUCCESS,
-FETCH_CATEGORIES_FAILURE,
+FETCH_CATEGORY_TREE_FAILURE,
 
 CREATE_CATEGORY_BEGIN,
 CREATE_CATEGORY_SUCCESS,
@@ -20,8 +23,12 @@ DELETE_CATEGORY_FAILURE
 const initState = {
 	catIDs: [],
 	cats: {},
-	catTree: [],
-	fetchState: {
+	catTree: {},
+	fetchArrayState: {
+		inProgress: false,
+		error: null
+	},
+	fetchTreeState: {
 		inProgress: false,
 		error: null
 	},
@@ -47,15 +54,16 @@ const categories = (state = initState, action) => {
 
 		/* FETCH ALL */
 
-		case FETCH_CATEGORIES_BEGIN:
+		case FETCH_CATEGORY_ARRAY_BEGIN:
 			return {
 				...state,
-				fetchState: {
-					...state.fetchState,
+				fetchArrayState: {
+					...state.fetchArrayState,
 					inProgress: true,
 					error: null
 				}
 			}
+
 		case FETCH_CATEGORY_ARRAY_SUCCESS: {
 			const catArray = action.payload.catArray;
 			return {
@@ -69,28 +77,48 @@ const categories = (state = initState, action) => {
 					};
 					return cts;
 				}, {}),
-				fetchState: {
-					...state.fetchState,
+				fetchArrayState: {
+					...state.fetchArrayState,
 					inProgress: false
 				}
 			}
 		}
 
+		case FETCH_CATEGORY_ARRAY_FAILURE:
+			return {
+				...state,
+				fetchArrayState: {
+					...state.fetchArrayState,
+					inProgress: false,
+					error: action.payload.error
+				}
+			}
+
+		case FETCH_CATEGORY_TREE_BEGIN:
+			return {
+				...state,
+				fetchTreeState: {
+					...state.fetchTreeState,
+					inProgress: true,
+					error: null
+				}
+			}
+
 		case FETCH_CATEGORY_TREE_SUCCESS:
 			return {
 				...state,
 				catTree: action.payload.catTree,
-				fetchState: {
-					...state.fetchState,
+				fetchTreeState: {
+					...state.fetchTreeState,
 					inProgress: false
 				}
 			}
 
-		case FETCH_CATEGORIES_FAILURE:
+		case FETCH_CATEGORY_TREE_FAILURE:
 			return {
 				...state,
-				fetchState: {
-					...state.fetchState,
+				fetchTreeState: {
+					...state.fetchTreeState,
 					inProgress: false,
 					error: action.payload.error
 				}

@@ -4,21 +4,35 @@ import 'bulma/css/bulma.css';
 import Catselect from './catselect.jsx';
 import Codeselect from './codeselect.jsx';
 
-import {fetchCategories} from '../redux/actions/categoryActions'
+import {fetchCategories} from '../../../redux/actions/categoryActions'
 
-function CategoryMenu({setGraph, isAdmin, fetchState, dir, fetchCategories}) {
+function CategoryMenu({
+	setGraph,
+	isAdmin,
+	catFetchState,
+	dir,
+	activeGroup,
+	fetchCategories
+}) {
 	useEffect(() => {
 		fetchCategories();
-	}, [])
+	}, []);
 
-	if (fetchState.inProgress) {
+	if (Object.keys(dir).length === 0 
+	    || activeGroup === "" 
+		|| catFetchState.inProgress) {
 		return (<div className="container choices">Loading menu...</div>);
-	} else if (fetchState.error != null) {
+	} else if (catFetchState.error !== null) {
 		return (
 			<div className="container choices">
-				Error loading categories: {fetchState.error.message}
+				Error loading categories: {catFetchState.error.message}
 			</div>);
 	}
+
+	console.error("dir = " + JSON.stringify(dir));
+	console.error("activeGroup = " + activeGroup);
+
+	dir = dir[activeGroup];
 
 	return (
 		<div className="container choices">
@@ -42,14 +56,14 @@ function CategoryMenu({setGraph, isAdmin, fetchState, dir, fetchCategories}) {
 								if (item.type === "category") {
 									return (
 										<div key={j}>											
-											<Catselect cat={item} isAdmin={isAdmin} setGraph={setGraph} startOpen={true} key={j} />											
+											<Catselect cat={item} isAdmin={isAdmin} startOpen={true} key={j} />											
 										</div>
 										)
 								}
 								else if (item.type === "sample") {
 									return (
 										<div key={j}>				
-											<Codeselect progID={item._id} progName={item.name} isAdmin={isAdmin} setGraph={setGraph} parent={groupcat._id} key={j} />	
+											<Codeselect progID={item._id} progName={item.name} isAdmin={isAdmin} parent={groupcat._id} key={j} />	
 										</div>
 										)
 								} else {
@@ -68,8 +82,9 @@ function CategoryMenu({setGraph, isAdmin, fetchState, dir, fetchCategories}) {
 
 
 const mapStateToProps = state => ({
-	fetchState: state.categories.fetchState,
-	dir: state.categories.catTree
+	catFetchState: state.categories.fetchTreeState,
+	dir: state.categories.catTree,
+	activeGroup: state.groups.activeGroup
 });
 
 
