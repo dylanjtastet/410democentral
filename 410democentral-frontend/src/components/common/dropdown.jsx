@@ -13,7 +13,7 @@ const Dropdown = ({fetchState, groups, activeGroup, fetchGroups, setActiveGroup}
     useEffect(() => {
 	   fetchGroups();
        setActiveGroup("")
-    }, []);
+    }, [fetchGroups, setActiveGroup]);
 
     const [opened, setOpened] = useState(false);
     const [showCourseAdd, setShowCourseAdd] = useState(false);
@@ -57,7 +57,7 @@ const Dropdown = ({fetchState, groups, activeGroup, fetchGroups, setActiveGroup}
                             setActiveGroup={setActiveGroup} setOpened={setOpened}/>
                     })}
 
-                    <a className="dropdown-item pointer" onClick={handleShowAddCourse}>
+                    <a className="dropdown-item pointer" onClick={handleShowAddCourse} href="#dropdown-join-course">
                         <span>Join a course </span>
                         <span className="icon is-small">
                             <i className="fas fa-plus" aria-hidden="true"></i>

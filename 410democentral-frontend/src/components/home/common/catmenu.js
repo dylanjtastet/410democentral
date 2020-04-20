@@ -16,7 +16,7 @@ function CategoryMenu({
 }) {
 	useEffect(() => {
 		fetchCategories();
-	}, []);
+	}, [fetchCategories]);
 
 	if (Object.keys(dir).length === 0 
 	    || activeGroup === "" 

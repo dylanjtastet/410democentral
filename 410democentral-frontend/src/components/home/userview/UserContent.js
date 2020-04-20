@@ -87,7 +87,7 @@ function Content(props) {
         :
         <span></span>
         }
-        <a className="button is-info runbutton copybutton" onClick={() => {setShowCopyModal(true)}}>
+        <a className="button is-info runbutton copybutton" onClick={() => {setShowCopyModal(true)}} href="#copybutton">
         Make a copy
         </a>
 

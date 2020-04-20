@@ -10,11 +10,10 @@ import {connect} from 'react-redux';
 import {fetchGroups,setActiveGroup,createGroup,deleteGroup, addInstructorToGroup, removeInstructorFromGroup} from '../../redux/actions/groupActions';
 
 const CoursePage = ({fetchState, groups, activeGroup, fetchGroups, setActiveGroup, createGroup, deleteGroup, addInstructorToGroup, removeInstructorFromGroup}) => {
-
     useEffect(() => {
         fetchGroups();
         setActiveGroup("")
-     }, []);
+     }, [fetchGroups, setActiveGroup]);
 
     const [course, setCourse] = useState("");
     const [adding, setAdding] = useState(false);
@@ -76,7 +75,8 @@ const CoursePage = ({fetchState, groups, activeGroup, fetchGroups, setActiveGrou
                                 return <li className="pointer" onClick={selectCourse(group)} key={index}>{group._id}</li> 
                             }
                         } else {
-                            return
+                            // TODO: was this really intended to return undefined?
+                            return undefined
                         }
                         
                     })}
@@ -119,7 +119,8 @@ const CoursePage = ({fetchState, groups, activeGroup, fetchGroups, setActiveGrou
                                 return <li className="pointer" onClick={selectInstructor(inst)} key={index}>{inst}</li> 
                             }
                         } else {
-                            return
+                            // TODO: was this really intended to return undefined?
+                            return undefined
                         }
                         
                     })}
