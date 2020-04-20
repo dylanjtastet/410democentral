@@ -33,7 +33,6 @@ function CodeEdit({
     const [code2, setCode2] = useState("");
     const [newcat, setNewcat] = useState("");
     const [newparent, setNewparent] = useState("");
-    const [codename, setCodename] = useState("");
 
 
     let insert;
@@ -69,7 +68,7 @@ function CodeEdit({
     }
 
     const handleCodeNameChange = function(event) {
-        setCodename(event.target.value);
+        console.log("rename program action not yet implemented.");
     }
 
 
@@ -122,7 +121,7 @@ function CodeEdit({
                                     {(newcat === "") ?
                                     <button className="button is-info is-static">Add</button>
                                     :
-                                    <button className="button is-info" onClick={handleAddCat()}>Add</button>
+                                    <button className="button is-info" onClick={handleAddCat}>Add</button>
                                     }
                                 </div>
                             </div>

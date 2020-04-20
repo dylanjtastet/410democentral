@@ -7,6 +7,14 @@
     color: white;
 }
 
+.fix {
+    color: black
+}
+
+.groupmanage {
+    padding: 20px;
+}
+
 .graph-filler {
     height: 300px;
 }

@@ -5,7 +5,7 @@ export default function Courseselect({group, setActiveGroup, setOpened}) {
     const handleClick = function(event) {
         event.preventDefault();
         setActiveGroup(group);
-       setOpened(false);
+        setOpened(false);
     }
 
     return( 
@@ -14,7 +14,11 @@ export default function Courseselect({group, setActiveGroup, setOpened}) {
                 (typeof(group)==="string") ?
                 group
                 :
+                (group ? 
                 group._id
+                :
+                ""
+                )
              }
         </a>
     )

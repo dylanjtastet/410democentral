@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './App.css';
 import HomePage from './components/home/HomePage';
 import HelpPage from './components/help/HelpPage';
+import CoursePage from './components/courses/CoursePage';
 import LoginPage from './components/login/LoginPage';
 import Dropdown from './components/common/dropdown';
 
@@ -53,6 +54,8 @@ function App() {
                             </Link>
                             <Link to="/help" className="navbar-item navtab">Help
                             </Link>
+                            <Link to="/courses" className="navbar-item navtab">Manage Courses
+                            </Link>
                             <div className="navbar-item">
                                 <Dropdown />
                             </div>
@@ -91,6 +94,13 @@ function App() {
                     </Route>
                     <Route path="/help">
                         <HelpPage />
+                    </Route>
+                    <Route path="/courses">
+                        {sessid ?
+                            <CoursePage />
+                        :
+                            <LoginPage setSessid={setSessid}/>
+                        }
                     </Route>
                 </Switch>
             </div>

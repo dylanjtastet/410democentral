@@ -228,11 +228,12 @@ module.exports.removeUserAsInstructor = async function(group, username){
 
 module.exports.addUserToGroup = async function(username, group){
     let db = await dbPromise;
-    return db.collection("users").update(
-        {_id: username},
+    return db.collection("users").updateOne(
+        {"_id": {$eq: username}},
         {
-            $addToSet: {groups: group}
-        }
+            $addToSet: {"groups": group}
+        },
+        {}
     );
 }
 

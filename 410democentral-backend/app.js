@@ -412,7 +412,8 @@ app.get("/addto/:group", async function(req, res, next){
     try{
         if(req.cookies.sessid){
             let user = await db.getUserForSession(req.cookies.sessid);
-            await addUserToGroup(user.username, req.params.group);
+            await db.addUserToGroup(user._id, req.query.group);
+
             res.sendStatus(200);
         }
         else{

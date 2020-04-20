@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import 'bulma/css/bulma.css';
 
 import Courseselect from './courseselect.jsx';
+import Courseadd from './courseadd.jsx';
 import {
     fetchGroups,
     setActiveGroup
@@ -15,10 +16,18 @@ const Dropdown = ({fetchState, groups, activeGroup, fetchGroups, setActiveGroup}
     }, []);
 
     const [opened, setOpened] = useState(false);
+    const [showCourseAdd, setShowCourseAdd] = useState(false);
+
 	const handleClick = event => {
 		event.preventDefault();
 		setOpened(!opened);
-	}
+    }
+    
+    const handleShowAddCourse = event => {
+        event.preventDefault();
+        setShowCourseAdd(true);
+        setOpened(false)
+    }
 
 
 	let insert = "";
@@ -48,14 +57,20 @@ const Dropdown = ({fetchState, groups, activeGroup, fetchGroups, setActiveGroup}
                             setActiveGroup={setActiveGroup} setOpened={setOpened}/>
                     })}
 
-                    <a className="dropdown-item pointer">
-                        <span>Add a course </span>
+                    <a className="dropdown-item pointer" onClick={handleShowAddCourse}>
+                        <span>Join a course </span>
                         <span className="icon is-small">
                             <i className="fas fa-plus" aria-hidden="true"></i>
                         </span>
                     </a>
 				</div>
             </div>
+            {showCourseAdd ?
+            <Courseadd setShowCourseAdd={setShowCourseAdd}/>
+            :
+            <span></span>
+            }
+
 		</div>
 	)
 }

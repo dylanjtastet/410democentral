@@ -8,7 +8,9 @@ import {
 	CREATE_GROUP_FAILURE,
 
 	SET_ACTIVE_GROUP,
-	SET_GROUP_VIEW_MODE
+	SET_GROUP_VIEW_MODE,
+
+
 } from './actionTypes';
 
 /* FETCHING ACTIONS */
@@ -72,13 +74,12 @@ export const createGroupFailure = error => ({
 export const createGroup = name => {
 	return dispatch => {
 		dispatch(createGroupBegin());
+		console.log("hello")
+		console.log(name)
 		let groupURL = new URL("http://localhost:3009/group");
-		groupURL.searchParams.append("group", name);
+		groupURL.searchParams.append("name", name);
 		fetch(groupURL, {
 			method: "POST",
-			headers: {
-				"Content-Type" : "application/json"
-			},
 			credentials: "include"
 		})
 		.then(res => {
