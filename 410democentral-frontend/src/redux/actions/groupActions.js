@@ -61,7 +61,11 @@ export const fetchGroups = () => {
 				if (data[i].isInstructor) {
 					let groupURL = new URL("http://localhost:3009/group");
 					console.log(data[i])
-					groupURL.searchParams.append("name", data[i]._id._id);
+					if (typeof data[i]._id==="string") {
+						groupURL.searchParams.append("name", data[i]._id);
+					} else {
+						groupURL.searchParams.append("name", data[i]._id._id);
+					}
 					let inner_res = await fetch(groupURL, {
 						credentials: "include"
 					});

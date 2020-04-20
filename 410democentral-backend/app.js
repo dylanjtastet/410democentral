@@ -461,15 +461,15 @@ app.get("/addto/:group", async function(req, res, next){
         if(req.cookies.sessid){
             if (req.query.username) {
                 if (auth.checkGroupPermissionsForSession(req.query.group)) {
-                    await addUserToGroup(req.query.username, req.query.group);
+                    await db.addUserToGroup(req.query.username, req.query.group);
                 }
                 else {
                     res.sendStatus(403);
                 }
             }
             else {
-                let user = await getUserForSession(req.cookies.sessid);
-                await addUserToGroup(user._id, req.query.group);
+                let user = await db.getUserForSession(req.cookies.sessid);
+                await db.addUserToGroup(user._id, req.query.group);
             }
             res.sendStatus(200);
         }
