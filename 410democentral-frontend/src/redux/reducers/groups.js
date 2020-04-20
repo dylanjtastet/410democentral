@@ -12,7 +12,6 @@ import {
 	ADD_MEMBER_TO_GROUP_FAILURE,
 
 	REMOVE_MEMBER_FROM_GROUP_BEGIN,
-    // eslint-disable-next-line no-unused-vars
 	REMOVE_MEMBER_FROM_GROUP_SUCCESS,
 	REMOVE_MEMBER_FROM_GROUP_FAILURE,
 
@@ -156,7 +155,7 @@ const groups = (state = initState, action) => {
 		// Ignore group state changes on success, instead refetching
 		// immediately after adds/removes
 		case ADD_MEMBER_TO_GROUP_SUCCESS:
-		case REMOVE_MEMBER_FROM_GROUP_BEGIN:
+		case REMOVE_MEMBER_FROM_GROUP_SUCCESS:
 			return {
 				...state,
 				updateState: {
