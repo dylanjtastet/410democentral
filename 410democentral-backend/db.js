@@ -182,6 +182,23 @@ module.exports.getGroup = async function(name){
     });
 }
 
+module.exports.deleteGroup = async function(name){
+    let db = await dbPromise;
+
+    await db.collection("samples").deleteMany({group: name});
+    await db.collection("categories").deleteMany({group: name});
+
+    let members = await db.getUsersInGroup(name);
+
+    for (i = 0; i < members.length; i++) {
+        await db.removeUserFromGroup(members[i].username, name);
+    }
+
+    return db.collection("groups").deleteOne({
+        _id: name
+    });
+}
+
 module.exports.getAllGroups = async function(){
     let db = await dbPromise;
     return db.collection("groups").find({}).toArray();
@@ -219,6 +236,13 @@ module.exports.checkGroupExists = async function(name){
     let db = await dbPromise;
     let group = await db.collection("groups").findOne({_id: name});
     return !!group;
+}
+
+module.exports.getUsersInGroup = async function(group){
+    let db = await dbPromise;
+    return db.collection("users").find({
+        groups: group
+    }).toArray();
 }
 
 module.exports.removeUserAsInstructor = async function(group, username){

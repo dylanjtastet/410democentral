@@ -362,7 +362,7 @@ app.get('/logout', async function(req, res, next){
     }
 });
 
-app.get("/group", async function(req, res, next){
+app.get("/allgroups", async function(req, res, next){
     try {
         if (req.cookies.sessid) {
             let groups;
@@ -387,9 +387,36 @@ app.get("/group", async function(req, res, next){
     }
 });
 
-app.post("/group", async function(req, res, next){
+app.get("/group", async function(req, res, next) {
+    try {
+        if (req.cookies.sessid) {
+            if (await auth.checkGroupPermissionsForSession(
+                req.cookies.sessid, req.query.name)
+                ) {
+                let members = await db.getUsersInGroup(req.query.name);
+                members = await Promise.all(members.map(async member => ({
+                    username: member._id,
+                    instructor: await auth.checkGroupPermissions(member, req.query.name)
+                })));
+                console.log(members);
+                res.send(members);
+            }
+            else {
+                res.sendStatus(403);
+            }
+        }
+        else {
+            res.sendStatus(401);
+        }
+    }
+    catch (err) {
+        next(err);
+    }
+})
+
+app.post("/group", async function(req, res, next) {
     try{
-        if(req.cookies.sessid){
+        if (req.cookies.sessid){
             //Only root accts can create new groups
             if(await auth.isRootSession(req.cookies.sessid)){
                 await db.createGroup(req.query.name);
@@ -408,12 +435,42 @@ app.post("/group", async function(req, res, next){
     }
 });
 
+app.delete("/group", async function(req, res, next) {
+    try {
+        if (req.cookies.sessid){
+            //Only root accts can delete
+            if (await auth.isRootSession(req.cookies.sessid)){
+                await db.deleteGroup(req.query.name);
+                res.sendStatus(200);
+            }
+            else{
+                res.sendStatus(403);
+            }
+        }
+        else{
+            res.sendStatus(401);
+        }
+    }
+    catch(err) {
+        next(err);
+    }
+});
+
 app.get("/addto/:group", async function(req, res, next){
     try{
         if(req.cookies.sessid){
-            let user = await db.getUserForSession(req.cookies.sessid);
-            await db.addUserToGroup(user._id, req.query.group);
-
+            if (req.query.username) {
+                if (auth.checkGroupPermissionsForSession(req.query.group)) {
+                    await addUserToGroup(req.query.username, req.query.group);
+                }
+                else {
+                    res.sendStatus(403);
+                }
+            }
+            else {
+                let user = await getUserForSession(req.cookies.sessid);
+                await addUserToGroup(user._id, req.query.group);
+            }
             res.sendStatus(200);
         }
         else{
@@ -428,8 +485,27 @@ app.get("/addto/:group", async function(req, res, next){
 app.get("/removefrom/:group", async function(req, res, next){
     try{
         if(req.cookies.sessid){
-            let user = await db.getUserForSession(req.cookies.sessid);
-            await removeUserFromGroup(user.username, req.params.group);
+            if (req.query.username) {
+                let currIsRoot = auth.isRootSession(req.cookies.sessid);
+                let currIsInstructor = auth.checkGroupPermissionsForSession(
+                    req.cookies.sessid
+                );
+                let targetIsInstructor = auth.checkGroupPermissions(
+                    req.query.username,
+                    req.params.group
+                );
+
+                if (currIsRoot || (currIsInstuctor && !targetIsInstructor)) {
+                    removeUserFromGroup(req.query.username, req.params.group);
+                }
+                else {
+                    res.sendStatus(403);
+                }
+            }
+            else {
+                let user = await getUserForSession(req.cookies.sessid);
+                await removeUserFromGroup(user.username, req.params.group);
+            }
             res.sendStatus(200);
         }
         else{
@@ -440,7 +516,6 @@ app.get("/removefrom/:group", async function(req, res, next){
         next(err);
     }
 });
-
 
 
 app.listen(port, function () {

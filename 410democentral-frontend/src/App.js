@@ -56,9 +56,14 @@ function App() {
                             </Link>
                             <Link to="/courses" className="navbar-item navtab">Manage Courses
                             </Link>
-                            <div className="navbar-item">
-                                <Dropdown />
-                            </div>
+
+                            {sessid ?
+                                <div className="navbar-item">
+                                    <Dropdown />
+                                </div>
+                            :
+                                <span></span>
+                            }
                         </div>
 
                         <div className="navbar-end">
