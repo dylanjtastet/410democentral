@@ -60,7 +60,8 @@ export const fetchGroups = () => {
 			for (let i = 0; i < data.length; i++) {
 				if (data[i].isInstructor) {
 					let groupURL = new URL("http://localhost:3009/group");
-					groupURL.searchParams.append("name", data[i]._id);
+					console.log(data[i])
+					groupURL.searchParams.append("name", data[i]._id._id);
 					let inner_res = await fetch(groupURL, {
 						credentials: "include"
 					});
@@ -98,8 +99,6 @@ export const createGroupFailure = error => ({
 export const createGroup = name => {
 	return dispatch => {
 		dispatch(createGroupBegin());
-		console.log("hello")
-		console.log(name)
 		let groupURL = new URL("http://localhost:3009/group");
 		groupURL.searchParams.append("name", name);
 		fetch(groupURL, {
@@ -111,7 +110,7 @@ export const createGroup = name => {
 			return res;
 		})
 		.then(res => {
-			dispatch(createGroupSuccess());
+			dispatch(createGroupSuccess(name));
 		})
 		.catch(error => dispatch(createGroupFailure(error)));
 	};
