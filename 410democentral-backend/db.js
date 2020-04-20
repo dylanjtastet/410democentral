@@ -188,10 +188,10 @@ module.exports.deleteGroup = async function(name){
     await db.collection("samples").deleteMany({group: name});
     await db.collection("categories").deleteMany({group: name});
 
-    let members = await db.getUsersInGroup(name);
+    let members = await this.getUsersInGroup(name);
 
     for (i = 0; i < members.length; i++) {
-        await db.removeUserFromGroup(members[i].username, name);
+        await this.removeUserFromGroup(members[i].username, name);
     }
 
     return db.collection("groups").deleteOne({

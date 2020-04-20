@@ -6,9 +6,9 @@ import Coursecreate from './coursecreate.jsx'
 import {connect} from 'react-redux';
 
 // Redux imports
-import {fetchGroups,setActiveGroup,createGroup} from '../../redux/actions/groupActions';
+import {fetchGroups,setActiveGroup,createGroup,deleteGroup} from '../../redux/actions/groupActions';
 
-const CoursePage = ({fetchState, groups, activeGroup, fetchGroups, setActiveGroup, createGroup}) => {
+const CoursePage = ({fetchState, groups, activeGroup, fetchGroups, setActiveGroup, createGroup, deleteGroup}) => {
 
     useEffect(() => {
         fetchGroups();
@@ -30,6 +30,10 @@ const CoursePage = ({fetchState, groups, activeGroup, fetchGroups, setActiveGrou
 
     const addGroup = async (name) => {
         createGroup(name);
+    }
+
+    const handleDelete = async function() {
+        deleteGroup(course);
     }
 
     return (
@@ -68,8 +72,8 @@ const CoursePage = ({fetchState, groups, activeGroup, fetchGroups, setActiveGrou
                             Remove Course
                           </button>
                           :
-                          <button className="button is-danger">
-                              Remove Course
+                          <button className="button is-danger" onClick={handleDelete}>
+                            Remove Course
                           </button>
                         }
                     </div>
@@ -87,7 +91,8 @@ const mapStateToProps = state => ({
     fetchState: state.groups.fetchState,
     groups: state.groups.groupNames,
     activeGroup: state.groups.activeGroup,
-    createGroup: state.groups.createGroup
+    createGroup: state.groups.createGroup,
+    deleteGroup: state.groups.deleteGroup
 });
 
-export default connect(mapStateToProps, {fetchGroups, setActiveGroup, createGroup})(CoursePage);
+export default connect(mapStateToProps, {fetchGroups, setActiveGroup, createGroup, deleteGroup})(CoursePage);

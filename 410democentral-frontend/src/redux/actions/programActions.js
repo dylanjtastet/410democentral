@@ -96,6 +96,7 @@ export const pushLocalChanges = id => {
 			dispatch(fetchProgramFailure(Error("Cannot push changes to program with null ID")));
 		}
 		let sampleURL = new URL("http://localhost:3009/sample");
+		console.log(id)
 		sampleURL.searchParams.append("id", id);
 
 		let prog = getProgramFromID(getState(), id);
