@@ -6,6 +6,7 @@ import {
 	PUSH_PROGRAM_SUCCESS,
 	PUSH_PROGRAM_FAILURE,
 	DELETE_PROGRAM_BEGIN,
+    // eslint-disable-next-line no-unused-vars
 	DELETE_PROGRAM_SUCCESS,
 	DELETE_PROGRAM_FAILURE,	
 	SET_ACTIVE_PROGRAM,
@@ -14,8 +15,6 @@ import {
 	PERFORM_EDIT,
 	FINISH_EDITING
 } from './actionTypes';
-
-import {fetchCategories} from './categoryActions';
 
 import {
 	getActiveProgramID,

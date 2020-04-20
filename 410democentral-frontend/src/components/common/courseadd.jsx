@@ -1,11 +1,5 @@
-import React, {useEffect, useState} from 'react';
-import {connect} from 'react-redux';
+import React, {useState} from 'react';
 import 'bulma/css/bulma.css';
-
-import {
-    fetchGroups,
-    setActiveGroup
-} from '../../redux/actions/groupActions';
 
 const Courseadd = (props) => {
     const [course, setCourse] = useState("");

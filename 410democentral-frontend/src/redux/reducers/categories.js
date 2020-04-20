@@ -233,7 +233,7 @@ const categories = (state = initState, action) => {
 			const {[id]: removedCat, ...remainingCats} = state.cats;
 			return {
 				...state,
-				catIDs: [...state.catIDs.filter(catID => catID != id)],
+				catIDs: [...state.catIDs.filter(catID => catID !== id)],
 				cats: remainingCats,
 				deleteState: {
 					...state.deleteState,

@@ -24,6 +24,7 @@ const initState = {
 		isEditable: true,
 		editState: {
 			editing: false,
+			// eslint-disable-next-line no-unused-vars
 			lastRemoteHash: null
 		},
 		localCode: "",
@@ -118,7 +119,6 @@ const programs = (state = initState, action) => {
 			}
 		case PUSH_PROGRAM_SUCCESS: {
 			const {id} = action.payload;
-			let lastRemoteHash;
 			return {
 				...state,
 				progs: {
@@ -162,7 +162,7 @@ const programs = (state = initState, action) => {
 			const {[id]: removedProg, ...remainingProgs} = state.progs;
 			return {
 				...state,
-				progIDs: [...state.progIDs.filter(progID => progID != id)],
+				progIDs: [...state.progIDs.filter(progID => progID !== id)],
 				progs: remainingProgs,
 				deleteState: {
 					...state.deleteState,

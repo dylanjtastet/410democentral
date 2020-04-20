@@ -11,7 +11,7 @@ function CodeTab({activeProgId, setActiveProgram}) {
     const [showCodeModal, setShowCodeModal] = useState(false);
 
     const handleStartAdd = () => {
-        if (activeProgId != "") {
+        if (activeProgId !== "") {
             setActiveProgram("");
         }
         setShowCodeModal(true);
@@ -25,7 +25,7 @@ function CodeTab({activeProgId, setActiveProgram}) {
                     <button className="button is-info" onClick={handleStartAdd}>Add Code</button>
                 </span>
                 <span>
-                    {(activeProgId != "") ?
+                    {(activeProgId !== "") ?
                     <button className="button" onClick={() => setShowCodeModal(true)}>Edit Selected Code</button>
                     :
                     <button className="button is-static">Edit Selected Code</button>

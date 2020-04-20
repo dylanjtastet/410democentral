@@ -5,7 +5,6 @@ import 'bulma/css/bulma.css';
 import 'bulma-slider/dist/css/bulma-slider.min.css'
 import 'bulma-switch/dist/css/bulma-switch.min.css'
 
-import Button from '@material-ui/core/Button';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import {Controlled as CodeMirror} from 'react-codemirror2';
@@ -13,7 +12,6 @@ import {Controlled as CodeMirror} from 'react-codemirror2';
 import '../../../general.css';
 import ConsoleWrapper from './ConsoleWrapper.js'
 import Graphbox from './graphbox.jsx';
-import Paraminput from './paraminput.jsx';
 import CodeSandbox from './CodeSandbox.js'
 import ConstControlPanel from './ConstControlPanel.js'
 import worker_script from "../../../scripts/eval_worker.js"
@@ -55,7 +53,7 @@ function Content(props) {
   }
 
   const handleEditToggle = (event, newState) => {
-    if (newState == props.program.editState.editing) return;
+    if (newState === props.program.editState.editing) return;
     if (newState) {
       console.log("yeet");
       props.editCheckpoint();

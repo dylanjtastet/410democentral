@@ -46,10 +46,12 @@ function CodeEdit({
         setShowCodeModal(false);
     }
 
+    // eslint-disable-next-line no-unused-vars
     const handleStartEdit = () => {
         editCheckpoint();
     }
 
+    // eslint-disable-next-line no-unused-vars
     const handleCancelEdit = () => {
         finishEditing();
     }
@@ -73,7 +75,7 @@ function CodeEdit({
 
 
     const handleAddCode = event => {
-        if (program._id == "") addNewProgram(program, cat, true);
+        if (program._id === "") addNewProgram(program, cat, true);
         else {
             pushCurrentLocalChanges();
             finishEditing();

@@ -12,6 +12,7 @@ import {
 	ADD_MEMBER_TO_GROUP_FAILURE,
 
 	REMOVE_MEMBER_FROM_GROUP_BEGIN,
+    // eslint-disable-next-line no-unused-vars
 	REMOVE_MEMBER_FROM_GROUP_SUCCESS,
 	REMOVE_MEMBER_FROM_GROUP_FAILURE,
 
@@ -193,7 +194,7 @@ const groups = (state = initState, action) => {
 			const {[name]: removedGroup, ...remainingGroups} = state.groups;
 			return {
 				...state,
-				groupNames: [...state.groupNames.filter(gn => gn != name)],
+				groupNames: [...state.groupNames.filter(gn => gn !== name)],
 				groups: remainingGroups,
 				deleteState: {
 					...state.deleteState,
