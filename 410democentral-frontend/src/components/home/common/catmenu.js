@@ -32,11 +32,18 @@ function CategoryMenu({
 	console.error("dir = " + JSON.stringify(dir));
 	console.error("activeGroup = " + activeGroup);
 
-	dir = dir[activeGroup];
+	let groupdir;
+	if (typeof(activeGroup)=="string") {
+		groupdir = dir[activeGroup];
+	} else {
+		groupdir = dir[activeGroup._id];
+	}
+
+	console.log(activeGroup)
 
 	return (
 		<div className="container choices">
-			{dir.filter((groupcat) => {
+			{groupdir.filter((groupcat) => {
 				if (groupcat.parent != null) {
 					console.warn("Top-level category has non-null parent.");
 				}

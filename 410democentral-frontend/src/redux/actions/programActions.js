@@ -142,6 +142,7 @@ export const addNewProgram = (program, category, group, user, setCurrent) => {
 			headers: {
 				"Content-Type" : "application/json"
 			},
+			credentials: "include",
 			body: JSON.stringify(program)
 		})
 		.then(res => {

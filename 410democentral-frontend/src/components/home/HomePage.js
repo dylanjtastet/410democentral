@@ -24,7 +24,7 @@ const HomePage = ({
     const handleModeToggle = (event, newState) => {
         setGroupViewMode(group.name, newState);
     }
-    console.error(group);
+    console.log(group);
     if (typeof group === "undefined" || groupFetchState.inProgress) {
         return (<div></div>);
     } else if (groupFetchState.error !== null) {
@@ -40,7 +40,12 @@ const HomePage = ({
                 <div className="column section">
                     <div className="content-header level">
                         <div className="level-left title">
-                            {"Class: " + group.name}
+                            {
+                                ((typeof group.name==="string") ?
+                                group.name
+                                :
+                                group.name._id)
+                            }
                         </div>
                         <div className="level-right">
                         {group.isInstructor ?

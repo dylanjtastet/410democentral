@@ -9,6 +9,10 @@ function CodeSandbox(props) {
 	useEffect(() => {
         const processMessage = (e) => {
             console.log(e.data);
+            if(frameRef.current===null) {
+                return;
+            }
+
             if (e.origin === "null" && e.source === frameRef.current.contentWindow) {
                 let msg = e.data;
                 if (msg.info.msgType === "console") {
@@ -31,7 +35,7 @@ function CodeSandbox(props) {
 
 	useEffect(() => {
 		if (pendingRun === true) {
-			frameRef.current.contentWindow.postMessage(code, "*");
+			//frameRef.current.contentWindow.postMessage(code, "*");
 			setPendingRun(false);
 		}
 	}, [setPendingRun, pendingRun, code]);

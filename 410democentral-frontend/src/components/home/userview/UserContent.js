@@ -79,11 +79,6 @@ function Content(props) {
         <CodeSandbox code={props.program.localCode} pendingRun={pendingRun} setPendingRun={setPendingRun} 
           setGraph={setGraph} setConsoleBuffer={setConsoleBuffer} />
 
-
-
-        {//<Paraminput input={program.input} setParameters={program.setParameters} parameters={program.parameters}></Paraminput>
-        }
-
         {props.program.isEditable ?
         <ToggleButtonGroup value={props.program.editState.editing} 
             exclusive onChange={handleEditToggle}>
@@ -94,9 +89,9 @@ function Content(props) {
         :
         <span></span>
         }
-        <Button variant="contained" className="button runbutton" onClick={() => {setShowCopyModal(true)}}>
+        <a className="button is-info runbutton copybutton" onClick={() => {setShowCopyModal(true)}}>
         Make a copy
-        </Button>
+        </a>
 
         {showCopyModal ?
         <CopySample name={props.program.name} code={props.program.localCode} 

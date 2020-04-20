@@ -130,3 +130,7 @@
     height: 350px;
     overflow: scroll;
 }
+
+.copybutton {
+    float: right;
+}

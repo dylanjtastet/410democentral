@@ -15,10 +15,11 @@ const Dropdown = ({fetchState, groups, activeGroup, fetchGroups, setActiveGroup}
     }, []);
 
     const [opened, setOpened] = useState(false);
-	const handleClick = function(event) {
+	const handleClick = event => {
 		event.preventDefault();
 		setOpened(!opened);
 	}
+
 
 	let insert = "";
 	if (opened) {
@@ -29,7 +30,12 @@ const Dropdown = ({fetchState, groups, activeGroup, fetchGroups, setActiveGroup}
 		<div className={"dropdown " + insert}>
             <div className="dropdown-trigger">
                 <button className="button" aria-haspopup="true" aria-controls="dropdown-menu" onClick={handleClick}>
-				    <span>{activeGroup}</span>
+                    <span>{
+                        (typeof(activeGroup)==="string") ?
+                        activeGroup
+                        :
+                        activeGroup._id
+                    }</span>
                     <span className="icon is-small">
                         <i className="fas fa-angle-down" aria-hidden="true"></i>
                     </span>
@@ -39,14 +45,15 @@ const Dropdown = ({fetchState, groups, activeGroup, fetchGroups, setActiveGroup}
 				<div className="dropdown-content">
                     {groups.map(function(group, index) {
                         return <Courseselect key={index} group={group}
-                            setActiveGroup={setActiveGroup} />
+                            setActiveGroup={setActiveGroup} setOpened={setOpened}/>
                     })}
-                    <div className="dropdown-item pointer">
+
+                    <a className="dropdown-item pointer">
                         <span>Add a course </span>
                         <span className="icon is-small">
                             <i className="fas fa-plus" aria-hidden="true"></i>
                         </span>
-                    </div>
+                    </a>
 				</div>
             </div>
 		</div>

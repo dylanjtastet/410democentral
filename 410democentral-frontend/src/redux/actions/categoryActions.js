@@ -61,6 +61,7 @@ export const fetchCategoryArray = () => {
 		})
 		.then(res => {
 			if (!res.ok) throw Error(res.statusText);
+			console.log(res)
 			return res;
 		})
 		.then(res => res.json())
@@ -133,6 +134,7 @@ export const createCategory = (name, parent, group) => {
 			headers: {
 				"Content-Type" : "application/json"
 			},
+			credentials: "include",
 			body: JSON.stringify({name: name, parent: parent, group: group})
 		})
 		.then(res => {
@@ -179,6 +181,7 @@ export const updateCategory = (id, name, parent, group) => {
 			headers: {
 				"Content-Type" : "application/json"
 			},
+			credentials: "include",
 			body: JSON.stringify({name: name, parent: parent, group: group})
 		})
 		.then(res => {
@@ -222,6 +225,7 @@ export const deleteCategory = id => {
 			headers: {
 				"Content-Type" : "application/json"
 			},
+			credentials: "include",
 			body: JSON.stringify({id: id})
 		})
 		.then(res => {

@@ -374,7 +374,7 @@ app.get("/allgroups", async function(req, res, next){
             }
             groups = await Promise.all(groups.map(async name => ({
                 _id: name,
-                isInstructor: await auth.checkGroupPermissions(user, name)
+                isInstructor: (await auth.checkGroupPermissions(user, name) || await auth.isRootSession(req.cookies.sessid))
             })));
             res.send(groups);
         }
