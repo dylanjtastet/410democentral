@@ -53,9 +53,13 @@ function App() {
                             </Link>
                             <Link to="/help" className="navbar-item navtab">Help
                             </Link>
-                            <div className="navbar-item">
-                                <Dropdown />
-                            </div>
+                            {sessid ?
+                                <div className="navbar-item">
+                                    <Dropdown />
+                                </div>
+                            :
+                                <span></span>
+                            }
                         </div>
 
                         <div className="navbar-end">

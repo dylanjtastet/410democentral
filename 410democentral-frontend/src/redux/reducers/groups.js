@@ -7,6 +7,18 @@ import {
 	CREATE_GROUP_SUCCESS,
 	CREATE_GROUP_FAILURE,
 
+	ADD_MEMBER_TO_GROUP_BEGIN,
+	ADD_MEMBER_TO_GROUP_SUCCESS,
+	ADD_MEMBER_TO_GROUP_FAILURE,
+
+	REMOVE_MEMBER_FROM_GROUP_BEGIN,
+	REMOVE_MEMBER_FROM_GROUP_SUCCESS,
+	REMOVE_MEMBER_FROM_GROUP_FAILURE,
+
+	DELETE_GROUP_BEGIN,
+	DELETE_GROUP_SUCCESS,
+	DELETE_GROUP_FAILURE,
+
 	SET_ACTIVE_GROUP,
 	SET_GROUP_VIEW_MODE
 } from '../actions/actionTypes';
@@ -19,7 +31,16 @@ const initState = {
 		inProgress: false,
 		error: null
 	},
+	updateState: {
+		name: null,
+		inProgress: false,
+		error: null
+	},
 	createState: {
+		inProgress: false,
+		error: null
+	},
+	deleteState: {
 		inProgress: false,
 		error: null
 	}
@@ -119,11 +140,78 @@ const groups = (state = initState, action) => {
 
 		/* UPDATE GROUP */
 
-		// Currently, groups cannot be updated
+		case ADD_MEMBER_TO_GROUP_BEGIN:
+		case REMOVE_MEMBER_FROM_GROUP_BEGIN:
+			return {
+				...state,
+				updateState: {
+					...state.updateState,
+					name: action.payload.name,
+					inProgress: true,
+					error: null
+				}
+			}
+
+		// Ignore group state changes on success, instead refetching
+		// immediately after adds/removes
+		case ADD_MEMBER_TO_GROUP_SUCCESS:
+		case REMOVE_MEMBER_FROM_GROUP_BEGIN:
+			return {
+				...state,
+				updateState: {
+					...state.updateState,
+					inProgress: false
+				}
+			}
+
+		case ADD_MEMBER_TO_GROUP_FAILURE:
+		case REMOVE_MEMBER_FROM_GROUP_FAILURE:
+			return {
+				...state,
+				updateState: {
+					...state.updateState,
+					inProgress: false,
+					error: action.payload.error
+				}
+			}
+
 
 		/* DELETE GROUP */
 
-		// Currently, groups cannot be deleted
+		case DELETE_GROUP_BEGIN:
+			return {
+				...state,
+				deleteState: {
+					...state.deleteState,
+					inProgress: true,
+					error: null
+				}
+			}
+
+		case DELETE_GROUP_SUCCESS: {
+			const {name} = action.payload;
+			const {[name]: removedGroup, ...remainingGroups} = state.groups;
+			return {
+				...state,
+				groupNames: [...state.groupNames.filter(gn => gn != name)],
+				groups: remainingGroups,
+				deleteState: {
+					...state.deleteState,
+					inProgress: false,
+					error: null
+				}
+			}
+		}
+
+		case DELETE_GROUP_FAILURE:
+			return {
+				...state,
+				deleteState: {
+					...state.deleteState,
+					inProgress: false,
+					error: action.payload.error
+				}
+			}
 
 		/* LOCAL STATE CHANGING ACTIONS */
 
