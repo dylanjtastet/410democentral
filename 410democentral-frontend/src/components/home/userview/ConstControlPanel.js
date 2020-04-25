@@ -19,7 +19,7 @@ export default class ConstControlPanel extends React.Component{
     }
     
     onConstInit(event){
-        console.log(event);
+        console.log("onconstInit: ");
         let append = (lst, item) => {
             lst.push(item);
             return lst;

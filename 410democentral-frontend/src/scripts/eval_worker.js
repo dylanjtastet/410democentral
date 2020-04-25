@@ -29,6 +29,9 @@ let constVals = {};
 // If the functions are queried in execute mode (doFetch = false) and the
 // value is not yet available in constVals, return the default
 // eslint-disable-next-line no-restricted-globals
+
+const getLineGraph = () => sendToParent({msgType: "graph"});
+
 function get_ui_fns(doFetch){
     function resolveValueHelper(ename, id, params){
         let val = params.def;
@@ -72,11 +75,13 @@ function eval_const_init(sample){
     //Remember to call eval_const_init again to get the new ui widgets
     //if the code sample is edited.
     constVals = [];
-    let ui_fns = get_ui_fns(true);
+    let allShims = [];
+    allShims.push(...get_ui_fns(true));
+    allShims.push(getLineGraph);
 
     // eval constructor is intended here
     // eslint-disable-next-line
-    let initvars = Function(...ui_fns.map(x => x.name),"var initvars; return initvars;"+sample)(...ui_fns);
+    let initvars = Function(...allShims.map(x => x.name),"var initvars; return initvars;"+sample)(...allShims);
     if(initvars){
         initvars();
     }
