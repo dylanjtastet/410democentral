@@ -1,5 +1,9 @@
 import React, {useState} from 'react';
+import {connect} from 'react-redux';
 import 'bulma/css/bulma.css';
+
+import {fetchGroups} from '../../redux/actions/groupActions';
+
 
 const Courseadd = (props) => {
     const [course, setCourse] = useState("");
@@ -16,8 +20,9 @@ const Courseadd = (props) => {
             method: "GET",
 			credentials: "include"
 		}).then(res => {
-            console.log(res)
-            props.setShowCourseAdd(false)
+            console.log(res);
+            props.setShowCourseAdd(false);
+            props.fetchGroups();
         }
         ).catch((err) => {
             console.log(err);
@@ -47,4 +52,4 @@ const Courseadd = (props) => {
 
 }
 
-export default Courseadd;
+export default connect(null, {fetchGroups})(Courseadd);
