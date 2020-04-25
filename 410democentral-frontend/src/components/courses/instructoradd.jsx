@@ -23,18 +23,18 @@ export default function Instructoradd(props) {
         <div>
             <input className="input paraminputs textinput" type="text" placeholder="instructor username" value={newinstructor} onChange={handleChange}></input>
             <div>
-                {(newinstructor) ?
-                    <span className="rightmargin">
-                        <button className="button" onClick={handleComplete}>
-                            Add
-                        </button>
-                    </span>
-                    :
-                    <span className="rightmargin">
-                        <button className="button is-static">
-                            Add
-                        </button>
-                    </span>
+                {   (newinstructor) ?
+                        <span className="rightmargin">
+                            <button className="button" onClick={handleComplete}>
+                                Add
+                            </button>
+                        </span>
+                        :
+                        <span className="rightmargin">
+                            <button className="button is-static">
+                                Add
+                            </button>
+                        </span>
                 }
                 <span>
                     <button className="button" onClick={handleCancel}>

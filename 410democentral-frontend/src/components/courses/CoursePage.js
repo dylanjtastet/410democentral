@@ -62,7 +62,7 @@ const CoursePage = ({fetchState, groups, activeGroup, fetchGroups, setActiveGrou
 
     return (
         <div className="groupmanage">
-          <div className="subtitle">Manage Courses</div>
+          <div className="subtitle">Manage Courses and Instructors</div>
           <div className="columns">
             <div className="column is-one-fourth">
               <div className="studentlist">
@@ -120,7 +120,7 @@ const CoursePage = ({fetchState, groups, activeGroup, fetchGroups, setActiveGrou
                             }
                         } else {
                             // TODO: was this really intended to return undefined?
-                            return undefined
+                            return <span></span>
                         }
                         
                     })}
@@ -131,9 +131,15 @@ const CoursePage = ({fetchState, groups, activeGroup, fetchGroups, setActiveGrou
               {(!addingInstructor) ?
                   <div>
                     <div className="paraminputs">
+                      {(course==="")?
+                        <button className="button is-static">
+                            Add Instructor
+                        </button>
+                        :
                         <button className="button is-info" onClick={startInstructorAdd}>
                             Add Instructor
                         </button>
+                      }
                     </div>
                     <div>
                         {(instructor==="") ?
