@@ -39,11 +39,13 @@ function StudentsTab(props) {
         <div className="column">
           {(!adding) ?
               <div>
+                {/*
                 <div className="paraminputs">
                     <button className="button is-info" onClick={startAdd}>
                         Add Student
                     </button>
                 </div>
+                */}
                 <div>
                     {(student==="") ?
                       <button className="button is-static">
@@ -57,7 +59,7 @@ function StudentsTab(props) {
                 </div>
               </div>
             :
-              <Studentadd setAdding={setAdding}/>
+              {/*<Studentadd setAdding={setAdding}/>*/}
           }
         </div>
       </div>

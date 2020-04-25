@@ -9,7 +9,8 @@
     "stop:darwin:linux": "pkill mongod; pkill node || true",
     "start:darwin:linux": "mkdir -p data/db; mongod --dbpath data/db > /dev/null & (sleep 1; node init_db_binary_tree_and_heap.js > /dev/null; node app.js > /dev/null & sleep 1)",
     "start:win32": "concurrently --kill-others \"mongod --dbpath data\\db > NUL\" \"node init_db_binary_tree_and_heap.js && node app.js\"",
-    "stop:win32": "@powershell Stop-Process -Name \"mongod\" -Force; Stop-Process -Name \"node\" -Force"
+    "stop:win32": "@powershell Stop-Process -Name \"mongod\" -Force; Stop-Process -Name \"node\" -Force",
+    "test": "jest"
   },
   "author": "",
   "license": "ISC",
@@ -22,6 +23,7 @@
   },
   "devDependencies": {
     "concurrently": "^5.1.0",
+    "jest": "^25.4.0",
     "run-script-os": "^1.1.1"
   }
 }

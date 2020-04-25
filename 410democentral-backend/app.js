@@ -487,11 +487,11 @@ app.get("/removefrom/:group", async function(req, res, next){
     try{
         if(req.cookies.sessid){
             if (req.query.username) {
-                let currIsRoot = auth.isRootSession(req.cookies.sessid);
-                let currIsInstructor = auth.checkGroupPermissionsForSession(
+                let currIsRoot = await auth.isRootSession(req.cookies.sessid);
+                let currIsInstructor = await auth.checkGroupPermissionsForSession(
                     req.cookies.sessid
                 );
-                let targetIsInstructor = auth.checkGroupPermissions(
+                let targetIsInstructor = await auth.checkGroupPermissions(
                     req.query.username,
                     req.params.group
                 );
@@ -518,6 +518,18 @@ app.get("/removefrom/:group", async function(req, res, next){
     }
 });
 
+app.get("/isroot", async function(req,res,next) {
+    try {
+        if(req.cookies.sessid) {
+            let isroot = await auth.isRootSession(req.cookies.sessid)
+            return isroot
+        } else {
+            return false
+        }
+    } catch(err) {
+        next(err)
+    }
+})
 
 app.listen(port, function () {
     console.log('Example app listening on port '+port);
