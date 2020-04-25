@@ -75,11 +75,13 @@ function CodeEdit({
 
 
     const handleAddCode = event => {
+        console.log(program)
         if (program._id === "") addNewProgram(program, cat, true);
         else {
             pushCurrentLocalChanges();
             finishEditing();
         }
+        setShowCodeModal(false);
     }
 
     const handleAddCat = function(event) {
