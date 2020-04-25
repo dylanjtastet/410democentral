@@ -31,10 +31,10 @@ const Codeselect = ({
         }
     }
 
-    const handleCodeDelete = event => {
+    const handleCodeDelete = async event => {
         if (window.confirm("Are you sure you would like to delete " + progName + "?")) {
             event.preventDefault();
-            deleteProgram(progID);
+            await deleteProgram(progID);
         }
     }
 

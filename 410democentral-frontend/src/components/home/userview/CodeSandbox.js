@@ -35,7 +35,7 @@ function CodeSandbox(props) {
 
 	useEffect(() => {
 		if (pendingRun === true) {
-			//frameRef.current.contentWindow.postMessage(code, "*");
+			frameRef.current.contentWindow.postMessage(code, "*");
 			setPendingRun(false);
 		}
 	}, [setPendingRun, pendingRun, code]);
