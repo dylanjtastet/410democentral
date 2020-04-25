@@ -80,17 +80,30 @@ export default class ConstControlPanel extends React.Component{
         }
     }
 
+    componentDidMount() {
+        // Clear buffer and then logs to make sure nothing remaining in buffer
+        // makes its way into the new program's console log
+        this.props.setConsoleBuffer([]);
+        this.props.setLogs([]);
+        this.sendWorkerInit("");
+    }
+
     //Maybe move the webworker call to init ui widgets here
     //To avoid races
     componentDidUpdate(prevProps, prevState){
-        if(prevProps.code !== this.props.code){
+        this.sendWorkerInit(prevProps.code);
+    }
+
+    sendWorkerInit(prevCode) {
+        if (prevCode !== this.props.code) {
             this.setState({widgets: []});
             this.props.evalWorker.postMessage({
                 type: "EVAL_CONST_INIT",
                 sample: this.props.code
-              });
+            });
         }
     }
+
 
     render(){
         if(this.state.widgets.length > 0)
