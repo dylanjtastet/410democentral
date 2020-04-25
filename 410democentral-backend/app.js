@@ -495,7 +495,7 @@ app.get("/removefrom/:group", async function(req, res, next){
                     req.params.group
                 );
 
-                if (currIsRoot || (currIsInstuctor && !targetIsInstructor)) {
+                if (currIsRoot || (currIsInstructor && !targetIsInstructor)) {
                     removeUserFromGroup(req.query.username, req.params.group);
                 }
                 else {
