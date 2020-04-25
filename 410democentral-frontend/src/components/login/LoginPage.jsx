@@ -43,8 +43,21 @@ export default class LoginPage extends React.Component {
             let res = await resp.json();
             if(res.sessid){
                 Cookies.set("sessid", res.sessid, {expires: new Date(res.exp)});
+
+                let rootlink = new URL("http://localhost:3009/isroot")
+                let rootResp = await fetch(rootlink, {
+                    headers:{"Content-Type": "application/json"},
+                    method: "GET",
+                    credentials: "include"
+                })
+
+                let rootRes = await rootResp.json();
+                Cookies.set("isroot", rootRes, {expires: new Date(res.exp)});
+
                 console.log(Cookies.get("sessid"));
+                console.log(Cookies.get("isroot"));
                 this.props.setSessid(res.sessid);
+                this.props.setIsroot(rootRes);
             }
             else{
                 this.setState({status: loginStatus.FAILURE});

@@ -17,10 +17,13 @@ import {
 
 function App() {
     const [sessid, setSessid] = useState(Cookies.get('sessid'));
+    const [isroot, setIsroot] = useState(Cookies.get('isroot'));
 
     let logout = () => {
         Cookies.remove("sessid");
+        Cookies.remove("isroot");
         setSessid(false);
+        setIsroot(false);
     }
 
     function LogInOutBtn() {
@@ -54,8 +57,13 @@ function App() {
                             </Link>
                             <Link to="/help" className="navbar-item navtab">Help
                             </Link>
-                            <Link to="/courses" className="navbar-item navtab">Manage Courses
-                            </Link>
+
+                            {isroot ?
+                                <Link to="/courses" className="navbar-item navtab">Manage Courses
+                                </Link>
+                                :
+                                <span></span>
+                            }
 
                             {sessid ?
                                 <div className="navbar-item">
@@ -94,7 +102,7 @@ function App() {
                         {sessid ?
                             <HomePage />
                         :
-                            <LoginPage setSessid={setSessid} />
+                            <LoginPage setSessid={setSessid} setIsroot={setIsroot}/>
                         }
                     </Route>
                     <Route path="/help">
@@ -104,7 +112,7 @@ function App() {
                         {sessid ?
                             <CoursePage />
                         :
-                            <LoginPage setSessid={setSessid}/>
+                            <LoginPage setSessid={setSessid} setIsroot={setIsroot}/>
                         }
                     </Route>
                 </Switch>

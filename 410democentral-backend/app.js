@@ -522,9 +522,9 @@ app.get("/isroot", async function(req,res,next) {
     try {
         if(req.cookies.sessid) {
             let isroot = await auth.isRootSession(req.cookies.sessid)
-            return isroot
+            res.send(isroot);
         } else {
-            return false
+            res.send(false)
         }
     } catch(err) {
         next(err)
