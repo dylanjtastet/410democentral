@@ -134,7 +134,8 @@ function Content(props) {
         </br>
         <div className="container columns">
             <div className="column is-2">
-                <ConstControlPanel setConsoleBuffer = {setConsoleBuffer} code={props.program.localCode} evalWorker = {evalWorker}/>
+                <ConstControlPanel setConsoleBuffer = {setConsoleBuffer} code={props.program.localCode}
+                  evalWorker = {evalWorker} setLogs = {setLogs} />
                 <p>
                     <button className="button runbutton" 
                       onClick={props.fetchActiveProgram}>Reload</button>
