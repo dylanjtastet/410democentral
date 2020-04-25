@@ -1,5 +1,6 @@
 export default () => {
 
+
 let sendToParent = (messageInfo) => {
     return (data) => {
         let msg = {...messageInfo, data: data};
@@ -89,6 +90,7 @@ function eval_all(sample){
 
     // eval constructor is intended here
     // eslint-disable-next-line
+    const getLineGraph = () => sendToParent({msgType: "graph"});
     Function(...ui_fns.map(x=>x.name), sample)(...ui_fns);
 }
 

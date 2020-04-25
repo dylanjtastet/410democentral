@@ -74,8 +74,8 @@ function Content(props) {
 
   return (
     <div className="container contentbox">
-        <CodeSandbox code={props.program.localCode} pendingRun={pendingRun} setPendingRun={setPendingRun} 
-          setGraph={setGraph} setConsoleBuffer={setConsoleBuffer} />
+        {/*<CodeSandbox code={props.program.localCode} pendingRun={pendingRun} setPendingRun={setPendingRun} 
+          setGraph={setGraph} setConsoleBuffer={setConsoleBuffer} />*/}
 
         {props.program.isEditable ?
         <ToggleButtonGroup value={props.program.editState.editing} 
