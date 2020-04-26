@@ -74,7 +74,9 @@ module.exports.getAllSampleStubs = async function(){
 
 module.exports.getUserSampleStubs = async function(user){
     let db = await dbPromise;
-    return db.collection("samples").find({group: {$in: user.groups}}, {projection:{category:1, user:1, name:1, _id:1}}).toArray();
+    let publicSamples = await db.collection("samples").find({user: false, group: {$in: user.groups}}, {projection:{category:1, user:1, name:1, _id:1}}).toArray();
+    let privateSamples = await db.collection("samples").find({user: user._id}).toArray();
+    return publicSamples.concat(privateSamples);
 }
 
 module.exports.deleteCategory = async function(id){
