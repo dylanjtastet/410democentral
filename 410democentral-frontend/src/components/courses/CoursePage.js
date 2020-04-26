@@ -61,11 +61,13 @@ const CoursePage = ({fetchState, groups, fetchGroups, createGroup, deleteGroup, 
 
     const handleDelete = async function() {
         await deleteGroup(course);
-        setCourse("")
+        setCourse("");
+        setInstructors([]);
     }
 
     const addInstructor = async function(group, instructor) {
-        await addInstructorToGroup(group, instructor)
+        await addInstructorToGroup(group, instructor);
+        setAddingInstructor(false);
     }
 
     const removeInstructor = async function() {
@@ -81,11 +83,15 @@ const CoursePage = ({fetchState, groups, fetchGroups, createGroup, deleteGroup, 
                 <ul>
                     {groups.map(function(group,index) {
                         if (group) {
+                          if (group === "My Code") {
+                                return <span></span>
+                          } else {
                             if (group === course) {
                                 return <li className="selected" onClick={selectCourse(group)} key={index}>{group}</li> 
                             } else {
                                 return <li className="pointer" onClick={selectCourse(group)} key={index}>{group}</li> 
                             }
+                          }
                         } else {
                             // TODO: was this really intended to return undefined?
                             return undefined
