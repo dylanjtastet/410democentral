@@ -20,7 +20,7 @@ function CodeSandbox(props) {
                         [...consoleBuffer, {level: msg.info.level, data: msg.data}]
                     );
                 } else if (msg.info.msgType === "graph") {
-                    setGraph({show: true, data: msg.data});
+                    setGraph({show: true, data: msg.data.data});
                 } else if (msg.info.msgType === "error") {
                     console.error(msg.data);
                 }

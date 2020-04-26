@@ -134,19 +134,16 @@ function Content(props) {
         </br>
         <div className="container columns">
             <div className="column is-2">
+                {/* This manages all of the webworker state. It aint pretty but it works */}
                 <ConstControlPanel setConsoleBuffer = {setConsoleBuffer} code={props.program.localCode}
-                  evalWorker = {evalWorker} setLogs = {setLogs} />
+                  evalWorker = {evalWorker} setLogs = {setLogs} setGraph = {setGraph}/>
                 <p>
                     <button className="button runbutton" 
                       onClick={props.fetchActiveProgram}>Reload</button>
                 </p>
                 <br></br>
                 <p>
-                    <button className="button runbutton" onClick={() => {setPendingRun(true)}}>Run</button>
-                </p>
-                <br></br>
-                <p>
-                    <button className="button runbutton" onClick={sendRun}>Run Inputs</button>
+                    <button className="button runbutton" onClick={sendRun}>Run</button>
                 </p>
             </div>
             <div className="column console">

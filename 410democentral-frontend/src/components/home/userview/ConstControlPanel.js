@@ -19,7 +19,7 @@ export default class ConstControlPanel extends React.Component{
     }
     
     onConstInit(event){
-        console.log("onconstInit: ");
+        console.log(event);
         let append = (lst, item) => {
             lst.push(item);
             return lst;
@@ -77,6 +77,11 @@ export default class ConstControlPanel extends React.Component{
             this.props.setConsoleBuffer(consoleBuffer =>
                 [...consoleBuffer, {level: event.data.level, data: event.data.data}]
             );
+        }
+
+        else if(type === "graph"){
+            console.log("got graph");
+            this.props.setGraph({show: true, data: event.data.data});
         }
     }
 
