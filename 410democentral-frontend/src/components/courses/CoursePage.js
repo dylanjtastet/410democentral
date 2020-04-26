@@ -9,7 +9,7 @@ import {connect} from 'react-redux';
 // Redux imports
 import {fetchGroups, createGroup, deleteGroup, addInstructorToGroup, removeInstructorFromGroup} from '../../redux/actions/groupActions';
 
-const CoursePage = ({fetchState, groups, fetchGroups, setActiveGroup, createGroup, deleteGroup, addInstructorToGroup, removeInstructorFromGroup}) => {
+const CoursePage = ({fetchState, groups, fetchGroups, createGroup, deleteGroup, addInstructorToGroup, removeInstructorFromGroup, groupObjects}) => {
     useEffect(() => {
         fetchGroups();
         setCourse("");
@@ -27,9 +27,17 @@ const CoursePage = ({fetchState, groups, fetchGroups, setActiveGroup, createGrou
 
     const selectCourse = function(course) {
         return () => {
-            setCourse(course._id);
-            setAddingInstructor(false)
-            setInstructors(course.instructors);
+            setCourse(course);
+            setAddingInstructor(false);
+
+            let instructors = [];
+            let groupObject= groupObjects[course];
+            console.log(groupObject);
+            if (groupObject.instructors) {
+              instructors = groupObject.instructors;
+            }
+
+            setInstructors(instructors);
         }
     }
 
@@ -73,10 +81,10 @@ const CoursePage = ({fetchState, groups, fetchGroups, setActiveGroup, createGrou
                 <ul>
                     {groups.map(function(group,index) {
                         if (group) {
-                            if (group._id === course) {
-                                return <li className="selected" onClick={selectCourse(group)} key={index}>{group._id}</li> 
+                            if (group === course) {
+                                return <li className="selected" onClick={selectCourse(group)} key={index}>{group}</li> 
                             } else {
-                                return <li className="pointer" onClick={selectCourse(group)} key={index}>{group._id}</li> 
+                                return <li className="pointer" onClick={selectCourse(group)} key={index}>{group}</li> 
                             }
                         } else {
                             // TODO: was this really intended to return undefined?
@@ -170,6 +178,7 @@ const CoursePage = ({fetchState, groups, fetchGroups, setActiveGroup, createGrou
 const mapStateToProps = state => ({
     fetchState: state.groups.fetchState,
     groups: state.groups.groupNames,
+    groupObjects: state.groups.groups,
     activeGroup: state.groups.activeGroup,
     createGroup: state.groups.createGroup,
     deleteGroup: state.groups.deleteGroup,

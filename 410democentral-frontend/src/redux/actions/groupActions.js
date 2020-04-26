@@ -54,7 +54,7 @@ export const fetchGroups = () => {
 			data = [...data, {
 				_id: "My Code",
 				isInstructor: false,
-				adminMode: false
+				adminMode: false,
 			}];
 
 			for (let i = 0; i < data.length; i++) {

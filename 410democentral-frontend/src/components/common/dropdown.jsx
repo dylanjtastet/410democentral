@@ -53,8 +53,15 @@ const Dropdown = ({fetchState, groups, activeGroup, fetchGroups, setActiveGroup}
             <div className="dropdown-menu" id="dropdown-menu" role="menu">
 				<div className="dropdown-content">
                     {groups.map(function(group, index) {
-                        return <Courseselect key={index} group={group}
-                            setActiveGroup={setActiveGroup} setOpened={setOpened}/>
+                        return (
+                            (group) ?
+                            <Courseselect key={index} group={group}
+                                setActiveGroup={setActiveGroup} setOpened={setOpened}/>
+                            :
+                            <span></span>
+                        )
+                        
+                        
                     })}
 
                     <a className="dropdown-item pointer" onClick={handleShowAddCourse} href="#dropdown-join-course">

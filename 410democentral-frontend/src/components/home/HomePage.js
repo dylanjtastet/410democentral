@@ -18,7 +18,7 @@ const HomePage = ({
     groupFetchState,
     group,
     fetchGroups,
-    setGroupViewMode
+    setGroupViewMode,
 }) => {
 
     const [graph, setGraph] = useState({show: false, data: []});
@@ -26,6 +26,7 @@ const HomePage = ({
     const handleModeToggle = (event, newState) => {
         setGroupViewMode(group.name, newState);
     }
+    console.log("hello")
     console.log(group);
     if (typeof group === "undefined" || groupFetchState.inProgress) {
         return (<div></div>);

@@ -306,9 +306,9 @@ app.get('/addInstructor', async function(req, res, next){
     try{
         if(req.cookies.sessid){
             if(await auth.isRootSession(req.cookies.sessid)){
-                await db.addUserToGroup(req.query.username, req.query.group);
+                await db.addUserToGroup(req.query.username, req.query.groupid);
                 await db.makeUserInstructorFor(req.query.username, req.query.groupid);
-                
+
                 res.sendStatus(200);
             }
             else{
@@ -371,13 +371,19 @@ app.get("/allgroups", async function(req, res, next){
             let user = await db.getUserForSession(req.cookies.sessid);
             if (await auth.isRootSession(req.cookies.sessid)) {
                 groups = await db.getAllGroups();
+                groups = await Promise.all(groups.map(async group => ({
+                    _id: group._id,
+                    isInstructor: (await auth.checkGroupPermissions(user, group._id)),
+                    instructors: group.instructors
+                })));
             } else {
                 groups = user.groups;
+                groups = await Promise.all(groups.map(async name => ({
+                    _id: name,
+                    isInstructor: (await auth.checkGroupPermissions(user, name))
+                })));
             }
-            groups = await Promise.all(groups.map(async name => ({
-                _id: name,
-                isInstructor: (await auth.checkGroupPermissions(user, name) || await auth.isRootSession(req.cookies.sessid))
-            })));
+            
             res.send(groups);
         }
         else {

@@ -70,6 +70,7 @@ const groups = (state = initState, action) => {
 					gs[g._id] = {
 						name: g._id,
 						isInstructor: g.isInstructor,
+				        instructors: g.instructors,
 						adminMode: false
 					};
 					return gs;
@@ -112,7 +113,7 @@ const groups = (state = initState, action) => {
 				groups: {
 					...state.groups,
 					[name] : {
-						_id: name,
+						name: name,
 						// Always true here b/c this can only be done
 						// from root acct
 						isInstructor: true,
