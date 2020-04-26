@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState} from 'react';
 import {connect} from 'react-redux';
 
 // Redux imports
@@ -21,6 +21,8 @@ const HomePage = ({
     setGroupViewMode
 }) => {
 
+    const [graph, setGraph] = useState({show: false, data: []});
+
     const handleModeToggle = (event, newState) => {
         setGroupViewMode(group.name, newState);
     }
@@ -35,7 +37,7 @@ const HomePage = ({
         <div>
             <div className="columns">
                 <div className="column is-one-fifth section">
-                    <CategoryMenu isAdmin={group.adminMode} />
+                    <CategoryMenu isAdmin={group.adminMode} setGraph={setGraph}/>
                 </div>
                 <div className="column section">
                     <div className="content-header level">
@@ -62,7 +64,7 @@ const HomePage = ({
                     {group.adminMode ? 
                         <AdminContent />
                     :
-                        <UserContent />
+                        <UserContent graph={graph} setGraph={setGraph} />
                     }
                 </div>
             </div>

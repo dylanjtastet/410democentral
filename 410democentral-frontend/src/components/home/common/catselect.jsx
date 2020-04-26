@@ -9,7 +9,8 @@ const Catselect = ({
   cat,
   isAdmin,
   startOpen,
-  deleteCategory
+  deleteCategory,
+  setGraph
 }) => {
   const [opened, setOpened] = useState(startOpen);
   
@@ -49,12 +50,12 @@ const Catselect = ({
             {cat.children.map((item, i) => {
               if (item.type === "category") {
                 return (
-                  <Catselect cat={item} isAdmin={isAdmin} startOpen={false} key={i} />
+                  <Catselect cat={item} isAdmin={isAdmin} startOpen={false} key={i} setGraph={setGraph}/>
                   )
               }
               else if (item.type === "sample") {
                 return (
-                  <Codeselect progID={item._id} progName={item.name} isAdmin={isAdmin} parent={cat._id} key={i} />
+                  <Codeselect progID={item._id} progName={item.name} isAdmin={isAdmin} parent={cat._id} key={i} setGraph={setGraph}/>
                   )
               } else {
                 return undefined; // could also do some error handling

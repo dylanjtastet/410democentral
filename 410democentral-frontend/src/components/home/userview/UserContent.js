@@ -36,7 +36,8 @@ function Content(props) {
 
   console.error(props.activeProgId);
 
-  const [graph, setGraph] = useState({show: false, data: []});
+  const graph = props.graph;
+  const setGraph = props.setGraph;
   
   const [showCopyModal, setShowCopyModal] = useState(false);
 

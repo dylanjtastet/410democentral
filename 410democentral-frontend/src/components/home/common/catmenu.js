@@ -63,14 +63,14 @@ function CategoryMenu({
 								if (item.type === "category") {
 									return (
 										<div key={j}>											
-											<Catselect cat={item} isAdmin={isAdmin} startOpen={true} key={j} />											
+											<Catselect cat={item} isAdmin={isAdmin} startOpen={true} key={j} setGraph={setGraph}/>											
 										</div>
 										)
 								}
 								else if (item.type === "sample") {
 									return (
 										<div key={j}>				
-											<Codeselect progID={item._id} progName={item.name} isAdmin={isAdmin} parent={groupcat._id} key={j} />	
+											<Codeselect progID={item._id} progName={item.name} isAdmin={isAdmin} parent={groupcat._id} key={j} setGraph={setGraph}/>	
 										</div>
 										)
 								} else {

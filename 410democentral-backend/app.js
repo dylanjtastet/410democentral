@@ -308,6 +308,7 @@ app.get('/addInstructor', async function(req, res, next){
             if(await auth.isRootSession(req.cookies.sessid)){
                 await db.addUserToGroup(req.query.username, req.query.group);
                 await db.makeUserInstructorFor(req.query.username, req.query.groupid);
+                
                 res.sendStatus(200);
             }
             else{

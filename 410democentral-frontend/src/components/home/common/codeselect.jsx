@@ -11,7 +11,8 @@ const Codeselect = ({
     activeProgId,
     fetchProgram,
     deleteProgram,
-    setActiveProgram
+    setActiveProgram,
+    setGraph
 }) => {
 
     let background;
@@ -26,6 +27,7 @@ const Codeselect = ({
         // If equality check isn't performed first, infinite
         // re-render occurs. I'm not sure why.
         if (progID !== activeProgId) {
+            setGraph({show: false, data: []})
             fetchProgram(progID);
             setActiveProgram(progID);
         }
