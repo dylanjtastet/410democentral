@@ -1,101 +1,96 @@
-//Category: Binary heap
-//Desc: Generates a basic binary heap from a randomly generated array.
+// Category: Binary heap
+// Desc: Generates a basic binary heap from a randomly generated array.
 "use strict";
 
 myMain();
 
 function myMain() {
-  var nums= [21,32,-19,4,71,-3,17,0,8,11,-18,27,54,-101,-9,62];
-  
+  var nums = [21, 32, -19, 4, 71, -3, 17, 0, 8, 11, -18, 27, 54, -101, -9, 62];
   var hh = makeNewHeap();
-  alert("new heap size: "+ hh.size());
-  alert("minimum item: "+hh.getMin());  // expect nothing to be there
-  
+
   // now load a bunch of elements into the new heap
   // this is not the special "build"
   // this is simulating items coming to the be added over time,
   // one at a time
-  for (var i=0; i<nums.length; i++) {  
+  for (var i = 0; i < nums.length; i++) {
     // the heap starts as a valid heap
     hh.insert(nums[i]); // after this is done, the heap is still a valid heap
   }
-  alert("heap size: "+hh.size());
+  console.log("heap size: " + hh.size());
   hh.print();
-  
-  alert("min: "+hh.getMin()); 
-  hh.delMin();  
-  alert("heap size after a delMin op: "+hh.size());
-  hh.print();  
+
+  console.log("min: " + hh.getMin());
+  hh.delMin();
+  console.log("heap size after a delMin op: " + hh.size());
+  hh.print();
 }
 
 function makeNewHeap() {
   // constructor for a min heap
   var heap = {
-    elts: [-Infinity],  // load bignum into elt 0, slot 0 not used
-    root:1,             // slot 1 is always root
-    last:0,             // slot last always holds last val used in array elts
-    
-    LC:     function (n) { return 2*n;             }, // slot num
-    RC:     function (n) { return (2*n)+1;         }, // slot num
-    PN:     function (n) { return Math.floor(n/2); }, // slot num
-    LCV:    function (n) { return this.elts[this.LC(n)]; },  // element val
-    RCV:    function (n) { return this.elts[this.RC(n)]; },  // element val
-    PNV:    function (n) { return this.elts[this.PN(n)]; },  // element val
+    elts: [-Infinity],   // load bignum into elt 0, slot 0 not used
+    root: 1,             // slot 1 is always root
+    last: 0,             // slot last always holds last val used in array elts
 
-    size:   function ( ) { return this.last;       }, // num vals stored
-    
-    print:  function ( ) { alert("heap elts: "+ this.elts.slice(1)); },
+    LC: function (n) { return 2 * n; }, // slot num
+    RC: function (n) { return (2 * n) + 1; }, // slot num
+    PN: function (n) { return Math.floor(n / 2); }, // slot num
+    LCV: function (n) { return this.elts[this.LC(n)]; },  // element val
+    RCV: function (n) { return this.elts[this.RC(n)]; },  // element val
+    PNV: function (n) { return this.elts[this.PN(n)]; },  // element val
 
-    getMin: function ( ) { 
-      if (this.size()===0) return NaN;
-      return this.elts[this.root]; 
+    size: function () { return this.last; }, // num vals stored
+
+    print: function () { console.log("heap elts: " + this.elts.slice(1)); },
+
+    getMin: function () {
+      if (this.size() === 0) return NaN;
+      return this.elts[this.root];
     },
-    
-    insert: function (pri) { 
+
+    insert: function (pri) {
       this.last++;
       this.elts[this.last] = pri;
-      var n=this.last;
-      var p=this.PN(n);
+      var n = this.last;
+      var p = this.PN(n);
       var temp;
-      while ( (p!==0) && (pri<this.elts[p])) {
-        temp=this.elts[n]; this.elts[n]=this.elts[p]; this.elts[p]=temp;
-        n=p;
-        p=this.PN(n);
+      while ((p !== 0) && (pri < this.elts[p])) {
+        temp = this.elts[n]; this.elts[n] = this.elts[p]; this.elts[p] = temp;
+        n = p;
+        p = this.PN(n);
       }
     },
-    
-    delMin: function () { 
-      if (this.size()===0) return;
-      if (this.size()===1) {
-        this.elts[this.root]=null; this.last--; this.elts.length--;
+
+    delMin: function () {
+      if (this.size() === 0) return;
+      if (this.size() === 1) {
+        this.elts[this.root] = null; this.last--; this.elts.length--;
         return;
       }
       this.elts[this.root] = this.elts[this.last];
-      this.elts[this.last]=null; 
+      this.elts[this.last] = null;
       this.last--;
       this.elts.length--;  // javascript specific trick for arrays
       // bubble down from root
-      var temp, done=false;
-      var n=this.root, c=0;
-      while(!done) { 
-        if (this.isLeaf(n)) { done=true; }
+      var temp, done = false;
+      var n = this.root, c = 0;
+      while (!done) {
+        if (this.isLeaf(n)) { done = true; }
         else {
-          if (this.hasOnlyLC(n)) { c = this.LC(n); } 
-          else { c = (this.LCV(n) < this.RCV(n)) ? this.LC(n) : this.RC(n) ; }
-          if (this.elts[n]>this.elts[c]) {
-            temp=this.elts[c]; this.elts[c]=this.elts[n]; this.elts[n]=temp;
+          if (this.hasOnlyLC(n)) { c = this.LC(n); }
+          else { c = (this.LCV(n) < this.RCV(n)) ? this.LC(n) : this.RC(n); }
+          if (this.elts[n] > this.elts[c]) {
+            temp = this.elts[c]; this.elts[c] = this.elts[n]; this.elts[n] = temp;
             n = c;
-          } 
-          else { done=true; }
-        }  
-      }      
+          }
+          else { done = true; }
+        }
+      }
     },
-    
-    isLeaf:    function (n) { return ( this.LC(n)>this.last && this.RC(n)>this.last ); },
-    hasOnlyLC: function (n) { return ( this.RC(n)>this.last && this.LC(n)<=this.last ); }   
+
+    isLeaf: function (n) { return (this.LC(n) > this.last && this.RC(n) > this.last); },
+    hasOnlyLC: function (n) { return (this.RC(n) > this.last && this.LC(n) <= this.last); }
   }
 
-  return heap;    
+  return heap;
 }
-
-
