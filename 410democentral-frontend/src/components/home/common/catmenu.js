@@ -39,12 +39,6 @@ function CategoryMenu({
 		groupdir = dir[activeGroup._id];
 	}
 
-	console.log(activeGroup)
-
-	function generateMenuList(groupcat) {
-
-	}
-
 	return (
 		<div className="container choices">
 			{groupdir.filter((groupcat) => {
