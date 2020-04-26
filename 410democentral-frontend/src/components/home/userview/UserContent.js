@@ -155,11 +155,15 @@ function Content(props) {
 
         {graph.show ?
         <div className="container columns">
+              {
+                /*
                 <div className="column is-2"> 
                     <p>
                         <button className="button runbutton">Evaluate</button>
                     </p>
                 </div>
+                */
+              }
                 
                 <div className="column">
                   <Graphbox data={graph.data} />

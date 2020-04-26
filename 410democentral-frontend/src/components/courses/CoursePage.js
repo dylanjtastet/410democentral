@@ -7,13 +7,16 @@ import Instructoradd from './instructoradd.jsx'
 import {connect} from 'react-redux';
 
 // Redux imports
-import {fetchGroups,setActiveGroup,createGroup,deleteGroup, addInstructorToGroup, removeInstructorFromGroup} from '../../redux/actions/groupActions';
+import {fetchGroups, createGroup, deleteGroup, addInstructorToGroup, removeInstructorFromGroup} from '../../redux/actions/groupActions';
 
-const CoursePage = ({fetchState, groups, activeGroup, fetchGroups, setActiveGroup, createGroup, deleteGroup, addInstructorToGroup, removeInstructorFromGroup}) => {
+const CoursePage = ({fetchState, groups, fetchGroups, setActiveGroup, createGroup, deleteGroup, addInstructorToGroup, removeInstructorFromGroup}) => {
     useEffect(() => {
         fetchGroups();
-        setActiveGroup("")
-     }, [fetchGroups, setActiveGroup]);
+        setCourse("");
+        setAdding(false);
+     }, [fetchGroups, createGroup, deleteGroup, addInstructorToGroup, removeInstructorFromGroup]);
+
+
 
     const [course, setCourse] = useState("");
     const [adding, setAdding] = useState(false);
@@ -50,6 +53,7 @@ const CoursePage = ({fetchState, groups, activeGroup, fetchGroups, setActiveGrou
 
     const handleDelete = async function() {
         await deleteGroup(course);
+        setCourse("")
     }
 
     const addInstructor = async function(group, instructor) {
@@ -173,4 +177,4 @@ const mapStateToProps = state => ({
     removeInstructorFromGroup: state.groups.removeInstructorFromGroup,
 });
 
-export default connect(mapStateToProps, {fetchGroups, setActiveGroup, createGroup, deleteGroup, addInstructorToGroup, removeInstructorFromGroup})(CoursePage);
+export default connect(mapStateToProps, {fetchGroups, createGroup, deleteGroup, addInstructorToGroup, removeInstructorFromGroup})(CoursePage);

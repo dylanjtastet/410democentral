@@ -115,6 +115,7 @@ export const createGroup = name => {
 		})
 		.then(res => {
 			dispatch(createGroupSuccess(name));
+			dispatch(fetchGroups());
 		})
 		.catch(error => dispatch(createGroupFailure(error)));
 	};
@@ -266,7 +267,8 @@ export const deleteGroup = name => {
 			return res;
 		})
 		.then(res => {
-			dispatch(deleteGroupSuccess());
+			dispatch(deleteGroupSuccess(name));
+			dispatch(fetchGroups());
 		})
 		.catch(error => dispatch(deleteGroupFailure(error)));
 	};

@@ -110,7 +110,7 @@ const groups = (state = initState, action) => {
 				...state,
 				groupNames: [...state.groupNames, name],
 				groups: {
-					...state.cats,
+					...state.groups,
 					[name] : {
 						_id: name,
 						// Always true here b/c this can only be done
