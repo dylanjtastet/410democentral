@@ -9,32 +9,54 @@ import {
     finishEditing
 } from '../../../redux/actions/programActions';
 import {
-    createCategory
+    createCategory, fetchCategories
 } from '../../../redux/actions/categoryActions';
+
+import {
+    getCategoriesForActiveGroup
+} from '../../../redux/selectors/categorySelectors';
 
 import 'bulma/css/bulma.css';
 import '../../../../node_modules/@fortawesome/fontawesome-free/css/all.css'
 
 import {Controlled as CodeMirror} from 'react-codemirror2';
+import { getCategoriesForGroup } from '../../../redux/selectors/categorySelectors';
 
 function CodeEdit({
     showCodeModal,
     setShowCodeModal,
-    catIDs,
     cats,
+    activeProgId,
     program,
     group,
+    createCategory,
+    fetchCategories,
     addNewProgram,
     pushCurrentLocalChanges,
     editCheckpoint,
     performEdit,
     finishEditing
 }) {
-    const [cat, setCat] = useState("");
-    const [code2, setCode2] = useState("");
+
+    let isNewProgram = activeProgId === "";
+
+    /* Local state for storing input from the form prior to submission */
+
+    const [name, setName] = useState(isNewProgram ? "" : program.name);
+    const [cat, setCat] = useState(isNewProgram ? "" : program.category);
+
+    // Just to be safe, explicitly check for hiddenCode for now (don't want 
+    // to introduce regressions)
+    let initHiddenCode = "";
+    if (!isNewProgram && "hiddenCode" in program) {
+        initHiddenCode = program.hiddenCode;
+    }
+    const [hiddenCode, setHiddenCode] = useState(initHiddenCode);
+    
     const [newcat, setNewcat] = useState("");
     const [newparent, setNewparent] = useState("");
     const [fileName, setFileName] = useState("");
+
 
     let insert;
     if (showCodeModal) {
@@ -66,40 +88,62 @@ function CodeEdit({
         let flist = event.target.files;
         let code = await flist.item(0).text();
         if(flist.length > 0){
-            performEdit(code)
+            performEdit(code);
         }
+    }
+
+    const handleNewCatChange = event => {
+        event.preventDefault()
+        setNewcat(event.target.value);
     }
 
     const handleParentSelect = event => {
         setNewparent(event.target.value);
     }
 
-    const handleCatChange = event => {
-        event.preventDefault()
-        setNewcat(event.target.value);
-    }
-
     const handleCodeNameChange = function(event) {
-        console.log("rename program action not yet implemented.");
+        setName(event.target.value);
     }
 
-    const handleAddCode = event => {
-        console.log(program)
-        if (program._id === "") {
+    const handleSaveChanges = event => {
+        if (name === "" || cat === "") {
+            window.alert("Must select category and non-empty program name.");
+            return;
+        }
+        //console.log(program);
+        if (isNewProgram) {
             addNewProgram(
-                {name: program.name, code: program.localCode},
+                {name: name, code: program.localCode},
                 cat, group, false, true);
         }
         else {
-            pushCurrentLocalChanges();
+            pushCurrentLocalChanges(
+                cat, // category ID
+                group, // group ID (i.e. name, currently)
+                { // program updates (in addition to local code) to go in req body
+                    name: name,
+                    hiddenCode: hiddenCode
+                }
+            );
             finishEditing();
+            fetchCategories();
         }
         setShowCodeModal(false);
     }
 
-    const handleAddCat = function(event) {
+    const handleAddCat = event => {
         // TODO add logic to check for result of createCategory
-        createCategory(newcat, newparent, "dummy group");
+        if (newcat === "") {
+            window.alert("Cannot create category with empty name.");
+            return;
+        }
+        if (newparent === "") {
+            window.alert("Must select a valid parent for the new category.");
+            return;
+        }        
+        createCategory(newcat, newparent, group);
+        // todo: get newID back from createCategory so that we can set
+        // setCat to newID (currently this doesn't work)
         setCat(newcat);
         setNewcat("");
         setNewparent("");
@@ -121,8 +165,8 @@ function CodeEdit({
                             <div className="select">
                                 <select value={cat} onChange={handleCatSelect}>
                                     <option value="">None selected</option>
-                                    {catIDs.map((catID, index) => {
-                                        return <option value={catID} key={index}>{cats[catID].name}</option>
+                                    {cats.map((cat, index) => {
+                                        return <option value={cat.id} key={index}>{cat.name}</option>
                                     })}
                                 </select>
                             </div>
@@ -132,7 +176,7 @@ function CodeEdit({
                             <label>Create new category</label>
                             <div className="field has-addons">    
                                 <div className="control">
-                                    <input className="input" type="text" placeholder="e.g. - Sorting" value={newcat} onChange={handleCatChange}></input>
+                                    <input className="input" type="text" placeholder="e.g. - Sorting" value={newcat} onChange={handleNewCatChange}></input>
                                 </div>
                                 <div className="control">
                                     {(newcat === "") ?
@@ -147,8 +191,8 @@ function CodeEdit({
                                 <div className="select">
                                     <select value={newparent} onChange={handleParentSelect}>
                                         <option value="">None selected</option>
-                                        {catIDs.map((catID, index) => {
-                                            return <option value={catID} key={index}>{cats[catID].name}</option>
+                                        {cats.map((cat, index) => {
+                                            return <option value={cat.id} key={index}>{cat.name}</option>
                                         })}
                                     </select>
                                 </div>
@@ -158,7 +202,11 @@ function CodeEdit({
 
                     <div className="bottommargin">
                         <label className="subtitle paraminputs">Sample Name</label>  
+                        {isNewProgram ?
                         <input className="input" type="text" placeholder="e.g. - Bubble Sort" onChange={handleCodeNameChange}></input>
+                        :
+                        <input className="input" type="text" value={name} onChange={handleCodeNameChange}></input>
+                        }
                     </div>
 
                     {program.editState.editing ?
@@ -174,8 +222,6 @@ function CodeEdit({
                                         lineNumbers: true
                                     }}
                                     onBeforeChange={(editor, data, value) => {
-                                    // commented out due to current implementation
-                                    // need to revisit structure here
                                         performEdit(value);
                                     }}
                                     onChange={(editor, data, value) => {
@@ -186,16 +232,14 @@ function CodeEdit({
                             <label className="subtitle">Benchmark (optional)</label>
                             <div className="bottommargin benchcode paraminputs">
                                 <CodeMirror
-                                    value={code2}
+                                    value={hiddenCode}
                                     options={{
                                         mode: 'javascript',
                                         theme: 'neo',
                                         lineNumbers: true
                                     }}
                                     onBeforeChange={(editor, data, value) => {
-                                    // commented out due to current implementation
-                                    // need to revisit structure here
-                                        setCode2(value);
+                                        setHiddenCode(value);
                                     }}
                                     onChange={(editor, data, value) => {
                                     }}
@@ -238,7 +282,7 @@ function CodeEdit({
 
                 </section>
                 <footer className="modal-card-foot">
-                    <button className="button is-success" onClick={handleAddCode}>Save Code</button>
+                    <button className="button is-success" onClick={handleSaveChanges}>Save Changes</button>
                     <button className="button" onClick={handleCancel}>Cancel</button>
                 </footer>
             </div>
@@ -248,13 +292,15 @@ function CodeEdit({
 
 
 const mapStateToProps = state => ({
-    catIDs: state.categories.catIDs,
-    cats: state.categories.cats,
+    cats: getCategoriesForActiveGroup(state),
+    activeProgId: state.programs.activeProgId,
     program: state.programs.progs[state.programs.activeProgId],
     group: state.groups.activeGroup
 });
 
 export default connect(mapStateToProps, {
+    createCategory,
+    fetchCategories,
     addNewProgram,
     pushCurrentLocalChanges,
     editCheckpoint,

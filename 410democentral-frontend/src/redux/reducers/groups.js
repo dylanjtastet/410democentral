@@ -70,8 +70,8 @@ const groups = (state = initState, action) => {
 					gs[g._id] = {
 						name: g._id,
 						isInstructor: g.isInstructor,
-				        instructors: g.instructors,
-						adminMode: false
+						adminMode: false,
+						members: g.isInstructor ? g.members : []
 					};
 					return gs;
 				}, {}),

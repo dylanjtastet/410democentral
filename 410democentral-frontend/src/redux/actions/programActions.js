@@ -80,9 +80,8 @@ export const pushProgramBegin = id => ({
 	payload: {id: id}
 });
 
-export const pushProgramSuccess = (id, codeSent) => ({
-	type: PUSH_PROGRAM_SUCCESS,
-	payload: {id: id, codeSent: codeSent}
+export const pushProgramSuccess = () => ({
+	type: PUSH_PROGRAM_SUCCESS
 });
 
 export const pushProgramFailure = error => ({
@@ -90,44 +89,63 @@ export const pushProgramFailure = error => ({
 	payload: {error: error}
 });
 
-export const pushLocalChanges = id => {
+export const pushLocalChanges = (
+	id,
+	catID = null,
+	group = null,
+	progUpdates = {}
+) => {
 	return (dispatch, getState) => {
 		dispatch(pushProgramBegin(id));
 		// Not sure if this validation is best placed here or within the react components
 		if (id === null || id === "") {
 			dispatch(fetchProgramFailure(Error("Cannot push changes to program with null ID")));
 		}
+
 		let sampleURL = new URL("http://localhost:3009/sample");
 		console.log(id)
 		sampleURL.searchParams.append("sample", id);
+		if (catID !== null && catID !== "") {
+			sampleURL.searchParams.append("category", catID);
+		}
+		if (group !== null && group !== "") {
+			sampleURL.searchParams.append("group", group);
+		}
 
-		let name = getProgramNameFromID(getState(), id);
-		let locCode = getProgramLocalCodeFromID(getState(), id);
-
+			
 		fetch(sampleURL, {
 			credentials: "include",
 			method: "POST",
 			headers: {
 				"Content-Type" : "application/json"
 			},
-			body: JSON.stringify({name: name, code: locCode})
+			body: JSON.stringify({
+				...progUpdates,
+				code: getProgramLocalCodeFromID(getState(), id)
+			})
 		})
 		.then(res => {
 			if (!res.ok) throw Error(res.statusText);
 			return res;
 		})
 		.then(data => {
+			// Might as well always refresh the categories here
+			dispatch(fetchCategories());
 			dispatch(fetchProgram(id));
-			dispatch(pushProgramSuccess(id, locCode));
+			dispatch(pushProgramSuccess());
 			return data;
-		});
-		//.catch(error => dispatch(pushProgramFailure(error)));
+		})
+		.catch(error => dispatch(pushProgramFailure(error)));
 	};
 }
 
-export const pushCurrentLocalChanges = () => {
+export const pushCurrentLocalChanges = (
+	catID = null,
+	group = null,
+	progUpdates = {}
+) => {
 	return (dispatch, getState) => {
-		dispatch(pushLocalChanges(getActiveProgramID(getState())));
+		dispatch(pushLocalChanges(getActiveProgramID(getState()), catID, group, progUpdates));
 	};
 }
 
@@ -156,12 +174,13 @@ export const addNewProgram = (program, category, group, user, setCurrent) => {
 			dispatch(pushProgramSuccess(data.newId, program.code));
 			dispatch(fetchCategories());
 			if (setCurrent) {
+				console.log("data = " + data.newId);
 				dispatch(fetchProgram(data.newId));
 				dispatch(setActiveProgram(data.newId));
 			}
 			return data;
-		});
-		//.catch(error => dispatch(pushProgramFailure(error)));
+		})
+		.catch(error => dispatch(pushProgramFailure(error)));
 	};
 }
 
@@ -180,7 +199,7 @@ export const deleteProgramBegin = id => ({
 });
 
 export const deleteProgramSuccess = id => ({
-	type: PUSH_PROGRAM_SUCCESS,
+	type: DELETE_PROGRAM_SUCCESS,
 	payload: {id: id}
 });
 
@@ -191,7 +210,7 @@ export const deleteProgramFailure = error => ({
 
 export const deleteProgram = id => {
 	return (dispatch, getState) => {
-		dispatch(pushProgramBegin(id));
+		dispatch(deleteProgramBegin(id));
 		let sampleURL = new URL("http://localhost:3009/sample");
 
 		fetch(sampleURL, {
@@ -206,15 +225,14 @@ export const deleteProgram = id => {
 			if (!res.ok) throw Error(res.statusText);
 			return res;
 		})
-		.then(res => res.json())
-		.then(data => {
+		.then(res => {
 			dispatch(deleteProgramSuccess(id));
 			// Category tree includes stubs for each sample, so
 			// we need to refresh it here
-			//dispatch(fetchCategories());
-			return data;
-		})
-		.catch(error => dispatch(deleteProgramFailure(error)));
+			dispatch(fetchCategories());
+			return res;
+		});
+		//.catch(error => dispatch(deleteProgramFailure(error)));
 	};
 }
 

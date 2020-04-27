@@ -128,13 +128,13 @@ export const createCategory = (name, parent, group) => {
 	return dispatch => {
 		dispatch(createCategoryBegin());
 		let categoryURL = new URL("http://localhost:3009/category");
+		categoryURL.searchParams.append("name", name);
+		categoryURL.searchParams.append("parent", parent);
+		categoryURL.searchParams.append("group", group);
+
 		fetch(categoryURL, {
 			credentials: "include",
-			method: "POST",
-			headers: {
-				"Content-Type" : "application/json"
-			},
-			body: JSON.stringify({name: name, parent: parent, group: group})
+			method: "POST"
 		})
 		.then(res => {
 			if (!res.ok) throw Error(res.statusText);
@@ -145,7 +145,7 @@ export const createCategory = (name, parent, group) => {
 			dispatch(createCategorySuccess(data.newId, name, parent, group));
 			// Create function fetches tree after completion as
 			// it's easier to do so than try to place the node manually
-			dispatch(fetchCategoryTree());
+			dispatch(fetchCategories());
 			return data;
 		})
 		.catch(error => dispatch(createCategoryFailure(error)));
@@ -229,14 +229,13 @@ export const deleteCategory = id => {
 			if (!res.ok) throw Error(res.statusText);
 			return res;
 		})
-		.then(res => res.json())
-		.then(data => {
+		.then(res => {
 			dispatch(deleteCategorySuccess(id));
 			// Since a category deletion can lead to multiple other
 			// category + sample deletions, we do a full fetch afterwards
 			dispatch(fetchCategories());
-			return data;
-		})
-		.catch(error => dispatch(deleteCategoryFailure(error)));
+			return res;
+		});
+		//.catch(error => dispatch(deleteCategoryFailure(error)));
 	};
 }
