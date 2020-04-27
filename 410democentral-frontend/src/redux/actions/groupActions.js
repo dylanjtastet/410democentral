@@ -84,6 +84,23 @@ export const fetchGroups = () => {
 	};
 }
 
+export const fetchGroupNames = async () => {
+	let groupnameURL = new URL("http://localhost:3009/allgroupnames")
+	try {	
+		let res = await fetch(groupnameURL, {
+			credentials: "include"
+		})
+		if (!res.ok) throw Error(res.statusText);
+		let data = await res.json();
+		return data;
+
+	} catch (error) {
+		//Fix this
+		console.log(error)
+		return []
+	}
+}
+
 /* CREATING ACTIONS */
 
 export const createGroupBegin = () => ({

@@ -3,14 +3,21 @@ import {connect} from 'react-redux';
 import 'bulma/css/bulma.css';
 
 import {fetchGroups} from '../../redux/actions/groupActions';
-
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import TextField from '@material-ui/core/TextField';
 
 const Courseadd = (props) => {
+
     const [course, setCourse] = useState("");
 
-    const handleCourseChange = function(event) {
+    const handleCourseChange = (event,newValue) => {
         event.preventDefault()
-        setCourse(event.target.value)
+        console.log(newValue);
+        if (newValue) {
+            setCourse(newValue._id)
+        } else {
+            setCourse("")
+        }
     }
 
     const joinGroup = async function(event) {
@@ -40,10 +47,22 @@ const Courseadd = (props) => {
                         </button>
                     </header>
                     <section className="modal-card-body fix">
-                        <input className="input" type="text" placeholder="course name - e.g. Comp210" value={course} onChange={handleCourseChange}></input>
+                        <Autocomplete
+                            id="combo-box-demo"
+                            options={props.courseNames}
+                            getOptionLabel={(option) => option._id}
+                            style={{ width: 300 }}
+                            renderInput={(params) => <TextField {...params} label="choose course" variant="outlined" />}
+                            onChange={handleCourseChange}
+
+                        />
                     </section>
                     <footer className="modal-card-foot">
-                        <button className="button is-success" onClick={joinGroup}>Join Course</button>
+                        {(course !== "")?
+                            <button className="button is-success" onClick={joinGroup}>Join Course</button>
+                            :
+                            <button className="button is-static">Join Course</button>
+                        }
                     </footer>		   	
 
                 </div>

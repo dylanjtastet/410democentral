@@ -395,6 +395,35 @@ app.get("/allgroups", async function(req, res, next){
     }
 });
 
+//Edit this so that inGroup will be true or false depending on whether user is in group
+app.get("/allgroupnames", async function (req, res, next) {
+    try {
+        if (req.cookies.sessid) {
+            let groups;
+            let user = await db.getUserForSession(req.cookies.sessid);
+            groups = await db.getAllGroups();
+            groups = await Promise.all(groups.map(async group => {
+                let users = await db.getUsersInGroup(group._id);
+                let userids = users.map(user => user._id)
+                let inGroup;
+                inGroup = userids.includes(user._id);
+                return (
+                    {
+                        _id: group._id,
+                        inGroup: inGroup
+                    }
+                );
+            }
+            ));
+            res.send(groups)
+        } else {
+            res.sendStatus(403)
+        }
+    } catch (err) {
+        next(err);
+    }
+})
+
 app.get("/group", async function(req, res, next) {
     try {
         if (req.cookies.sessid) {
