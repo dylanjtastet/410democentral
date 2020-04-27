@@ -30,10 +30,15 @@ const CoursePage = ({fetchState, groups, fetchGroups, createGroup, deleteGroup, 
             setInstructor("")
 
             let instructors = [];
+            let members;
             let groupObject= groupObjects[course];
             console.log(groupObject);
-            if (groupObject.instructors) {
-              instructors = groupObject.instructors;
+            if (groupObject.members) {
+               members = groupObject.members;
+            }
+
+            for (let member of members) {
+              if (member.instructor) instructors.push(member.username)
             }
 
             setInstructors(instructors);
