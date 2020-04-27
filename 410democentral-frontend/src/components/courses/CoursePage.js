@@ -7,12 +7,11 @@ import Instructoradd from './instructoradd.jsx'
 import {connect} from 'react-redux';
 
 // Redux imports
-import {fetchGroups, createGroup, deleteGroup, addInstructorToGroup, removeInstructorFromGroup} from '../../redux/actions/groupActions';
+import {fetchGroups, createGroup, deleteGroup, addInstructorToGroup, removeInstructorFromGroup, setActiveGroup} from '../../redux/actions/groupActions';
 
-const CoursePage = ({fetchState, groups, fetchGroups, createGroup, deleteGroup, addInstructorToGroup, removeInstructorFromGroup, groupObjects}) => {
+const CoursePage = ({fetchState, groups, fetchGroups, createGroup, deleteGroup, addInstructorToGroup, removeInstructorFromGroup, groupObjects, setActiveGroup}) => {
     useEffect(() => {
         fetchGroups();
-        setCourse("");
         setAdding(false);
      }, [fetchGroups, createGroup, deleteGroup, addInstructorToGroup, removeInstructorFromGroup]);
 
@@ -28,7 +27,7 @@ const CoursePage = ({fetchState, groups, fetchGroups, createGroup, deleteGroup, 
     const selectCourse = function(course) {
         return () => {
             setCourse(course);
-            setAddingInstructor(false);
+            setInstructor("")
 
             let instructors = [];
             let groupObject= groupObjects[course];
@@ -38,6 +37,7 @@ const CoursePage = ({fetchState, groups, fetchGroups, createGroup, deleteGroup, 
             }
 
             setInstructors(instructors);
+            setAddingInstructor(false);
         }
     }
 
@@ -67,11 +67,13 @@ const CoursePage = ({fetchState, groups, fetchGroups, createGroup, deleteGroup, 
 
     const addInstructor = async function(group, instructor) {
         await addInstructorToGroup(group, instructor);
-        setAddingInstructor(false);
+
     }
 
     const removeInstructor = async function() {
          await removeInstructorFromGroup(course, instructor)
+         setInstructor("")
+         
     }
 
     return (
@@ -192,4 +194,4 @@ const mapStateToProps = state => ({
     removeInstructorFromGroup: state.groups.removeInstructorFromGroup,
 });
 
-export default connect(mapStateToProps, {fetchGroups, createGroup, deleteGroup, addInstructorToGroup, removeInstructorFromGroup})(CoursePage);
+export default connect(mapStateToProps, {fetchGroups, createGroup, deleteGroup, addInstructorToGroup, removeInstructorFromGroup, setActiveGroup})(CoursePage);

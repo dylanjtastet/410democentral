@@ -4,7 +4,8 @@ import 'bulma/css/bulma.css';
 import Catselect from './catselect.jsx';
 import Codeselect from './codeselect.jsx';
 
-import { fetchCategories } from '../../../redux/actions/categoryActions'
+import { fetchCategories, deleteCategory } from '../../../redux/actions/categoryActions'
+import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
 
 function CategoryMenu({
 	setGraph,
@@ -12,7 +13,9 @@ function CategoryMenu({
 	catFetchState,
 	dir,
 	activeGroup,
-	fetchCategories
+	fetchCategories,
+	deleteCategory,
+
 }) {
 	useEffect(() => {
 		fetchCategories();
@@ -39,9 +42,20 @@ function CategoryMenu({
 		groupdir = dir[activeGroup._id];
 	}
 
+	const handleCatDelete = (id) => {
+		return () => {
+			if (window.confirm(
+			"Are you sure? Deleting a category deletes all " 
+			+ "subcategories and the samples contained within.")) {
+			deleteCategory(id);
+			}
+		}
+	  }
+
 	return (
 		<div className="container choices">
 			{groupdir.filter((groupcat) => {
+				console.log(groupcat)
 				if (groupcat.parent != null) {
 					console.warn("Top-level category has non-null parent.");
 				}
@@ -50,9 +64,24 @@ function CategoryMenu({
 				if (groupcat.type === "category") {
 					return (
 						<aside className="menu" key={i}>
-							<p className="menu-label titletext">
-								{groupcat.name}
-							</p>
+							
+							<div>
+								{isAdmin?
+								<div>
+									<ContextMenuTrigger id={groupcat._id}>
+										<a className="menu-label titletext">{groupcat.name}</a>
+									</ContextMenuTrigger>
+
+									<ContextMenu id={groupcat._id}>
+											<MenuItem onClick={handleCatDelete(groupcat._id)}>
+													<a href="#deletebutton" className="box">Delete</a>
+											</MenuItem>
+									</ContextMenu>
+								</div>
+								:
+								<a className="menu-label titletext">{groupcat.name}</a>
+								}
+							</div>
 							<ul className="menu-list">
 								{
 									groupcat.children.map((item, j) => {
@@ -105,4 +134,4 @@ const mapStateToProps = state => ({
 });
 
 
-export default connect(mapStateToProps, { fetchCategories })(CategoryMenu);
+export default connect(mapStateToProps, { fetchCategories, deleteCategory })(CategoryMenu);
