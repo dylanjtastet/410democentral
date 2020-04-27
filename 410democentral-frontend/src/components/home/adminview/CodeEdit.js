@@ -23,6 +23,7 @@ function CodeEdit({
     catIDs,
     cats,
     program,
+    group,
     addNewProgram,
     pushCurrentLocalChanges,
     editCheckpoint,
@@ -33,7 +34,7 @@ function CodeEdit({
     const [code2, setCode2] = useState("");
     const [newcat, setNewcat] = useState("");
     const [newparent, setNewparent] = useState("");
-
+    const [fileName, setFileName] = useState("");
 
     let insert;
     if (showCodeModal) {
@@ -60,6 +61,15 @@ function CodeEdit({
         setCat(event.target.value);
     }
 
+    const handleFileSelect = async (event) => {
+        setFileName(event.target.value);
+        let flist = event.target.files;
+        let code = await flist.item(0).text();
+        if(flist.length > 0){
+            performEdit(code)
+        }
+    }
+
     const handleParentSelect = event => {
         setNewparent(event.target.value);
     }
@@ -76,7 +86,11 @@ function CodeEdit({
 
     const handleAddCode = event => {
         console.log(program)
-        if (program._id === "") addNewProgram(program, cat, true);
+        if (program._id === "") {
+            addNewProgram(
+                {name: program.name, code: program.localCode},
+                cat, group, false, true);
+        }
         else {
             pushCurrentLocalChanges();
             finishEditing();
@@ -145,7 +159,7 @@ function CodeEdit({
 
                     <div className="bottommargin">
                         <label className="subtitle paraminputs">Sample Name</label>  
-                        <input className="input" type="text" placeholder="e.g. - Bubble Sort" value={program.name} onChange={handleCodeNameChange}></input>
+                        <input className="input" type="text" placeholder="e.g. - Bubble Sort" onChange={handleCodeNameChange}></input>
                     </div>
 
                     {program.editState.editing ?
@@ -204,7 +218,7 @@ function CodeEdit({
                                 <div className="column is-one-third">
                                     <div className="file">
                                         <label className="file-label">
-                                            <input className="file-input" type="file" name="resume"/>
+                                            <input className="file-input" type="file" name="codeFile" onChange={handleFileSelect} multiple={false}/>
                                             <span className="file-cta">
                                             <span className="file-icon">
                                                 <i className="fas fa-upload"></i>
@@ -215,6 +229,7 @@ function CodeEdit({
                                             </span>
                                         </label>
                                     </div>
+                                    <span>{fileName}</span>
                                 </div>
                                 <div className="column"></div>
                             </div>
@@ -236,7 +251,8 @@ function CodeEdit({
 const mapStateToProps = state => ({
     catIDs: state.categories.catIDs,
     cats: state.categories.cats,
-    program: state.programs.progs[state.programs.activeProgId]
+    program: state.programs.progs[state.programs.activeProgId],
+    group: state.groups.activeGroup
 });
 
 export default connect(mapStateToProps, {
