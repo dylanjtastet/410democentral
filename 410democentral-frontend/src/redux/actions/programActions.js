@@ -19,8 +19,10 @@ import {
 import {
 	getActiveProgramID,
 	getProgramFromID,
+	getProgramNameFromID,
 	getProgramLocalCodeFromID
 } from '../selectors/programSelectors';
+import { fetchCategories } from './categoryActions';
 
 /* FETCHING ACTIONS */
 
@@ -47,6 +49,7 @@ export const fetchProgram = (id) => {
 		}
 		let sampleURL = new URL("http://localhost:3009/sample");
 		sampleURL.searchParams.append("id", id);
+		console.log("here");
 		fetch(sampleURL, {
 			credentials: "include"
 		})
@@ -91,15 +94,14 @@ export const pushLocalChanges = id => {
 	return (dispatch, getState) => {
 		dispatch(pushProgramBegin(id));
 		// Not sure if this validation is best placed here or within the react components
-		if (id === null) {
+		if (id === null || id === "") {
 			dispatch(fetchProgramFailure(Error("Cannot push changes to program with null ID")));
 		}
 		let sampleURL = new URL("http://localhost:3009/sample");
 		console.log(id)
-		sampleURL.searchParams.append("id", id);
+		sampleURL.searchParams.append("sample", id);
 
-		let prog = getProgramFromID(getState(), id);
-		const {code: remoteCode, ...progInfo} = prog;
+		let name = getProgramNameFromID(getState(), id);
 		let locCode = getProgramLocalCodeFromID(getState(), id);
 
 		fetch(sampleURL, {
@@ -108,18 +110,18 @@ export const pushLocalChanges = id => {
 			headers: {
 				"Content-Type" : "application/json"
 			},
-			body: JSON.stringify({code: locCode, ...progInfo})
+			body: JSON.stringify({name: name, code: locCode})
 		})
 		.then(res => {
 			if (!res.ok) throw Error(res.statusText);
 			return res;
 		})
-		.then(res => res.json())
 		.then(data => {
+			dispatch(fetchProgram(id));
 			dispatch(pushProgramSuccess(id, locCode));
 			return data;
-		})
-		.catch(error => dispatch(pushProgramFailure(error)));
+		});
+		//.catch(error => dispatch(pushProgramFailure(error)));
 	};
 }
 
@@ -130,6 +132,7 @@ export const pushCurrentLocalChanges = () => {
 }
 
 export const addNewProgram = (program, category, group, user, setCurrent) => {
+	console.log("test");
 	return dispatch => {
 		dispatch(pushProgramBegin(null));
 		let sampleURL = new URL("http://localhost:3009/sample");
@@ -151,11 +154,14 @@ export const addNewProgram = (program, category, group, user, setCurrent) => {
 		.then(res => res.json())
 		.then(data => {
 			dispatch(pushProgramSuccess(data.newId, program.code));
-			dispatch(fetchProgram(data.newId));
-			if (setCurrent) dispatch(setActiveProgram(data.newId));
+			dispatch(fetchCategories());
+			if (setCurrent) {
+				dispatch(fetchProgram(data.newId));
+				dispatch(setActiveProgram(data.newId));
+			}
 			return data;
-		})
-		.catch(error => dispatch(pushProgramFailure(error)));
+		});
+		//.catch(error => dispatch(pushProgramFailure(error)));
 	};
 }
 

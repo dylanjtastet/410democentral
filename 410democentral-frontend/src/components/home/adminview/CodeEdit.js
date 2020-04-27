@@ -83,7 +83,6 @@ function CodeEdit({
         console.log("rename program action not yet implemented.");
     }
 
-
     const handleAddCode = event => {
         console.log(program)
         if (program._id === "") {

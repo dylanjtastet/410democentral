@@ -32,10 +32,13 @@ require('codemirror/mode/javascript/javascript');
 
 const evalWorker = new WorkerWrapper(worker_script);
 
+// The following const's are a convenience for checking view/edit mode
+const MODE_VIEWING = "MODE_VIEWING";
+const MODE_EDITING = "MODE_EDITING";
+
 function Content(props) {
 
-  console.error(props.activeProgId);
-
+  /* Local state (react hooks) */
   const graph = props.graph;
   const setGraph = props.setGraph;
   
@@ -46,96 +49,147 @@ function Content(props) {
   // log array for console feed
   const [logs, setLogs] = useState([]);
 
+  // iframe specific (uncomment for iframes)
+  /*
   // flag for code sandbox to indicate that code should be run
   const [pendingRun, setPendingRun] = useState(false);
+  */
 
-  function sendRun(){
-      evalWorker.postMessage({type: "EVAL_ALL", sample: props.program.localCode});
-  }
-
-  const handleEditToggle = (event, newState) => {
-    if (newState === props.program.editState.editing) return;
-    if (newState) {
-      console.log("yeet");
-      props.editCheckpoint();
-    }
-    else props.finishEditing();
-  }
-
-  //TODO: Clear content when activeGroup changes
-
+  /* Early short-circuit returns */
+  // Some early short-circuits to avoid further issues if/when state isn't defined
+  
+  // Might be commented out loading state bc leads to flickers every time a new program, group, etc is loaded
+  // Can uncomment if any issues arise, or (in the far future) have a nice UI loading indicator
+  
   if (props.progFetchState.inProgress) {
     return (<div className="container contentbox">Loading program...</div>);
-  } else if (props.progFetchState.error !== null) {
+  }
+  if (props.progFetchState.error !== null) {
     return (
       <div className="container contentbox">
         Error loading program: {props.progFetchState.error.message}
       </div>);
   }
 
+  /* Other local declarations */
+
+  // Some convenient local decls derived from redux state
+  let editing = props.program.editState.editing;
+  let hasEdits = props.program.editState.hasEdits;
+  let canPushEdits = props.program.isEditable;
+  let editorMode, code;
+  if (editing) {
+    code = props.program.localCode;
+  } else {
+    code = props.program.remoteCode;
+  }
+
+  let codeMirrorOptions = {
+    mode: 'javascript',
+    theme: 'material',
+    lineNumbers: true,
+    readOnly: !editing
+  }
+  
+  /* Event Handlers */
+
+  function sendRun(){
+    let fullCode = code;
+    if ("hiddenCode" in props.program) {
+      fullCode += "\n" + props.program.hiddenCode;
+    }
+    evalWorker.postMessage({type: "EVAL_ALL", sample: fullCode});
+  }
+
+  const handleEditToggle = (event, newState) => {
+    if (newState === editing) return;
+    if (newState) {
+      props.editCheckpoint();
+    }
+    else props.finishEditing();
+  }
+
+  const saveChanges = (event) => {
+    console.log("Saving?");
+    props.pushCurrentLocalChanges();
+  }
+
+
+  const reloadCode = (event) => {
+    props.fetchActiveProgram();
+    if (editing) {
+      props.checkoutRemoteCode();
+    }
+  }
+  
+  /* Main logic */
+
+  //TODO: Clear content when activeGroup changes
+
+
+
   return (
     <div className="container contentbox">
         {/*<CodeSandbox code={props.program.localCode} pendingRun={pendingRun} setPendingRun={setPendingRun} 
           setGraph={setGraph} setConsoleBuffer={setConsoleBuffer} />*/}
 
-        <ToggleButtonGroup value={props.program.editState.editing} 
+        <ToggleButtonGroup value={editing} 
             exclusive onChange={handleEditToggle}>
           <ToggleButton key={0} value={false}>View</ToggleButton>
-          <ToggleButton key={1} value={true}>Edit</ToggleButton>
+          <ToggleButton key={1} value={true}>
+            {canPushEdits ? 'Edit' : 'Edit Locally'}
+          </ToggleButton>
         </ToggleButtonGroup>
+        
+        {editing && canPushEdits &&
+          <a className="button is-info savechangesbutton copybutton" onClick={saveChanges} href="#savechangesbutton">
+            Save local changes
+          </a>
+        }
 
-        <a className="button is-info savechangesbutton copybutton" onClick={() => {}} href="#savechangesbutton">
-        Save local changes
-        </a>
         <a className="button is-info runbutton copybutton" onClick={() => {setShowCopyModal(true)}} href="#copybutton">
-        Make a copy
+          Make a copy
         </a>
 
-        {showCopyModal ?
-        <CopySample name={props.program.name} code={props.program.localCode} 
+        {showCopyModal &&
+        <CopySample name={props.program.name} code={code} 
           addNewProgram={props.addNewProgram} setShowCopyModal={setShowCopyModal}
           category={props.program.category} group={props.group} />
-        : <span></span>
         }
-        {props.program.editState.editing ?
+        
         <CodeMirror
-            value={props.program.localCode}
-            options={{
-                mode: 'javascript',
-                theme: 'material',
-                lineNumbers: true,
-                readOnly: false
-            }}
+            value={code}
+            options={codeMirrorOptions}
             onBeforeChange={(editor, data, value) => {
-              // commented out due to current implementation
-              // need to revisit structure here
-              props.performEdit(value);
+              if (editing) {
+                // commented out due to current implementation
+                // need to revisit structure here
+                props.performEdit(value);
+              } else {
+                console.error("CodeMirror change attempted while not in edit mode.");
+              }
             }}
             onChange={(editor, data, value) => {
             }}
         />
-        :
-        <CodeMirror
-            value={props.program.remoteCode}
-            options={{
-                mode: 'javascript',
-                theme: 'material',
-                lineNumbers: true,
-                readOnly: true
-            }}
-            onBeforeChange={(editor, data, value) => {
-            }}
-            onChange={(editor, data, value) => {
-            }}
-        />
-        }
 
         <br>
         </br>
+        
+        {editing && !canPushEdits &&
+          <>
+          <div>
+            Note: You are editing a sample which you do not have permission to change.
+            To store your changes, click <b>Make a Copy</b> to the right.
+          </div>
+          <br></br>
+          </>
+        }
+
         <div className="container columns">
             <div className="column is-2">
                 {/* This manages all of the webworker state. It aint pretty but it works */}
-                <ConstControlPanel setConsoleBuffer = {setConsoleBuffer} code={props.program.localCode}
+                <ConstControlPanel setConsoleBuffer = {setConsoleBuffer} code={code}
                   evalWorker = {evalWorker} setLogs = {setLogs} setGraph = {setGraph}/>
                 <p>
                     <button className="button runbutton" 
