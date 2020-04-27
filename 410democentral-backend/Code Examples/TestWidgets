@@ -4,4 +4,4 @@ function initvars(){
     B = getBoolean("B");
 }
 initvars();
-console.log(N, B);
+console.log(N + " " + B);
