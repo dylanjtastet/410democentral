@@ -55,7 +55,6 @@ function CategoryMenu({
 	return (
 		<div className="container choices">
 			{groupdir.filter((groupcat) => {
-				console.log(groupcat)
 				if (groupcat.parent != null) {
 					console.warn("Top-level category has non-null parent.");
 				}
@@ -110,7 +109,7 @@ function CategoryMenu({
 					var item = groupcat;
 					if (item.type === "sample") {
 						return (
-							<ul className="menu-list">
+							<ul className="menu-list" key={item._id}>
 								<div>
 									<Codeselect progID={item._id} progName={item.name} isAdmin={isAdmin} parent={groupcat._id} setGraph={setGraph} />
 								</div>
