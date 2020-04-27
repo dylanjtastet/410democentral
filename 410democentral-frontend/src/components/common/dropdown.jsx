@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import {connect} from 'react-redux';
 import 'bulma/css/bulma.css';
 
@@ -13,16 +13,31 @@ import {
 const Dropdown = ({fetchState, groups, activeGroup, fetchGroups, setActiveGroup}) => {
     useEffect(() => {
 	   fetchGroups();
-       setActiveGroup("")
+       setActiveGroup("");
+       document.addEventListener("mousedown", handleClickOff);
+    // return function to be called when unmounted
+       return () => {
+           document.removeEventListener("mousedown", handleClickOff);
+       };
     }, [fetchGroups, setActiveGroup]);
 
     const [opened, setOpened] = useState(false);
     const [showCourseAdd, setShowCourseAdd] = useState(false);
     const [courseNames, setCourseNames] = useState([]);
 
+    const node = useRef();
+
 	const handleClick = event => {
 		event.preventDefault();
-		setOpened(!opened);
+        setOpened(!opened);
+    }
+
+    const handleClickOff = event => {
+        if (node.current.contains(event.target)) {
+            return;
+        }
+
+        setOpened(false)
     }
     
     const handleShowAddCourse = async event => {
@@ -48,7 +63,7 @@ const Dropdown = ({fetchState, groups, activeGroup, fetchGroups, setActiveGroup}
 	}
 	
 	return( 
-		<div className={"dropdown " + insert}>
+		<div className={"dropdown " + insert} ref={node}>
             <div className="dropdown-trigger">
                 <button className="button" aria-haspopup="true" aria-controls="dropdown-menu" onClick={handleClick}>
                     <span>{
