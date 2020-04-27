@@ -194,11 +194,12 @@ export const removeMemberFromGroupFailure = error => ({
 
 export const removeMemberFromGroup = (name, member = null) => {
 	return dispatch => {
-		dispatch(removeMemberFromGroupBegin());
-		let removeURL = new URL("http://loclhost:3009/removefrom/" + name);
+		dispatch(removeMemberFromGroupBegin(name));
+		let removeURL = new URL("http://localhost:3009/removefrom/" + name);
 		if (member !== null) {
 			removeURL.searchParams.append("username", member);
 		}
+		console.log(name)
 		fetch(removeURL, {
 			credentials: "include"
 		})

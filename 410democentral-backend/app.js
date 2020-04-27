@@ -533,15 +533,15 @@ app.get("/removefrom/:group", async function(req, res, next){
                 );
 
                 if (currIsRoot || (currIsInstructor && !targetIsInstructor)) {
-                    removeUserFromGroup(req.query.username, req.params.group);
+                    db.removeUserFromGroup(req.query.username, req.params.group);
                 }
                 else {
                     res.sendStatus(403);
                 }
             }
             else {
-                let user = await getUserForSession(req.cookies.sessid);
-                await removeUserFromGroup(user.username, req.params.group);
+                let user = await db.getUserForSession(req.cookies.sessid);
+                await db.removeUserFromGroup(user._id, req.params.group);
             }
             res.sendStatus(200);
         }

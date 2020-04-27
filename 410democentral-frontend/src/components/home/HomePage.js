@@ -2,7 +2,7 @@ import React, { useState} from 'react';
 import {connect} from 'react-redux';
 
 // Redux imports
-import {fetchGroups, setGroupViewMode} from '../../redux/actions/groupActions';
+import {fetchGroups, setGroupViewMode, removeMemberFromGroup} from '../../redux/actions/groupActions';
 
 // View imports
 import 'bulma/css/bulma.css';
@@ -19,6 +19,7 @@ const HomePage = ({
     group,
     fetchGroups,
     setGroupViewMode,
+    removeMemberFromGroup
 }) => {
 
     const [graph, setGraph] = useState({show: false, data: []});
@@ -26,6 +27,16 @@ const HomePage = ({
     const handleModeToggle = (event, newState) => {
         setGroupViewMode(group.name, newState);
     }
+
+    const handleDropCourse = (event) => {
+        if (group.name !== "My Code") {
+            console.log(group.name)
+            removeMemberFromGroup(group.name)
+        } else {
+            return
+        }
+    }
+
     console.log("hello")
     console.log(group);
     if (typeof group === "undefined" || groupFetchState.inProgress) {
@@ -69,16 +80,25 @@ const HomePage = ({
                     }
                 </div>
             </div>
+            {(group.name !== "My Code")?
+                <div>
+                    <button className="button is-small" onClick={handleDropCourse}>Drop Course</button>
+                </div>
+                :
+                <span></span>
+            }
         </div>
     );
 }
 
 const mapStateToProps = state => ({
     groupFetchState: state.groups.fetchState,
-    group: state.groups.groups[state.groups.activeGroup]
+    group: state.groups.groups[state.groups.activeGroup],
+    
 });
 
 export default connect(mapStateToProps, {
     fetchGroups,
-    setGroupViewMode
+    setGroupViewMode,
+    removeMemberFromGroup
 })(HomePage);
