@@ -53,7 +53,7 @@ module.exports.putCodeSample = async function(category, group, sample, user=fals
 
 module.exports.updateCodeSample = async function(id, newFields){
     let db = await dbPromise;
-    return db.collection("sample").update({_id: new MongoClient.ObjectId(id)}, {$set: newFields});
+    return db.collection("samples").update({_id: new MongoClient.ObjectId(id)}, {$set: newFields});
 }
 
 module.exports.createCategory = async function(name, parent, group){
