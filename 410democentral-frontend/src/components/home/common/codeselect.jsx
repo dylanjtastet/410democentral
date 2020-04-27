@@ -50,7 +50,7 @@ const Codeselect = ({
 
                 <ContextMenu id={progID}>
                     <MenuItem onClick={handleCodeDelete}>
-                        <a href="#deletebutton" className="box">Delete</a>
+                        <a href="#deletebutton" className="button is-small">Delete</a>
                     </MenuItem>
                 </ContextMenu>
             </li>

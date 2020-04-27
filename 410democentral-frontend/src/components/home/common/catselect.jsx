@@ -38,7 +38,7 @@ const Catselect = ({
 
           <ContextMenu id={cat._id}>
       				<MenuItem onClick={handleCatDelete}>
-      						<a href="#deletebutton" className="box">Delete</a>
+      						<a href="#deletebutton" className="button is-small">Delete</a>
       				</MenuItem>
       		</ContextMenu>
         </>

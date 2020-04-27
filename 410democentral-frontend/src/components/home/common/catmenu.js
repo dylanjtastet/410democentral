@@ -72,10 +72,12 @@ function CategoryMenu({
 									</ContextMenuTrigger>
 
 									<ContextMenu id={groupcat._id}>
-											<MenuItem onClick={handleCatDelete(groupcat._id)}>
-													<a href="#deletebutton" className="box">Delete</a>
-											</MenuItem>
+										<MenuItem onClick={handleCatDelete(groupcat._id)}>
+												<a href="#deletebutton" className="button is-small">Delete</a>
+										</MenuItem>
 									</ContextMenu>
+
+									
 								</div>
 								:
 								<a className="menu-label titletext">{groupcat.name}</a>
