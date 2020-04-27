@@ -28,6 +28,11 @@
     width: 100px;
 }
 
+.savechangesbutton {
+    width: 145px;
+    margin-left: 5px;
+}
+
 .choices {
     margin-left: 15px;
 }
