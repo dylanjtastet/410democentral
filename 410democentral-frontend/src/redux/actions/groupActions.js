@@ -84,6 +84,23 @@ export const fetchGroups = () => {
 	};
 }
 
+export const fetchGroupNames = async () => {
+	let groupnameURL = new URL("http://localhost:3009/allgroupnames")
+	try {	
+		let res = await fetch(groupnameURL, {
+			credentials: "include"
+		})
+		if (!res.ok) throw Error(res.statusText);
+		let data = await res.json();
+		return data;
+
+	} catch (error) {
+		//Fix this
+		console.log(error)
+		return []
+	}
+}
+
 /* CREATING ACTIONS */
 
 export const createGroupBegin = () => ({
@@ -177,11 +194,12 @@ export const removeMemberFromGroupFailure = error => ({
 
 export const removeMemberFromGroup = (name, member = null) => {
 	return dispatch => {
-		dispatch(removeMemberFromGroupBegin());
-		let removeURL = new URL("http://loclhost:3009/removefrom/" + name);
+		dispatch(removeMemberFromGroupBegin(name));
+		let removeURL = new URL("http://localhost:3009/removefrom/" + name);
 		if (member !== null) {
 			removeURL.searchParams.append("username", member);
 		}
+		console.log(name)
 		fetch(removeURL, {
 			credentials: "include"
 		})

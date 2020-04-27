@@ -395,6 +395,35 @@ app.get("/allgroups", async function(req, res, next){
     }
 });
 
+//Edit this so that inGroup will be true or false depending on whether user is in group
+app.get("/allgroupnames", async function (req, res, next) {
+    try {
+        if (req.cookies.sessid) {
+            let groups;
+            let user = await db.getUserForSession(req.cookies.sessid);
+            groups = await db.getAllGroups();
+            groups = await Promise.all(groups.map(async group => {
+                let users = await db.getUsersInGroup(group._id);
+                let userids = users.map(user => user._id)
+                let inGroup;
+                inGroup = userids.includes(user._id);
+                return (
+                    {
+                        _id: group._id,
+                        inGroup: inGroup
+                    }
+                );
+            }
+            ));
+            res.send(groups)
+        } else {
+            res.sendStatus(403)
+        }
+    } catch (err) {
+        next(err);
+    }
+})
+
 app.get("/group", async function(req, res, next) {
     try {
         if (req.cookies.sessid) {
@@ -504,15 +533,15 @@ app.get("/removefrom/:group", async function(req, res, next){
                 );
 
                 if (currIsRoot || (currIsInstructor && !targetIsInstructor)) {
-                    removeUserFromGroup(req.query.username, req.params.group);
+                    db.removeUserFromGroup(req.query.username, req.params.group);
                 }
                 else {
                     res.sendStatus(403);
                 }
             }
             else {
-                let user = await getUserForSession(req.cookies.sessid);
-                await removeUserFromGroup(user.username, req.params.group);
+                let user = await db.getUserForSession(req.cookies.sessid);
+                await db.removeUserFromGroup(user._id, req.params.group);
             }
             res.sendStatus(200);
         }

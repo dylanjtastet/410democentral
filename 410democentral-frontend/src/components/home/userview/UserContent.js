@@ -78,16 +78,15 @@ function Content(props) {
         {/*<CodeSandbox code={props.program.localCode} pendingRun={pendingRun} setPendingRun={setPendingRun} 
           setGraph={setGraph} setConsoleBuffer={setConsoleBuffer} />*/}
 
-        {props.program.isEditable ?
         <ToggleButtonGroup value={props.program.editState.editing} 
             exclusive onChange={handleEditToggle}>
           <ToggleButton key={0} value={false}>View</ToggleButton>
           <ToggleButton key={1} value={true}>Edit</ToggleButton>
         </ToggleButtonGroup>
 
-        :
-        <span></span>
-        }
+        <a className="button is-info savechangesbutton copybutton" onClick={() => {}} href="#savechangesbutton">
+        Save local changes
+        </a>
         <a className="button is-info runbutton copybutton" onClick={() => {setShowCopyModal(true)}} href="#copybutton">
         Make a copy
         </a>

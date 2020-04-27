@@ -6,7 +6,8 @@ import Courseselect from './courseselect.jsx';
 import Courseadd from './courseadd.jsx';
 import {
     fetchGroups,
-    setActiveGroup
+    setActiveGroup,
+    fetchGroupNames
 } from '../../redux/actions/groupActions';
 
 const Dropdown = ({fetchState, groups, activeGroup, fetchGroups, setActiveGroup}) => {
@@ -17,14 +18,25 @@ const Dropdown = ({fetchState, groups, activeGroup, fetchGroups, setActiveGroup}
 
     const [opened, setOpened] = useState(false);
     const [showCourseAdd, setShowCourseAdd] = useState(false);
+    const [courseNames, setCourseNames] = useState([]);
 
 	const handleClick = event => {
 		event.preventDefault();
 		setOpened(!opened);
     }
     
-    const handleShowAddCourse = event => {
+    const handleShowAddCourse = async event => {
         event.preventDefault();
+
+        let groupnames = await fetchGroupNames();
+        let groupstojoin = [];
+        for (let group of groupnames) {
+            if (!group.inGroup) {
+                groupstojoin.push(group);
+            }
+        }
+
+        setCourseNames(groupstojoin);
         setShowCourseAdd(true);
         setOpened(false)
     }
@@ -73,7 +85,7 @@ const Dropdown = ({fetchState, groups, activeGroup, fetchGroups, setActiveGroup}
 				</div>
             </div>
             {showCourseAdd ?
-            <Courseadd setShowCourseAdd={setShowCourseAdd}/>
+            <Courseadd setShowCourseAdd={setShowCourseAdd} courseNames={courseNames}/>
             :
             <span></span>
             }
