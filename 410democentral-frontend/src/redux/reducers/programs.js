@@ -24,11 +24,13 @@ const initState = {
 		isEditable: true,
 		editState: {
 			editing: false,
+			hasEdits: false,
 			// eslint-disable-next-line no-unused-vars
 			lastRemoteHash: null
 		},
 		localCode: "",
 		remoteCode: "",
+		hiddenCode: ""
 	}},
 	activeProgId: "",
 	fetchState: {
@@ -68,7 +70,8 @@ const programs = (state = initState, action) => {
 		case FETCH_PROGRAM_SUCCESS: {
 			const {id, program} = action.payload;
 			const isNew = !state.progIDs.includes(id);
-			return {
+			//console.log("isNew = " + isNew);
+			let new_state = {
 				...state,
 				progIDs: isNew ? [...state.progIDs, id] : state.progIDs,
 				progs: {
@@ -78,14 +81,11 @@ const programs = (state = initState, action) => {
 						name: program.name,
 						category: program.category,
 						isEditable: program.isEditable,
-						// Should never change if program isn't editable
 						editState: isNew ? {
 							editing: false,
+							hasEdits: false,
 							lastRemoteHash: null
 						} : state.progs[id].editState,
-						remoteCode: program.code,
-						// Should always equal remoteCode if program isn't editable
-						localCode: isNew ? program.code : state.progs[id].localCode
 					}
 				},
 				fetchState: {
@@ -93,6 +93,7 @@ const programs = (state = initState, action) => {
 					inProgress: false,
 				}
 			}
+			return setCodeState(new_state, id, program.code, isNew);
 		}
 
 		case FETCH_PROGRAM_FAILURE:
@@ -117,23 +118,15 @@ const programs = (state = initState, action) => {
 					error: null
 				}
 			}
-		case PUSH_PROGRAM_SUCCESS: {
-			const {id} = action.payload;
+		case PUSH_PROGRAM_SUCCESS:
 			return {
 				...state,
-				progs: {
-					...state.progs,
-					[id]: {
-						...state.progs[id],
-						remoteCode: action.payload.codeSent
-					}
-				},
 				pushState: {
 					...state.pushState,
-					inProgress: false,
+					inProgress: false
 				}
 			}
-		}
+
 		case PUSH_PROGRAM_FAILURE:
 			return {
 				...state,
@@ -192,16 +185,9 @@ const programs = (state = initState, action) => {
 
 		case CHECKOUT_REMOTE_CODE: {
 			const id = state.activeProgId;
-			return {
-				...state,
-				progs: {
-					...state.progs,
-					[id] : {
-						...state.progs[id],
-						localCode: state.progs[id].remoteCode
-					}
-				}
-			}
+			return setLocalCodeState(
+				state, state.activeProgId, state.progs[id].remoteCode
+			);
 		}
 
 		case EDIT_CHECKPOINT: {
@@ -222,19 +208,10 @@ const programs = (state = initState, action) => {
 			}
 		}
 
-		case PERFORM_EDIT: {
-			const id = state.activeProgId;
-			return {
-				...state,
-				progs: {
-					...state.progs,
-					[id] : {
-						...state.progs[id],
-						localCode: action.payload.code
-					}
-				}
-			}
-		}
+		case PERFORM_EDIT:
+			return setLocalCodeState(
+				state, state.activeProgId, action.payload.code
+				);
 
 		case FINISH_EDITING: {
 			const id = state.activeProgId;
@@ -255,6 +232,57 @@ const programs = (state = initState, action) => {
 		}
 		default:
 			return state;
+	}
+}
+
+// Changes to localCode/remoteCode should ONLY occur via these three functions
+
+// Behavior here: always updates remoteCode to newCode. In addition, 
+// if hasEdits is false (prev local code hadn't been changed since 
+// last fetch) or forceUpdateLocal is true, localCode will be updated as well
+const setCodeState = (state, id, newCode, forceUpdateLocal = false) => {
+	//console.log("here2")
+	let new_state = setRemoteCodeState(state, id, newCode);
+	if (forceUpdateLocal || !state.progs[id].editState.hasEdits) {
+		new_state = setLocalCodeState(new_state, id, newCode);
+	}
+	return new_state;
+}
+
+// localCode should ONLY be updated via this function to 
+// ensure hasEdits invariant remains consistent
+const setLocalCodeState = (state, id, newLocalCode) => {
+	return {
+		...state,
+		progs: {
+			...state.progs,
+			[id] : {
+				...state.progs[id],
+				localCode: newLocalCode,
+				editState: {
+					...state.progs[id].editState,
+					hasEdits: newLocalCode !== state.progs[id].remoteCode
+				}
+			}
+		}
+	}
+}
+
+// Similarly, remoteCode should ONLY be updated via this function
+const setRemoteCodeState = (state, id, newRemoteCode) => {
+	return {
+		...state,
+		progs: {
+			...state.progs,
+			[id] : {
+				...state.progs[id],
+				remoteCode: newRemoteCode,
+				editState: {
+					...state.progs[id].editState,
+					hasEdits: newRemoteCode !== state.progs[id].localCode
+				}
+			}
+		}
 	}
 }
 

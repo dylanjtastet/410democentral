@@ -144,7 +144,10 @@ app.post('/sample', async function(req,res,next){
                             newFields["category"] = req.query.category;
                         }
                     }
-                    await db.updateCodeSample(newFields);
+                    console.log("Updating sample:");
+                    console.log(req.query.sample);
+                    console.log(newFields);
+                    await db.updateCodeSample(req.query.sample, newFields);
                     res.sendStatus(200);
                 }
                 else{
