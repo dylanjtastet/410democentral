@@ -7,6 +7,14 @@
     color: white;
 }
 
+.fix {
+    color: black
+}
+
+.groupmanage {
+    padding: 20px;
+}
+
 .graph-filler {
     height: 300px;
 }
@@ -18,6 +26,11 @@
 
 .runbutton {
     width: 100px;
+}
+
+.savechangesbutton {
+    width: 145px;
+    margin-left: 5px;
 }
 
 .choices {
@@ -62,13 +75,12 @@
     margin-bottom: 15px;
 }
 
-.courseselect {
-    float: right;
+.divider {
     margin-right: 25px;
 }
 
-.divider {
-    margin-right: 25px;
+.mode-toggle {
+    float: right;
 }
 
 .bottommargin {
@@ -130,4 +142,8 @@
     background-color: #263238;
     height: 350px;
     overflow: scroll;
+}
+
+.copybutton {
+    float: right;
 }

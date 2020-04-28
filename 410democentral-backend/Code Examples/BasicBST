@@ -6,17 +6,171 @@
 myMain();
 
 function myMain() {
-  //var elts = [23,4,121,15,5,78,7,-21,12,-6,19];
-  var MAX=99999999;
-  //N=Number(prompt("how many numbers to generate?"));
-  //MAX=Number(prompt("biggest num value?"));
+  var MAX = 99999999;
+  var N = 20, MAX = 9000000;
+  var Nstart = 0, Nfinal = 25000000, numSteps = 20;
   var st, et;
-  
-  var elts = genRandomElts(N, MAX);
-  console.log(elts.slice(0,10));
-  st = (new Date()).getTime();
-  elts = bubbleSort(elts); 
-  et = (new Date()).getTime();
-  console.log(elts.slice(0,10));
-  console.log("time: "+(et-st)+" msec");
+
+  var datapoints = [];
+
+  for (let i = Nstart; i <= Nfinal; i += Math.floor((Nfinal - Nstart) / numSteps)) {
+    var elts = genRandomElts(i, MAX);
+    console.log("elts length is " + elts.length);
+    st = (new Date()).getTime();
+    // build BST
+    var bst = makeBST();
+    for (var j = 0; j < elts.length; j++) {
+      bst.insert(elts[i]); // this ignores adding dupes
+    }
+    et = (new Date()).getTime();
+    datapoints.push({ x: i, y: et - st });
+    console.log("Inserting " + i + " elements took " + (et - st) + " ms");
+    getLineGraph(datapoints);
+  }
+}
+
+//-------------------------------------------------------------------
+// the BST tree object constructor
+//-------------------------------------------------------------------
+
+function makeCell(k, left, right) {
+  var cell = {
+    key: k,
+    LC: left,
+    RC: right,
+    size: 1,
+    show: function () { return this.key; }
+  };
+  return cell;
+}
+
+
+function makeBST() {
+  var bstObj = {
+    root: null,
+
+    insert: function (elt) {
+      var c = makeCell(elt, null, null);
+      if (this.root === null) {
+        this.root = c;
+        return;
+      }
+      var parent, cur = this.root;
+      while (true) {
+        parent = cur;
+        if (cur.key === elt) return;
+        if (elt < cur.key) {
+          cur = cur.LC;
+          if (cur === null) {
+            parent.LC = c;
+            return;
+          }
+        }
+        else { // elt > cur.key 
+          cur = cur.RC;
+          if (cur === null) {
+            parent.RC = c;
+            return;
+          }
+        }
+      }
+    },
+
+    contains: function (elt) {
+      if (this.root === null) { return false; }
+      var parent;
+      var cur = this.root;
+      while (true) {
+        parent = cur;
+        if (elt === cur.key) { return true; }
+        if (elt < cur.key) {
+          cur = cur.LC;
+          if (cur === null) { return false; }
+        }
+        else {
+          cur = cur.RC;
+          if (cur === null) { return false; }
+        }
+      }
+    },
+
+    remove: function () { },
+    findMin: function () { },
+    findMax: function () { },
+    get: function (elt) { return elt; },
+    size: function () { return this.root.size; },
+    empty: function () { return (this.root.size == 0); },
+    height: function (cel) {
+      if (cel == null) { return -1; }
+      else {
+        return Math.max(this.height(cel.LC), this.height(cel.RC)) + 1;
+      }
+    }
+  };
+  return bstObj;
+}
+
+//-------------------------------------------------------------------
+// traversals
+//-------------------------------------------------------------------
+
+function inOrder(cel) {
+  if (cel === null) { return; }
+  inOrder(cel.LC);
+  alert(cel.key);
+  inOrder(cel.RC);
+}
+
+
+function preOrder(cel) {
+  if (cel === null) { return; }
+  alert(cel.key);
+  preOrder(cel.LC);
+  preOrder(cel.RC);
+}
+
+
+
+//-----------------------------------------------------------------------
+// random 
+//-----------------------------------------------------------------------
+
+function genRandomElts(N, MAX) {
+  var arr = [];
+  for (var i = 0; i < N; i++) {
+    arr[i] = genNumber(MAX);
+  }
+  return arr;
+}
+
+function genOrderedElts(N) {
+  var arr = [];
+  for (var i = 0; i < N; i++) {
+    arr[i] = N - (i + 1);
+  }
+  return arr;
+}
+
+
+function genNumber(MAX) {
+  return Math.floor(Math.random() * MAX);
+}
+
+function genString(size) {
+  if (size === 0) { return ranAlpha(); }
+  else {
+    var str = "";
+    for (var i = 0; i < size; i++) { str += ranChar(); }
+    return str;
+  }
+
+  function ranAlpha() {
+    var chars = "abcdefghijklmnopqurstuvwxyzABCDEFGHIJKLMNOPQURSTUVWXYZ";
+    return chars.substr(Math.floor(Math.random() * chars.length), 1);
+  }
+
+  function ranChar() {
+    var chars = "0123456789abcdefghijklmnopqurstuvwxyzABCDEFGHIJKLMNOPQURSTUVWXYZ";
+    return chars.substr(Math.floor(Math.random() * chars.length), 1);
+  }
 }

@@ -1,67 +1,24 @@
-//Category: Binary Search Tree
-//Desc: Finds height and average time complexity of a binary search tree generated from random data
+// Category: Binary Search Tree
+// Desc: Finds height and average time complexity of a binary search tree generated from random data
 "use strict";
-//var tab = window.open();   
 
 myMain();
 
 function myMain() {
   var MAX = 7;
-  var NODES = 1000000;
   var TRIALS = 10;
-  
-
-  
   var avgH = 0;
-  
-  for (var tr=1; tr<=TRIALS; tr++) {
-    var bst = makeBST(); 
-    for (var n=1; n<=NODES; n++) {  bst.insert(genString(MAX)); }
-    avgH += bst.height(bst.root);
-    //alert(bst.height(bst.root));  
+
+  for (var numNodes = 16; numNodes <= 300000; numNodes *= 2) {
+    for (var tr = 1; tr <= TRIALS; tr++) {
+      var bst = makeBST();
+      for (var n = 1; n <= numNodes; n++) { bst.insert(genString(MAX)); }
+      avgH += bst.height(bst.root);
+    }
+    avgH = avgH / TRIALS;
+    console.log("With " + numNodes + " nodes, average height: " + avgH.toFixed(3));
   }
-  avgH = avgH/TRIALS;
-  alert("average height: "+ avgH.toFixed(3));
   return;
-  
- /*
-  //alert(bst.contains("alpha"));
-    alert("height: "+ bst.height(bst.root));
-  bst.insert("kappa"); 
-    alert("height: "+ bst.height(bst.root));
-  bst.insert("lambda");
-    alert("height: "+ bst.height(bst.root));
-  bst.insert("kappa"); // this will not be added a second time
-    alert("height: "+ bst.height(bst.root));
-  bst.insert("alpha"); 
-    alert("height: "+ bst.height(bst.root));
-  bst.insert("beta"); 
-      alert("height: "+ bst.height(bst.root));
-  bst.insert("gamma");
-      alert("height: "+ bst.height(bst.root));
-  bst.insert("delta"); 
-      alert("height: "+ bst.height(bst.root));
-  bst.insert("epsilon");
-      alert("height: "+ bst.height(bst.root));
-  bst.insert("zeta");
-      alert("height: "+ bst.height(bst.root));
-  bst.insert("eta"); 
-      alert("height: "+ bst.height(bst.root));
-  bst.insert("theta"); 
-      alert("height: "+ bst.height(bst.root));
-  bst.insert("iota");
-      alert("height: "+ bst.height(bst.root));
- 
-  //alert(bst.contains("alpha"));
-  //alert(bst.contains("sigma"));
-  */
-  
-  alert("height: "+ bst.height(bst.root));
-  return;
-  
-  inOrder(bst.root);
-  
-  //tab.document.close();
 }
 
 
@@ -69,77 +26,77 @@ function myMain() {
 // the BST tree object constructor
 //-------------------------------------------------------------------
 
-function makeCell ( k, left, right ) {
+function makeCell(k, left, right) {
   var cell = {
     key: k,
     LC: left,
     RC: right,
     size: 1,
-    show: function() { return this.key; }
+    show: function () { return this.key; }
   };
   return cell;
 }
 
 
-function makeBST ( ) {
+function makeBST() {
   var bstObj = {
     root: null,
-    
-    insert: function ( elt ) { 
-      var c = makeCell(elt,null,null);
-      if (this.root===null) { 
-        this.root = c; 
+
+    insert: function (elt) {
+      var c = makeCell(elt, null, null);
+      if (this.root === null) {
+        this.root = c;
         return;
       }
       var parent, cur = this.root;
       while (true) {
         parent = cur;
-        if (cur.key===elt) return;
+        if (cur.key === elt) return;
         if (elt < cur.key) {
           cur = cur.LC;
-          if (cur===null) {
+          if (cur === null) {
             parent.LC = c;
             return;
           }
         }
         else { // elt > cur.key 
           cur = cur.RC;
-          if (cur===null) {
-            parent.RC=c;
+          if (cur === null) {
+            parent.RC = c;
             return;
           }
         }
       }
     },
-    
-    contains: function ( elt ) {
-      if (this.root===null) { return false; }
+
+    contains: function (elt) {
+      if (this.root === null) { return false; }
       var parent;
       var cur = this.root;
       while (true) {
         parent = cur;
-        if (elt===cur.key) { return true; }
+        if (elt === cur.key) { return true; }
         if (elt < cur.key) {
           cur = cur.LC;
-          if (cur===null) { return false; }
+          if (cur === null) { return false; }
         }
         else {
           cur = cur.RC;
-          if (cur===null) { return false; }
-        }  
+          if (cur === null) { return false; }
+        }
       }
     },
-    
+
     remove: function () { },
-    findMin: function() { },
-    findMax: function() { },
-    get: function( elt ) { return elt; },
-    size: function() { return this.root.size; },
-    empty: function() { return (this.root.size==0); },
-    height: function(cel) {
-      if (cel==null) { return -1; } 
+    findMin: function () { },
+    findMax: function () { },
+    get: function (elt) { return elt; },
+    size: function () { return this.root.size; },
+    empty: function () { return (this.root.size == 0); },
+    height: function (cel) {
+      if (cel == null) { return -1; }
       else {
-        return Math.max( this.height(cel.LC), this.height(cel.RC) ) + 1;
+        return Math.max(this.height(cel.LC), this.height(cel.RC)) + 1;
       }
     }
   };
@@ -150,64 +107,64 @@ function makeBST ( ) {
 // traversals
 //-------------------------------------------------------------------
 
-function inOrder( cel ) {
-  if (cel===null) { return; }
+function inOrder(cel) {
+  if (cel === null) { return; }
   inOrder(cel.LC);
   alert(cel.key);
   inOrder(cel.RC);
 }
 
 
-function preOrder( cel ) {
-  if (cel===null) { return; }
+function preOrder(cel) {
+  if (cel === null) { return; }
   alert(cel.key);
   preOrder(cel.LC);
   preOrder(cel.RC);
 }
- 
-  
+
+
 
 //-----------------------------------------------------------------------
 // random 
 //-----------------------------------------------------------------------
 
-function genRandomElts(N,MAX) {
-  var arr=[];
-  for (var i=0; i<N; i++) {
+function genRandomElts(N, MAX) {
+  var arr = [];
+  for (var i = 0; i < N; i++) {
     arr[i] = genNumber(MAX);
   }
   return arr;
 }
 
 function genOrderedElts(N) {
-  var arr=[];
-  for (var i=0; i<N; i++) {
-    arr[i] = N-(i+1);
+  var arr = [];
+  for (var i = 0; i < N; i++) {
+    arr[i] = N - (i + 1);
   }
   return arr;
 }
 
 
 function genNumber(MAX) {
-  return Math.floor(Math.random()*MAX); 
+  return Math.floor(Math.random() * MAX);
 }
 
-function genString(size){
-  if (size===0) { return ranAlpha(); }
-  else {  
+function genString(size) {
+  if (size === 0) { return ranAlpha(); }
+  else {
     var str = "";
-    for (var i=0; i<size; i++) { str += ranChar(); }
+    for (var i = 0; i < size; i++) { str += ranChar(); }
     return str;
   }
 
   function ranAlpha() {
     var chars = "abcdefghijklmnopqurstuvwxyzABCDEFGHIJKLMNOPQURSTUVWXYZ";
-    return chars.substr( Math.floor(Math.random() * chars.length), 1);
+    return chars.substr(Math.floor(Math.random() * chars.length), 1);
   }
-  
+
   function ranChar() {
     var chars = "0123456789abcdefghijklmnopqurstuvwxyzABCDEFGHIJKLMNOPQURSTUVWXYZ";
-    return chars.substr( Math.floor(Math.random() * chars.length), 1);
+    return chars.substr(Math.floor(Math.random() * chars.length), 1);
   }
 }
 

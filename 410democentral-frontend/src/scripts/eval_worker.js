@@ -1,5 +1,6 @@
 export default () => {
 
+
 let sendToParent = (messageInfo) => {
     return (data) => {
         let msg = {...messageInfo, data: data};
@@ -29,6 +30,9 @@ let constVals = {};
 // If the functions are queried in execute mode (doFetch = false) and the
 // value is not yet available in constVals, return the default
 // eslint-disable-next-line no-restricted-globals
+
+// const getLineGraph = () => sendToParent({msgType: "graph"});
+
 function get_ui_fns(doFetch){
     function resolveValueHelper(ename, id, params){
         let val = params.def;
@@ -73,6 +77,8 @@ function eval_const_init(sample){
     //if the code sample is edited.
     constVals = [];
     let ui_fns = get_ui_fns(true);
+    // eval constructor is intended here
+    // eslint-disable-next-line
     let initvars = Function(...ui_fns.map(x => x.name),"var initvars; return initvars;"+sample)(...ui_fns);
     if(initvars){
         initvars();
@@ -83,12 +89,17 @@ function eval_const_init(sample){
 //Api functions to its scope
 function eval_all(sample){
     let ui_fns = get_ui_fns(false);
-    Function(...ui_fns.map(x=>x.name), sample)(...ui_fns);
+
+    // eval constructor is intended here
+    // eslint-disable-next-line
+    let getLineGraph = sendToParent({type: "graph"});
+    // let getLineGraph = () => console.log("tried to graph");
+    Function(...ui_fns.map(x=>x.name), "getLineGraph", sample)(...ui_fns, getLineGraph);
 }
 
 
 onmessage = function(event){
-    console.log(event.data);
+    // console.log(event.data);
     if(event.data.type === "EVAL_CONST_INIT"){
         eval_const_init(event.data.sample);
     }
