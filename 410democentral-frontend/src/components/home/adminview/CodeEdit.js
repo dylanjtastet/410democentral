@@ -138,8 +138,7 @@ function CodeEdit({
             return;
         }
         if (newparent === "") {
-            window.alert("Must select a valid parent for the new category.");
-            return;
+            setNewparent(null);
         }        
         createCategory(newcat, newparent, group);
         // todo: get newID back from createCategory so that we can set

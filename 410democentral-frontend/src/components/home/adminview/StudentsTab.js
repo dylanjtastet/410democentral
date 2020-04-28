@@ -1,8 +1,13 @@
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
 import 'bulma/css/bulma.css';
 import '../../../../node_modules/@fortawesome/fontawesome-free/css/all.css'
 
 import Studentadd from './studentadd.jsx';
+import {
+  addMemberToGroup,
+  removeMemberFromGroup
+} from '../../../redux/actions/groupActions';
 
 function StudentsTab(props) {
   const [student, setStudent] = useState("");
@@ -18,6 +23,11 @@ function StudentsTab(props) {
       setAdding(true);
   }
 
+  const handleRemoveStudent = event => {
+    props.removeMemberFromGroup(props.group, student);
+    setStudent("");
+  }
+
   return (
     <div>
       <div className="subtitle">Manage Students</div>
@@ -25,11 +35,11 @@ function StudentsTab(props) {
         <div className="column is-one-third">
           <div className="studentlist">
             <ul>
-                {props.students.map(function(name,index) {
-                    if (name === student) {
-                        return <li className="selected" onClick={selectStudent(name)} key={index}>{name}</li> 
+                {props.members.map(function(member,index) {
+                    if (member.username === student) {
+                        return <li className="selected" onClick={selectStudent(member.username)} key={index}>{member.username}</li> 
                     } else {
-                        return <li className="pointer" onClick={selectStudent(name)} key={index}>{name}</li> 
+                        return <li className="pointer" onClick={selectStudent(member.username)} key={index}>{member.username}</li> 
                     }
                     
                 })}
@@ -52,7 +62,7 @@ function StudentsTab(props) {
                         Remove Student
                       </button>
                       :
-                      <button className="button is-danger">
+                      <button className="button is-danger" onClick={handleRemoveStudent}>
                           Remove Student
                       </button>
                     }
@@ -66,5 +76,13 @@ function StudentsTab(props) {
     </div>
   );
 }
+
+const mapStateToProps = state => ({
+  members: state.groups.groups[state.groups.activeGroup].members,
+  group: state.groups.activeGroup
+});
   
-  export default StudentsTab;
+export default connect(mapStateToProps, {
+  addMemberToGroup,
+  removeMemberFromGroup
+ })(StudentsTab);
