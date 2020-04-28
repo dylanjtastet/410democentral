@@ -1,4 +1,6 @@
 import React from 'react';
+
+import ReactDOM from "react-dom";
 import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
 
 export default function Codeselect(props) {
@@ -8,11 +10,14 @@ export default function Codeselect(props) {
             if (window.confirm("Are you sure you would like to delete " + props.name + "?")) {
                 let sampleURL = new URL("http://localhost:3009/sample");
 
-                await fetch(sampleURL, {
+                //sampleURL.searchParams.append("id", id);
+
+                let response = await fetch(sampleURL, {
                     method: 'DELETE',
                     headers: {
                         'Content-Type': 'application/json',
                 },
+                    
                     body: JSON.stringify({id: id})
                 });
                 await props.refreshCats();
@@ -62,7 +67,7 @@ export default function Codeselect(props) {
 
             <ContextMenu id={props.progID}>
                 <MenuItem onClick={handleCodeDelete(props.progID)}>
-                    <a href="#deletebutton" className="box">Delete</a>
+                    <a className="box">Delete</a>
                 </MenuItem>
             </ContextMenu>
         </li>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import 'bulma/css/bulma.css';
 import '../../../node_modules/@fortawesome/fontawesome-free/css/all.css'
 
@@ -69,17 +69,18 @@ function CodeEdit(props) {
 
             let sampleURL = new URL("http://localhost:3009/sample");
 
-            await fetch(sampleURL, {
+            let response = await fetch(sampleURL, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
-            },    
+            },
+                
                 body: JSON.stringify({id: props.id})
 			});
 
             sampleURL.searchParams.append("category", cat);
 
-            await fetch(sampleURL, {
+            let response2 = await fetch(sampleURL, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

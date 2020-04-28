@@ -1,7 +1,11 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import 'bulma/css/bulma.css'
+
 import Catselect from './catselect.jsx'
 import Codeselect from './codeselect.jsx'
+
+import ReactDOM from "react-dom";
+import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
 
 function AdminCatGroupMenu(props) {
 	let data = props.data;

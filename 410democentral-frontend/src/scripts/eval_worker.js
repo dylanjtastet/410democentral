@@ -73,9 +73,6 @@ function eval_const_init(sample){
     //if the code sample is edited.
     constVals = [];
     let ui_fns = get_ui_fns(true);
-
-    // eval constructor is intended here
-    // eslint-disable-next-line
     let initvars = Function(...ui_fns.map(x => x.name),"var initvars; return initvars;"+sample)(...ui_fns);
     if(initvars){
         initvars();
@@ -86,9 +83,6 @@ function eval_const_init(sample){
 //Api functions to its scope
 function eval_all(sample){
     let ui_fns = get_ui_fns(false);
-
-    // eval constructor is intended here
-    // eslint-disable-next-line
     Function(...ui_fns.map(x=>x.name), sample)(...ui_fns);
 }
 

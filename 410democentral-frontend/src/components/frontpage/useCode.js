@@ -27,7 +27,7 @@ export default function useCode(id, setLogs) {
         setParameters({});
       }
     })
-  }, [id, input, updateFlag, setLogs]);
+  }, [id, input, updateFlag]);
 
   return {
     "name" : name,
