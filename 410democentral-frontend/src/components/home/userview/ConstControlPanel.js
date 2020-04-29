@@ -8,6 +8,8 @@ export default class ConstControlPanel extends React.Component{
         this.state = {widgets: []};
         this.handleChange = this.handleChange.bind(this);
         this.onConstInit = this.onConstInit.bind(this);
+        this.lastCode = "";
+        this.pending = false;
         props.evalWorker.onmessage = this.onConstInit;
         props.evalWorker.onerror = (err) => console.log(err); 
         console.log(props.evalWorker);
@@ -101,11 +103,21 @@ export default class ConstControlPanel extends React.Component{
 
     sendWorkerInit(prevCode) {
         if (prevCode !== this.props.code) {
-            this.setState({widgets: []});
-            this.props.evalWorker.postMessage({
-                type: "EVAL_CONST_INIT",
-                sample: this.props.code
-            });
+            this.lastCode = this.props.code;
+            if(!this.pending){
+                setTimeout(()=>{
+                    this.pending = false;
+                    this.setState({widgets: []}, () => {
+                        this.props.evalWorker.postMessage({
+                            type: "EVAL_CONST_INIT",
+                            sample: this.lastCode
+                        });
+                    });
+
+                } ,500);
+                this.pending = true;
+            }
+            
         }
     }
 
