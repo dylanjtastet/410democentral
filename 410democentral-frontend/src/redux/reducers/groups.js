@@ -73,6 +73,12 @@ const groups = (state = initState, action) => {
 						adminMode: false,
 						members: g.isInstructor ? g.members : []
 					};
+					if (state.groupNames.includes(g._id) && g.isInstructor) {
+						gs[g._id] = {
+							...gs[g._id],
+							adminMode: state.groups[g._id].adminMode
+						};
+					}
 					return gs;
 				}, {}),
 				fetchState: {
