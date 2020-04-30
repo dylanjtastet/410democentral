@@ -7,12 +7,12 @@ const HelpPage = () => {
         <div>
             <section className="section"> 
                 <div className="container">
-                    <h1 className="title is-2">General</h1>
+                    <h1 className="title is-3">General</h1>
                     <p>Welcome to 210 Demo Central! The following help page provides tips for how to use the site.</p>
                 </div>
                 <br></br>
                 <div className="container">
-                    <h2 className="title is-4">Getting Started</h2>
+                    <h2 className="title is-5">Getting Started</h2>
                     <p>
                         If you haven't already registered, you can do so by navigating to the login page! Just click the home tab to view it. 
                         Select the "Register" button, where you will be prompted to enter a username, email, and password.
@@ -24,7 +24,7 @@ const HelpPage = () => {
                 </div>
                 <br></br>
                 <div className="container">
-                    <h2 className="title is-4">Joining a Course</h2>
+                    <h2 className="title is-5">Joining a Course</h2>
                     <div className="columns"> 
                         <div className="column is-two-thirds">
                             <p>
@@ -45,7 +45,7 @@ const HelpPage = () => {
             </section>
             <section className="section">
                 <div className="container">
-                    <h1 className="title is-2">Running Code</h1>
+                    <h1 className="title is-5">Running Code</h1>
                 </div>
                  
             </section>
