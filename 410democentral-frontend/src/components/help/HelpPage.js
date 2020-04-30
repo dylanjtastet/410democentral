@@ -46,6 +46,24 @@ const HelpPage = () => {
             <section className="section">
                 <div className="container">
                     <h1 className="title is-3">Running Code</h1>
+                    <div className="columns">
+                        <div className="column is-two-thirds">
+                            <p>
+                                For the most part, you can just navigate to a demo in one of your courses and start running JavaScript! Be sure to
+                                select the "Edit" tab or "Make a copy" of an uneditable demo in order to make your own changes. We provide a few
+                                extra features that might be useful in running and creating Demos.
+
+                                For one, you can try using the <span className="inlinecode">getLineGraph</span> function, which
+                                takes a list of objects as input, each with an x and y value and then plots the resulting graph! This can be useful
+                                to analyze the running time of your code as the input size increases.
+                            </p>
+                        </div>
+                        <div className="column">
+                            <figure className="image">
+                                <img src={require("./HelpImages/getLineGraphExample.png")} alt="getLineGraph Example"/>
+                            </figure>
+                        </div>
+                    </div>
                 </div>
                  
             </section>
