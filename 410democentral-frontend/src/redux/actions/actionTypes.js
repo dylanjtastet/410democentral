@@ -1,3 +1,5 @@
+export const CLEAR_SESSION_STATE = "CLEAR_SESSION_STATE";
+
 /* Program (code) related actions */
 export const FETCH_PROGRAM_BEGIN = "FETCH_PROGRAM_BEGIN";
 export const FETCH_PROGRAM_SUCCESS = "FETCH_PROGRAM_SUCCESS";
