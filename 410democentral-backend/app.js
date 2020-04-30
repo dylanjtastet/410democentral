@@ -192,17 +192,13 @@ app.post('/sample', async function(req,res,next){
 // body here should include parent if there is one
 app.get('/allcategories', async function(req,res,next) {
     try {
-        console.log("hello")
         if(req.cookies.sessid){
-            console.log("hello")
             let categories;
             let user = await db.getUserForSession(req.cookies.sessid);
             if(user.isroot){
-                console.log("hello")
                 categories = await db.getAllCategories();
             }
             else{
-                console.log("hello2")
                 categories = await db.getCategoriesForUser(user);
             }
             console.log(categories)

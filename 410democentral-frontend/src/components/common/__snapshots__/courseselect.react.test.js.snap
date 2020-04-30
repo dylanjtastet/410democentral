@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Component reflects group prop 1`] = `
+<a
+  className="dropdown-item"
+  href="#coursebutton"
+  onClick={[Function]}
+>
+  comp210
+</a>
+`;
+
+exports[`Component reflects group prop 2`] = `
+<a
+  className="dropdown-item"
+  href="#coursebutton"
+  onClick={[Function]}
+>
+  comp550
+</a>
+`;
+
+exports[`Component reflects group prop 3`] = `
+<a
+  className="dropdown-item"
+  href="#coursebutton"
+  onClick={[Function]}
+>
+  comp690
+</a>
+`;
