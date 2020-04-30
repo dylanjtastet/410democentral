@@ -32,9 +32,6 @@ function CategoryMenu({
 			</div>);
 	}
 
-	console.error("dir = " + JSON.stringify(dir));
-	console.error("activeGroup = " + activeGroup);
-
 	let groupdir;
 	if (typeof (activeGroup) == "string") {
 		groupdir = dir[activeGroup];
@@ -68,7 +65,7 @@ function CategoryMenu({
 								{isAdmin?
 								<div>
 									<ContextMenuTrigger id={groupcat._id}>
-										<a className="menu-label titletext">{groupcat.name}</a>
+										<a className="menu-label titletext" href="#categorybutton">{groupcat.name}</a>
 									</ContextMenuTrigger>
 
 									<ContextMenu id={groupcat._id}>
@@ -80,7 +77,7 @@ function CategoryMenu({
 									
 								</div>
 								:
-								<a className="menu-label titletext">{groupcat.name}</a>
+								<a className="menu-label titletext" href="#categorybutton">{groupcat.name}</a>
 								}
 							</div>
 							<ul className="menu-list">

@@ -12,7 +12,6 @@ const Courseadd = (props) => {
 
     const handleCourseChange = (event,newValue) => {
         event.preventDefault()
-        console.log(newValue);
         if (newValue) {
             setCourse(newValue._id)
         } else {
@@ -27,12 +26,11 @@ const Courseadd = (props) => {
             method: "GET",
 			credentials: "include"
 		}).then(res => {
-            console.log(res);
             props.setShowCourseAdd(false);
             props.fetchGroups();
         }
         ).catch((err) => {
-            console.log(err);
+            //console.log(err);
         })
     }
 

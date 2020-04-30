@@ -1,0 +1,63 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Component responds to text input changes 1`] = `
+<div>
+  <input
+    className="input paraminputs textinput"
+    onChange={[Function]}
+    placeholder="course name"
+    type="text"
+    value=""
+  />
+  <div>
+    <span
+      className="rightmargin"
+    >
+      <button
+        className="button is-static"
+      >
+        Add
+      </button>
+    </span>
+    <span>
+      <button
+        className="button"
+        onClick={[Function]}
+      >
+        Cancel
+      </button>
+    </span>
+  </div>
+</div>
+`;
+
+exports[`Component responds to text input changes 2`] = `
+<div>
+  <input
+    className="input paraminputs textinput"
+    onChange={[Function]}
+    placeholder="course name"
+    type="text"
+    value=""
+  />
+  <div>
+    <span
+      className="rightmargin"
+    >
+      <button
+        className="button is-static"
+      >
+        Add
+      </button>
+    </span>
+    <span>
+      <button
+        className="button"
+        onClick={[Function]}
+      >
+        Cancel
+      </button>
+    </span>
+  </div>
+</div>
+`;

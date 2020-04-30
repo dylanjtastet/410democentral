@@ -10,12 +10,14 @@
     "start:darwin:linux": "mkdir -p data/db; mongod --dbpath data/db > /dev/null & (sleep 1; node init_db_binary_tree_and_heap.js > /dev/null; node app.js > /dev/null & sleep 1)",
     "start:win32": "concurrently --kill-others \"mongod --dbpath data\\db > NUL\" \"node init_db_binary_tree_and_heap.js && node app.js\"",
     "stop:win32": "@powershell Stop-Process -Name \"mongod\" -Force; Stop-Process -Name \"node\" -Force",
-    "test": "jest"
+    "test": "jest --runInBand"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.19.0",
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
     "express": "^4.17.1",

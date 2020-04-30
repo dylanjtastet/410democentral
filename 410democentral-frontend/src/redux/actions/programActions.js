@@ -18,8 +18,6 @@ import {
 
 import {
 	getActiveProgramID,
-	getProgramFromID,
-	getProgramNameFromID,
 	getProgramLocalCodeFromID
 } from '../selectors/programSelectors';
 import { fetchCategories } from './categoryActions';
@@ -49,7 +47,6 @@ export const fetchProgram = (id) => {
 		}
 		let sampleURL = new URL("http://localhost:3009/sample");
 		sampleURL.searchParams.append("id", id);
-		console.log("here");
 		fetch(sampleURL, {
 			credentials: "include"
 		})
@@ -103,7 +100,6 @@ export const pushLocalChanges = (
 		}
 
 		let sampleURL = new URL("http://localhost:3009/sample");
-		console.log(id)
 		sampleURL.searchParams.append("sample", id);
 		if (catID !== null && catID !== "") {
 			sampleURL.searchParams.append("category", catID);
@@ -150,7 +146,6 @@ export const pushCurrentLocalChanges = (
 }
 
 export const addNewProgram = (program, category, group, user, setCurrent) => {
-	console.log("test");
 	return dispatch => {
 		dispatch(pushProgramBegin(null));
 		let sampleURL = new URL("http://localhost:3009/sample");
@@ -174,7 +169,6 @@ export const addNewProgram = (program, category, group, user, setCurrent) => {
 			dispatch(pushProgramSuccess(data.newId, program.code));
 			dispatch(fetchCategories());
 			if (setCurrent) {
-				console.log("data = " + data.newId);
 				dispatch(fetchProgram(data.newId));
 				dispatch(setActiveProgram(data.newId));
 			}

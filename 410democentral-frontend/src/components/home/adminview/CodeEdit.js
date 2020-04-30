@@ -20,7 +20,6 @@ import 'bulma/css/bulma.css';
 import '../../../../node_modules/@fortawesome/fontawesome-free/css/all.css'
 
 import {Controlled as CodeMirror} from 'react-codemirror2';
-import { getCategoriesForGroup } from '../../../redux/selectors/categorySelectors';
 
 function CodeEdit({
     showCodeModal,
@@ -110,7 +109,6 @@ function CodeEdit({
             window.alert("Must select category and non-empty program name.");
             return;
         }
-        //console.log(program);
         if (isNewProgram) {
             addNewProgram(
                 {name: name, code: program.localCode},

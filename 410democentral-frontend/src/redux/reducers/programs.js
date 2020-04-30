@@ -70,7 +70,6 @@ const programs = (state = initState, action) => {
 		case FETCH_PROGRAM_SUCCESS: {
 			const {id, program} = action.payload;
 			const isNew = !state.progIDs.includes(id);
-			//console.log("isNew = " + isNew);
 			let new_state = {
 				...state,
 				progIDs: isNew ? [...state.progIDs, id] : state.progIDs,
@@ -91,6 +90,20 @@ const programs = (state = initState, action) => {
 				fetchState: {
 					...state.fetchState,
 					inProgress: false,
+				}
+			}
+			// Adding hiddenCode conditionally to avoid regresssion,
+			// since it isn't currently guaranteed to be present
+			if ("hiddenCode" in program) {
+				new_state = {
+					...new_state,
+					progs: {
+						...new_state.progs,
+						[id] : {
+							...new_state.progs[id],
+							hiddenCode: program.hiddenCode
+						}
+					}
 				}
 			}
 			return setCodeState(new_state, id, program.code, isNew);
@@ -241,7 +254,6 @@ const programs = (state = initState, action) => {
 // if hasEdits is false (prev local code hadn't been changed since 
 // last fetch) or forceUpdateLocal is true, localCode will be updated as well
 const setCodeState = (state, id, newCode, forceUpdateLocal = false) => {
-	//console.log("here2")
 	let new_state = setRemoteCodeState(state, id, newCode);
 	if (forceUpdateLocal || !state.progs[id].editState.hasEdits) {
 		new_state = setLocalCodeState(new_state, id, newCode);

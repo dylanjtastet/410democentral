@@ -12,7 +12,6 @@ export default class ConstControlPanel extends React.Component{
         this.pending = false;
         props.evalWorker.onmessage = this.onConstInit;
         props.evalWorker.onerror = (err) => console.log(err); 
-        console.log(props.evalWorker);
     }
 
     handleChange(id, e){
@@ -21,7 +20,6 @@ export default class ConstControlPanel extends React.Component{
     }
     
     onConstInit(event){
-        console.log(event);
         let append = (lst, item) => {
             lst.push(item);
             return lst;
@@ -83,7 +81,6 @@ export default class ConstControlPanel extends React.Component{
         }
 
         else if(type === "graph"){
-            console.log("got graph");
             this.props.setGraph({show: true, data: event.data.data});
         }
     }
