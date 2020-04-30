@@ -41,7 +41,7 @@ export const fetchGroupsFailure = error => ({
 	payload: {error: error}
 });
 
-export const fetchGroups = () => {
+export const fetchGroups = (resetActiveGroup = true) => {
 	return async dispatch => {
 		dispatch(fetchGroupsBegin());
 		let allgroupURL = new URL("http://localhost:3009/allgroups");
@@ -75,7 +75,10 @@ export const fetchGroups = () => {
 			}
 
 			dispatch(fetchGroupsSuccess(data));
-			dispatch(setActiveGroup("My Code"));
+
+			if (resetActiveGroup) {
+				dispatch(setActiveGroup("My Code"));
+			}
 		}
 		catch(error) {
 			dispatch(fetchGroupsFailure(error));
@@ -171,7 +174,7 @@ export const addMemberToGroup = (name, member = null) => {
 			dispatch(addMemberToGroupSuccess());
 			// Various cases complexify local state, so we just
 			// re-fetch all the groups
-			dispatch(fetchGroups());
+			dispatch(fetchGroups(false));
 		})
 		.catch(error => dispatch(addMemberToGroupFailure(error)));		
 	};
@@ -209,7 +212,7 @@ export const removeMemberFromGroup = (name, member = null) => {
 			dispatch(removeMemberFromGroupSuccess());
 			// Various cases complexify local state, so we just
 			// re-fetch all the groups
-			dispatch(fetchGroups());
+			dispatch(fetchGroups(false));
 		})
 		.catch(error => dispatch(removeMemberFromGroupFailure(error)));		
 	};
