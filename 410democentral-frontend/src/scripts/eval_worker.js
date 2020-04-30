@@ -1,17 +1,20 @@
 export default () => {
 
 let suppressErrors = false;
-
+let rootConsole = console;
 let sendToParent = (messageInfo) => {
     return (data) => {
-        if(suppressErrors && (messageInfo.level === "warn" || messageInfo.level === "error"))
-            return;
+        // if(suppressErrors && (messageInfo.level === "warn" || messageInfo.level === "error"))
+        //     return;
+        rootConsole.log("hello");
         let msg = {...messageInfo, data: data};
         try {
             // Add origin-check for (maybe) more security
             // eslint-disable-next-line no-restricted-globals
             self.postMessage(msg);
-        } catch (err) {/*do something here*/}
+        } catch (err) {
+            rootConsole.log(err);
+        }
     }
 }
 

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useRef} from 'react';
 import {connect} from 'react-redux';
 
 import 'bulma/css/bulma.css';
@@ -39,10 +39,12 @@ function Content(props) {
   
   const [showCopyModal, setShowCopyModal] = useState(false);
 
-  const [consoleBuffer, setConsoleBuffer] = useState([]);
+  const [consoleRerenderHook, setConsoleRerenderHook] = useState();
 
   // log array for console feed
   const [logs, setLogs] = useState([]);
+
+  const consoleBuffer = useRef([]);
 
   // iframe specific (uncomment for iframes)
   /*
@@ -174,8 +176,8 @@ function Content(props) {
         <div className="container columns">
             <div className="column is-2">
                 {/* This manages all of the webworker state. It aint pretty but it works */}
-                <ConstControlPanel setConsoleBuffer = {setConsoleBuffer} code={code}
-                  evalWorker = {evalWorker} setLogs = {setLogs} setGraph = {setGraph}/>
+                <ConstControlPanel code={code} setConsoleRerenderHook = {setConsoleRerenderHook}
+                  evalWorker = {evalWorker} setLogs = {setLogs} setGraph = {setGraph} consoleBuffer = {consoleBuffer}/>
                 <p>
                     <button className="button runbutton" 
                       onClick={props.fetchActiveProgram}>Reload</button>
@@ -186,8 +188,7 @@ function Content(props) {
                 </p>
             </div>
             <div className="column console">
-                <ConsoleWrapper logs={logs} setLogs={setLogs} 
-                  consoleBuffer={consoleBuffer} setConsoleBuffer={setConsoleBuffer} />
+                <ConsoleWrapper logs={logs} setLogs={setLogs} consoleRerenderHook = {consoleRerenderHook} consoleBuffer = {consoleBuffer}/>
             </div>
         </div>
 
