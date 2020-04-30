@@ -92,6 +92,20 @@ const programs = (state = initState, action) => {
 					inProgress: false,
 				}
 			}
+			// Adding hiddenCode conditionally to avoid regresssion,
+			// since it isn't currently guaranteed to be present
+			if ("hiddenCode" in program) {
+				new_state = {
+					...new_state,
+					progs: {
+						...new_state.progs,
+						[id] : {
+							...new_state.progs[id],
+							hiddenCode: program.hiddenCode
+						}
+					}
+				}
+			}
 			return setCodeState(new_state, id, program.code, isNew);
 		}
 
