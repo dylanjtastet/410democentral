@@ -45,7 +45,7 @@ const HelpPage = () => {
             </section>
             <section className="section">
                 <div className="container">
-                    <h1 className="title is-5">Running Code</h1>
+                    <h1 className="title is-3">Running Code</h1>
                 </div>
                  
             </section>
