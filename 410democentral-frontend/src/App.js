@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
 import './App.css';
 import HomePage from './components/home/HomePage';
 import HelpPage from './components/help/HelpPage';
@@ -8,6 +9,8 @@ import Dropdown from './components/common/dropdown';
 
 import Cookies from 'js-cookie';
 
+import {clearSessionState} from './redux/actions/index';
+
 import {
     BrowserRouter as Router,
     Switch,
@@ -15,7 +18,9 @@ import {
     Link
 } from "react-router-dom";
 
-function App() {
+function App({
+    clearSessionState
+}) {
     const [sessid, setSessid] = useState(Cookies.get('sessid'));
     const [isroot, setIsroot] = useState(Cookies.get('isroot'));
 
@@ -24,6 +29,7 @@ function App() {
         Cookies.remove("isroot");
         setSessid(false);
         setIsroot(false);
+        clearSessionState();
     }
 
     function LogInOutBtn() {
@@ -121,4 +127,4 @@ function App() {
     );
 }
 
-export default App;
+export default connect(null, {clearSessionState})(App);
