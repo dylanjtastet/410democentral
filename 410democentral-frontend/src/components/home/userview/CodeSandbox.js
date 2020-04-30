@@ -8,7 +8,6 @@ function CodeSandbox(props) {
 
 	useEffect(() => {
         const processMessage = (e) => {
-            console.log(e.data);
             if(frameRef.current===null) {
                 return;
             }

@@ -30,15 +30,12 @@ const HomePage = ({
 
     const handleDropCourse = (event) => {
         if (group.name !== "My Code") {
-            console.log(group.name)
             removeMemberFromGroup(group.name)
         } else {
             return
         }
     }
 
-    // console.log("hello")
-    // console.log(group);
     if (typeof group === "undefined" || groupFetchState.inProgress) {
         return (<div></div>);
     } else if (groupFetchState.error !== null) {

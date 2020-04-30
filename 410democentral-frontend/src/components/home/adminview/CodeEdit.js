@@ -110,7 +110,6 @@ function CodeEdit({
             window.alert("Must select category and non-empty program name.");
             return;
         }
-        //console.log(program);
         if (isNewProgram) {
             addNewProgram(
                 {name: name, code: program.localCode},

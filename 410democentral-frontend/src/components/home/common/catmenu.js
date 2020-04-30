@@ -32,9 +32,6 @@ function CategoryMenu({
 			</div>);
 	}
 
-	console.error("dir = " + JSON.stringify(dir));
-	console.error("activeGroup = " + activeGroup);
-
 	let groupdir;
 	if (typeof (activeGroup) == "string") {
 		groupdir = dir[activeGroup];

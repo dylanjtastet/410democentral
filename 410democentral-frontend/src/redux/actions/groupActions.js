@@ -60,7 +60,6 @@ export const fetchGroups = () => {
 			for (let i = 0; i < data.length; i++) {
 				if (data[i].isInstructor) {
 					let groupURL = new URL("http://localhost:3009/group");
-					console.log(data[i])
 					if (typeof data[i]._id==="string") {
 						groupURL.searchParams.append("name", data[i]._id);
 					} else {
@@ -96,7 +95,7 @@ export const fetchGroupNames = async () => {
 
 	} catch (error) {
 		//Fix this
-		console.log(error)
+        //console.log(error)
 		return []
 	}
 }
@@ -199,7 +198,6 @@ export const removeMemberFromGroup = (name, member = null) => {
 		if (member !== null) {
 			removeURL.searchParams.append("username", member);
 		}
-		console.log(name)
 		fetch(removeURL, {
 			credentials: "include"
 		})
