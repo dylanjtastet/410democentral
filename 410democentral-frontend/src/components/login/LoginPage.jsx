@@ -54,8 +54,6 @@ export default class LoginPage extends React.Component {
                 let rootRes = await rootResp.json();
                 Cookies.set("isroot", rootRes, {expires: new Date(res.exp)});
 
-                console.log(Cookies.get("sessid"));
-                console.log(Cookies.get("isroot"));
                 this.props.setSessid(res.sessid);
                 this.props.setIsroot(rootRes);
             }
@@ -64,7 +62,7 @@ export default class LoginPage extends React.Component {
             }
         }
         catch(err){
-            console.log(err);
+            //console.log(err);
             this.setState({status: loginStatus.FAILURE});
         }
     }

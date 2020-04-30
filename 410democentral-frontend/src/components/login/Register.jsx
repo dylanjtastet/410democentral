@@ -55,9 +55,7 @@ export default class RegisterModal extends React.Component{
             this.setState({ nstatus: nameStatus.PENDING});
             let resp = await fetch("http://localhost:3009/user/"+this.state.username);
             let val = await resp.json();
-            console.log(val);
             if(val.taken){
-                console.log("bop");
                 this.setState({nstatus: nameStatus.TAKEN});
             }
             else{
@@ -88,7 +86,7 @@ export default class RegisterModal extends React.Component{
             }
         }
         catch(err){
-            console.log(err);
+            //console.log(err)
             this.setState({regStatus: submitStatus.FAILURE});
         }
     }

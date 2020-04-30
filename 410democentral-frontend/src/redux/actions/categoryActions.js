@@ -61,7 +61,6 @@ export const fetchCategoryArray = () => {
 		})
 		.then(res => {
 			if (!res.ok) throw Error(res.statusText);
-			console.log(res)
 			return res;
 		})
 		.then(res => res.json())

@@ -30,15 +30,12 @@ const HomePage = ({
 
     const handleDropCourse = (event) => {
         if (group.name !== "My Code") {
-            console.log(group.name)
             removeMemberFromGroup(group.name)
         } else {
             return
         }
     }
 
-    console.log("hello")
-    console.log(group);
     if (typeof group === "undefined" || groupFetchState.inProgress) {
         return (<div></div>);
     } else if (groupFetchState.error !== null) {
@@ -69,7 +66,12 @@ const HomePage = ({
                                     <ToggleButton key={1} value={true}>Admin View</ToggleButton>
                                 </ToggleButtonGroup>
                         :
-                            <span></span>
+                        (group.name !== "My Code")?
+                        <div>
+                            <button className="button is-small is-danger" onClick={handleDropCourse}>Drop Course</button>
+                        </div>
+                        :
+                        <span></span>
                         }
                         </div>
                     </div>
@@ -80,13 +82,6 @@ const HomePage = ({
                     }
                 </div>
             </div>
-            {(group.name !== "My Code")?
-                <div>
-                    <button className="button is-small" onClick={handleDropCourse}>Drop Course</button>
-                </div>
-                :
-                <span></span>
-            }
         </div>
     );
 }

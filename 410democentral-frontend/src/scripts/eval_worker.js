@@ -1,8 +1,11 @@
 export default () => {
 
+let suppressErrors = false;
 
 let sendToParent = (messageInfo) => {
     return (data) => {
+        if(suppressErrors && (messageInfo.level === "warn" || messageInfo.level === "error"))
+            return;
         let msg = {...messageInfo, data: data};
         try {
             // Add origin-check for (maybe) more security
@@ -11,6 +14,7 @@ let sendToParent = (messageInfo) => {
         } catch (err) {/*do something here*/}
     }
 }
+
 
 // eslint-disable-next-line no-restricted-globals
 self.console = {
@@ -75,14 +79,21 @@ function eval_const_init(sample){
     //Clear the const vals when this is called again.
     //Remember to call eval_const_init again to get the new ui widgets
     //if the code sample is edited.
+    suppressErrors = true;
     constVals = [];
     let ui_fns = get_ui_fns(true);
     // eval constructor is intended here
     // eslint-disable-next-line
     let initvars = Function(...ui_fns.map(x => x.name),"var initvars; return initvars;"+sample)(...ui_fns);
     if(initvars){
-        initvars();
+        try{
+            initvars();
+        }
+        catch(err){
+            return
+        }
     }
+    suppressErrors = false;
 }
 
 //Run the entire sample (including 'initvars') and bind the 
@@ -93,13 +104,11 @@ function eval_all(sample){
     // eval constructor is intended here
     // eslint-disable-next-line
     let getLineGraph = sendToParent({type: "graph"});
-    // let getLineGraph = () => console.log("tried to graph");
     Function(...ui_fns.map(x=>x.name), "getLineGraph", sample)(...ui_fns, getLineGraph);
 }
 
 
 onmessage = function(event){
-    // console.log(event.data);
     if(event.data.type === "EVAL_CONST_INIT"){
         eval_const_init(event.data.sample);
     }

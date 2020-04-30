@@ -53,9 +53,6 @@ app.get('/dir', async function(req,res, next){
                 return {_id: name}
             });
         }
-        console.log(samples);
-        // console.log(categories);
-        // console.log(samples);
 
         for(i=0; i < groups.length; i++){
             groupMap[groups[i]._id] = groups[i];
@@ -144,9 +141,6 @@ app.post('/sample', async function(req,res,next){
                             newFields["category"] = req.query.category;
                         }
                     }
-                    console.log("Updating sample:");
-                    console.log(req.query.sample);
-                    console.log(newFields);
                     await db.updateCodeSample(req.query.sample, newFields);
                     res.sendStatus(200);
                 }
@@ -201,7 +195,6 @@ app.get('/allcategories', async function(req,res,next) {
             else{
                 categories = await db.getCategoriesForUser(user);
             }
-            console.log(categories)
             res.send(categories);
         }
         else{
@@ -236,7 +229,6 @@ app.delete('/category', async function(req,res,next){
     try{
         if(req.cookies.sessid){
             let cat = await db.getCategory(req.body.id);
-            console.log(req.body.id, cat);
             if(await auth.checkGroupPermissionsForSession(req.cookies.sessid, cat.group)){
                 await db.deleteCategory(req.body.id);
                 res.sendStatus(200);
@@ -434,7 +426,6 @@ app.get("/group", async function(req, res, next) {
                     username: member._id,
                     instructor: await auth.checkGroupPermissions(member, req.query.name)
                 })));
-                console.log(members);
                 res.send(members);
             }
             else {

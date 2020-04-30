@@ -110,7 +110,6 @@ function Content(props) {
   }
 
   const saveChanges = (event) => {
-    console.log("Saving?");
     props.pushCurrentLocalChanges();
   }
 
