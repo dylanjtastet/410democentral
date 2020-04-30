@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import 'bulma/css/bulma.css';
 import '../../../../node_modules/@fortawesome/fontawesome-free/css/all.css'
 
-import Studentadd from './studentadd.jsx';
 import {
   addMemberToGroup,
   removeMemberFromGroup
@@ -11,16 +10,15 @@ import {
 
 function StudentsTab(props) {
   const [student, setStudent] = useState("");
+
+  // adding students for admins was never implemented (students add themselves to classes)
+  // eslint-disable-next-line no-unused-vars
   const [adding, setAdding] = useState(false);
 
   const selectStudent = function(student) {
       return () => {
         setStudent(student);
       }
-  }
-
-  const startAdd = function() {
-      setAdding(true);
   }
 
   const handleRemoveStudent = event => {

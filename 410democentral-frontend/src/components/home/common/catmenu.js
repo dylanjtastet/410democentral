@@ -65,7 +65,7 @@ function CategoryMenu({
 								{isAdmin?
 								<div>
 									<ContextMenuTrigger id={groupcat._id}>
-										<a className="menu-label titletext">{groupcat.name}</a>
+										<a className="menu-label titletext" href="#categorybutton">{groupcat.name}</a>
 									</ContextMenuTrigger>
 
 									<ContextMenu id={groupcat._id}>
@@ -77,7 +77,7 @@ function CategoryMenu({
 									
 								</div>
 								:
-								<a className="menu-label titletext">{groupcat.name}</a>
+								<a className="menu-label titletext" href="#categorybutton">{groupcat.name}</a>
 								}
 							</div>
 							<ul className="menu-list">

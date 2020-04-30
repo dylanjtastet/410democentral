@@ -18,8 +18,6 @@ import {
 
 import {
 	getActiveProgramID,
-	getProgramFromID,
-	getProgramNameFromID,
 	getProgramLocalCodeFromID
 } from '../selectors/programSelectors';
 import { fetchCategories } from './categoryActions';

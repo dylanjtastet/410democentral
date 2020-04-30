@@ -12,7 +12,6 @@ import {Controlled as CodeMirror} from 'react-codemirror2';
 import '../../../general.css';
 import ConsoleWrapper from './ConsoleWrapper.js'
 import Graphbox from './graphbox.jsx';
-import CodeSandbox from './CodeSandbox.js'
 import ConstControlPanel from './ConstControlPanel.js'
 import worker_script from "../../../scripts/eval_worker.js"
 import WorkerWrapper from "../../../scripts/workerWrapper.js"
@@ -31,10 +30,6 @@ require('codemirror/mode/xml/xml');
 require('codemirror/mode/javascript/javascript');
 
 const evalWorker = new WorkerWrapper(worker_script);
-
-// The following const's are a convenience for checking view/edit mode
-const MODE_VIEWING = "MODE_VIEWING";
-const MODE_EDITING = "MODE_EDITING";
 
 function Content(props) {
 
@@ -75,9 +70,8 @@ function Content(props) {
 
   // Some convenient local decls derived from redux state
   let editing = props.program.editState.editing;
-  let hasEdits = props.program.editState.hasEdits;
   let canPushEdits = props.program.isEditable;
-  let editorMode, code;
+  let code;
   if (editing) {
     code = props.program.localCode;
   } else {
@@ -113,14 +107,6 @@ function Content(props) {
     props.pushCurrentLocalChanges();
   }
 
-
-  const reloadCode = (event) => {
-    props.fetchActiveProgram();
-    if (editing) {
-      props.checkoutRemoteCode();
-    }
-  }
-  
   /* Main logic */
 
   //TODO: Clear content when activeGroup changes
