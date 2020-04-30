@@ -76,9 +76,10 @@ export default class ConstControlPanel extends React.Component{
         //Restructure this later. Only one handler so it should be in content
         //and add to a buffer of object which are transformed into widgets
         else if(type === "console"){
-            this.props.setConsoleBuffer(consoleBuffer =>
-                [...consoleBuffer, {level: event.data.level, data: event.data.data}]
-            );
+            // this.props.localBuffer.current.push({level: event.data.level, data: event.data.data});
+            // console.log(this.props.localBuffer.current);
+            this.props.consoleBuffer.current.push({level: event.data.level, data: event.data.data});
+            this.props.setConsoleRerenderHook({});
         }
 
         else if(type === "graph"){
@@ -90,7 +91,7 @@ export default class ConstControlPanel extends React.Component{
     componentDidMount() {
         // Clear buffer and then logs to make sure nothing remaining in buffer
         // makes its way into the new program's console log
-        this.props.setConsoleBuffer([]);
+        this.props.consoleBuffer.current = [];
         this.props.setLogs([]);
         this.sendWorkerInit("");
     }
