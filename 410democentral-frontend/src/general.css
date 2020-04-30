@@ -11,6 +11,10 @@
     color: black
 }
 
+.inlinecode {
+    font-family: "Lucida Console, monospace"
+}
+
 .groupmanage {
     padding: 20px;
 }
