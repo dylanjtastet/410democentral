@@ -101,9 +101,9 @@ function eval_const_init(sample){
 function eval_all(sample){
     let ui_fns = get_ui_fns(false);
 
+    let getLineGraph = sendToParent({type: "graph"});
     // eval constructor is intended here
     // eslint-disable-next-line
-    let getLineGraph = sendToParent({type: "graph"});
     Function(...ui_fns.map(x=>x.name), "getLineGraph", sample)(...ui_fns, getLineGraph);
 }
 
