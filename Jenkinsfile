@@ -24,7 +24,8 @@ npm install'''
 
     stage('deploy') {
       steps {
-        sh 'BUILD_ID=dontKillMe ./scripts/productionStart'
+        sh '''chmod +x ./scripts/productionStart
+BUILD_ID=dontKillMe ./scripts/productionStart'''
       }
     }
 
