@@ -53,6 +53,7 @@ export default class RegisterModal extends React.Component{
         }
         else{
             this.setState({ nstatus: nameStatus.PENDING});
+            console.log(process.env);
             let resp = await fetch(process.env.BASEURL+"user/"+this.state.username);
             let val = await resp.json();
             if(val.taken){
