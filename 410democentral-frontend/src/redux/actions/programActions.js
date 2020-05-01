@@ -45,7 +45,7 @@ export const fetchProgram = (id) => {
 		if (id === "") {
 			dispatch(fetchProgramFailure(Error("Cannot fetch program without ID")));
 		}
-		let sampleURL = new URL("http://localhost:3009/sample");
+		let sampleURL = new URL(process.env.BASEURL+"sample");
 		sampleURL.searchParams.append("id", id);
 		fetch(sampleURL, {
 			credentials: "include"
@@ -99,7 +99,7 @@ export const pushLocalChanges = (
 			dispatch(fetchProgramFailure(Error("Cannot push changes to program with null ID")));
 		}
 
-		let sampleURL = new URL("http://localhost:3009/sample");
+		let sampleURL = new URL(process.env.BASEURL+"sample");
 		sampleURL.searchParams.append("sample", id);
 		if (catID !== null && catID !== "") {
 			sampleURL.searchParams.append("category", catID);
@@ -148,7 +148,7 @@ export const pushCurrentLocalChanges = (
 export const addNewProgram = (program, category, group, user, setCurrent) => {
 	return dispatch => {
 		dispatch(pushProgramBegin(null));
-		let sampleURL = new URL("http://localhost:3009/sample");
+		let sampleURL = new URL(process.env.BASEURL+"sample");
 		sampleURL.searchParams.append("category", category);
 		sampleURL.searchParams.append("group", group);
 		sampleURL.searchParams.append("user", user);
@@ -205,7 +205,7 @@ export const deleteProgramFailure = error => ({
 export const deleteProgram = id => {
 	return (dispatch, getState) => {
 		dispatch(deleteProgramBegin(id));
-		let sampleURL = new URL("http://localhost:3009/sample");
+		let sampleURL = new URL(process.env.BASEURL+"sample");
 
 		fetch(sampleURL, {
 			credentials: "include",

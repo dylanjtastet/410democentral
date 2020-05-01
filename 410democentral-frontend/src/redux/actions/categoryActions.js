@@ -55,7 +55,7 @@ export const fetchCategoryTreeFailure = error => ({
 export const fetchCategoryArray = () => {
 	return dispatch => {
 		dispatch(fetchCategoryArrayBegin());
-		let categoryURL = new URL("http://localhost:3009/allcategories");
+		let categoryURL = new URL(process.env.BASEURL+"allcategories");
 		fetch(categoryURL, {
 			credentials: "include"
 		})
@@ -75,7 +75,7 @@ export const fetchCategoryArray = () => {
 export const fetchCategoryTree = () => {
 	return dispatch => {
 		dispatch(fetchCategoryTreeBegin());
-		let dirURL = new URL("http://localhost:3009/dir");
+		let dirURL = new URL(process.env.BASEURL+"dir");
 		fetch(dirURL, {
 			credentials: "include"
 		})
@@ -126,7 +126,7 @@ export const createCategoryFailure = error => ({
 export const createCategory = (name, parent, group) => {
 	return dispatch => {
 		dispatch(createCategoryBegin());
-		let categoryURL = new URL("http://localhost:3009/category");
+		let categoryURL = new URL(process.env.BASEURL+"category");
 		categoryURL.searchParams.append("name", name);
 		categoryURL.searchParams.append("parent", parent);
 		categoryURL.searchParams.append("group", group);
@@ -171,7 +171,7 @@ export const updateCategoryFailure = error => ({
 export const updateCategory = (id, name, parent, group) => {
 	return dispatch => {
 		dispatch(updateCategoryBegin(id));
-		let categoryURL = new URL("http://localhost:3009/category");
+		let categoryURL = new URL(process.env.BASEURL+"category");
 		categoryURL.searchParams.append("id", id);
 		fetch(categoryURL, {
 			credentials: "include",
@@ -214,7 +214,7 @@ export const deleteCategoryFailure = error => ({
 export const deleteCategory = id => {
 	return dispatch => {
 		dispatch(deleteCategoryBegin(id));
-		let categoryURL = new URL("http://localhost:3009/category");
+		let categoryURL = new URL(process.env.BASEURL+"category");
 		categoryURL.searchParams.append("id", id);
 		fetch(categoryURL, {
 			credentials: "include",

@@ -44,7 +44,7 @@ export const fetchGroupsFailure = error => ({
 export const fetchGroups = (resetActiveGroup = true) => {
 	return async dispatch => {
 		dispatch(fetchGroupsBegin());
-		let allgroupURL = new URL("http://localhost:3009/allgroups");
+		let allgroupURL = new URL(process.env.BASEURL+"allgroups");
 		try {
 			let res = await fetch(allgroupURL, {
 				credentials: "include"
@@ -59,7 +59,7 @@ export const fetchGroups = (resetActiveGroup = true) => {
 
 			for (let i = 0; i < data.length; i++) {
 				if (data[i].isInstructor) {
-					let groupURL = new URL("http://localhost:3009/group");
+					let groupURL = new URL(process.env.BASEURL+"group");
 					if (typeof data[i]._id==="string") {
 						groupURL.searchParams.append("name", data[i]._id);
 					} else {
@@ -87,7 +87,7 @@ export const fetchGroups = (resetActiveGroup = true) => {
 }
 
 export const fetchGroupNames = async () => {
-	let groupnameURL = new URL("http://localhost:3009/allgroupnames")
+	let groupnameURL = new URL(process.env.BASEURL+"allgroupnames")
 	try {	
 		let res = await fetch(groupnameURL, {
 			credentials: "include"
@@ -122,7 +122,7 @@ export const createGroupFailure = error => ({
 export const createGroup = name => {
 	return dispatch => {
 		dispatch(createGroupBegin());
-		let groupURL = new URL("http://localhost:3009/group");
+		let groupURL = new URL(process.env.BASEURL+"group");
 		groupURL.searchParams.append("name", name);
 		fetch(groupURL, {
 			method: "POST",
@@ -197,7 +197,7 @@ export const removeMemberFromGroupFailure = error => ({
 export const removeMemberFromGroup = (name, member = null) => {
 	return dispatch => {
 		dispatch(removeMemberFromGroupBegin(name));
-		let removeURL = new URL("http://localhost:3009/removefrom/" + name);
+		let removeURL = new URL(process.env.BASEURL+"removefrom/" + name);
 		if (member !== null) {
 			removeURL.searchParams.append("username", member);
 		}
@@ -222,7 +222,7 @@ export const removeMemberFromGroup = (name, member = null) => {
 // just refetching on every update (maybe)
 export const addInstructorToGroup = (groupName, username) => {
 	return dispatch => {
-		let addInstructorURL = new URL("http://localhost:3009/addinstructor");
+		let addInstructorURL = new URL(process.env.BASEURL+"addinstructor");
 		addInstructorURL.searchParams.append("username", username);
 		addInstructorURL.searchParams.append("groupid", groupName);
 
@@ -238,7 +238,7 @@ export const addInstructorToGroup = (groupName, username) => {
 
 export const removeInstructorFromGroup = (groupName, username) => {
 	return dispatch => {
-		let rmInstructorURL = new URL("http://localhost:3009/removeinstructor");
+		let rmInstructorURL = new URL(process.env.BASEURL+"removeinstructor");
 		rmInstructorURL.searchParams.append("username", username);
 		rmInstructorURL.searchParams.append("groupid", groupName);
 
@@ -272,7 +272,7 @@ export const deleteGroupFailure = error => ({
 export const deleteGroup = name => {
 	return dispatch => {
 		dispatch(deleteGroupBegin());
-		let groupURL = new URL("http://localhost:3009/group");
+		let groupURL = new URL(process.env.BASEURL+"group");
 		groupURL.searchParams.append("name", name);
 		fetch(groupURL, {
 			method: "DELETE",

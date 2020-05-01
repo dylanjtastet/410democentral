@@ -1,10 +1,15 @@
 import React from 'react';
 import 'bulma/css/bulma.css';
 
-export default function Courseselect({group, setActiveGroup, setOpened}) {
+export default function Courseselect({
+    group,
+    setActiveGroup,
+    setActiveProgram,
+    setOpened}) {
     const handleClick = function(event) {
         event.preventDefault();
         setActiveGroup(group);
+        setActiveProgram("");
         setOpened(false);
     }
 
