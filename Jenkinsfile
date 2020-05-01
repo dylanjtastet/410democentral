@@ -23,10 +23,6 @@ npm install'''
     }
 
     stage('deploy') {
-      agent any
-      environment {
-        JENKINS_NODE_COOKIE = 'dontkillme'
-      }
       steps {
         sh '''export JENKINS_NODE_COOKIE=dontKillMe
 pkill node
