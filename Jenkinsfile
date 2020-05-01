@@ -25,7 +25,7 @@ npm install'''
     stage('deploy') {
       steps {
         sh '''chmod +x ./scripts/productionStart
-BUILD_ID=dontKillMe ./scripts/productionStart'''
+JENKINS_NODE_COOKIE=dontKillMe ./scripts/productionStart'''
       }
     }
 
