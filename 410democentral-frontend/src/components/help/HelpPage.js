@@ -53,15 +53,47 @@ const HelpPage = () => {
                                 For the most part, you can just navigate to a demo in one of your courses and start running JavaScript! Be sure to
                                 select the "Edit" tab or "Make a copy" of an uneditable demo in order to make your own changes. We provide a few
                                 extra features that might be useful in running and creating Demos.
-
-                                For one, you can try using the <span className="inlinecode">getLineGraph</span> function, which
+                            </p>
+                         </div>
+                     </div>
+                 </div>
+                <br></br>
+                <div className="container">
+                    <h1 className="title is-5">Line Graphs</h1>
+                    <div className="columns">
+                        <div className="column is-two-thirds">
+                            <p>
+                                For one, you can try using the <span className="inlinecode"> getLineGraph </span> function, which
                                 takes a list of objects as input, each with an x and y value and then plots the resulting graph! This can be useful
                                 to analyze the running time of your code as the input size increases.
                             </p>
                         </div>
-                        <div className="column">
+                        <div className="columns">
                             <figure className="image">
                                 <img src={require("./HelpImages/getLineGraphExample.png")} alt="getLineGraph Example"/>
+                            </figure>
+                        </div>
+                    </div>
+                 </div>
+                 <div className="container">
+                    <h1 className="title is-5">UI Widgets</h1>
+                    <div className="columns">
+                        <div className="column is-two-thirds">
+                            <p>
+                                We've also provided some simple UI widgets that let you change the value of a variable through the user interface!
+                                The three main ones are continuousRange, integerRange, and Boolean. These are initialized in an
+                                <span className="inlinecode"> initvars </span> function which you should create and call at the top of your code. In
+                                this function, you should set the value of global variables to the calls of the form
+                                <ul style={{"list-style-type": "circle", "padding-left": "40px"}}>
+                                       <li><span className="inlinecode">continuousRange(minimum_value, maximum_value, label)</span></li>
+                                       <li><span className="inlinecode">integerRange(minimum_value, maximum_value, label)</span></li>
+                                       <li><span className="inlinecode">getBoolean(label)</span></li>
+                                </ul>
+                            </p>
+                        </div>
+                        <div className="columns">
+                            <figure className="image">
+                                <img src={require("./HelpImages/UIWidgets.png")} alt="UI Widgets Example"/>
                             </figure>
                         </div>
                     </div>
