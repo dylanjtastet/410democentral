@@ -24,8 +24,10 @@ npm install'''
 
     stage('deploy') {
       steps {
-        sh '''chmod +x ./scripts/productionStart
-JENKINS_NODE_COOKIE=dontKillMe ./scripts/productionStart'''
+        sh '''export JENKINS_NODE_COOKIE=dontKillMe
+sudo pkill node
+sudo node 410democentral-backend/app.js &
+sudo node 410democentral-backend/serv_frontend.js &'''
       }
     }
 

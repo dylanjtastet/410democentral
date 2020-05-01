@@ -57,6 +57,10 @@ test('Add and get category and child category from database', async () => {
 test('Delete parent category (should delete child)', async () => {
   //For some reason this one gets caught up on the db.deleteCategory() call.
   jest.setTimeout(1000)
+
+  await db.clearDB();
+  await db.createGroup('Comp210')
+  let category = await db.createCategory('Algorithms', null, 'Comp210')
   
   let categories = await db.getAllCategories()
   if (categories[0].name==='Algorithms') {
