@@ -10,7 +10,16 @@ import {
     fetchGroupNames
 } from '../../redux/actions/groupActions';
 
-const Dropdown = ({fetchState, groups, activeGroup, fetchGroups, setActiveGroup}) => {
+import { setActiveProgram } from '../../redux/actions/programActions';
+
+const Dropdown = ({
+    fetchState,
+    groups,
+    activeGroup,
+    fetchGroups,
+    setActiveGroup,
+    setActiveProgram
+}) => {
     useEffect(() => {
 	   fetchGroups();
        setActiveGroup("");
@@ -83,7 +92,9 @@ const Dropdown = ({fetchState, groups, activeGroup, fetchGroups, setActiveGroup}
                         return (
                             (group) ?
                             <Courseselect key={index} group={group}
-                                setActiveGroup={setActiveGroup} setOpened={setOpened}/>
+                                setActiveGroup={setActiveGroup} setOpened={setOpened}
+                                setActiveProgram={setActiveProgram}
+                                />
                             :
                             <span></span>
                         )
@@ -115,4 +126,8 @@ const mapStateToProps = state => ({
     activeGroup: state.groups.activeGroup,
 });
 
-export default connect(mapStateToProps, {fetchGroups, setActiveGroup})(Dropdown);
+export default connect(mapStateToProps, {
+    fetchGroups,
+    setActiveGroup,
+    setActiveProgram
+})(Dropdown);
