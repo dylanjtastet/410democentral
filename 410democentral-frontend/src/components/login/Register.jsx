@@ -54,7 +54,7 @@ export default class RegisterModal extends React.Component{
         else{
             this.setState({ nstatus: nameStatus.PENDING});
             console.log(process.env);
-            let resp = await fetch(process.env.REACT_APP_BASEURL+"user/"+this.state.username);
+            let resp = await fetch(process.env.REACT_APP_BASEURL + ":" + process.env.REACT_APP_BACKEND_PORT + "/"+"user/"+this.state.username);
             let val = await resp.json();
             if(val.taken){
                 this.setState({nstatus: nameStatus.TAKEN});
@@ -68,7 +68,7 @@ export default class RegisterModal extends React.Component{
     async handleSubmit(){
         try{
             this.setState({regStatus: submitStatus.PENDING});
-            let resp = await fetch(process.env.REACT_APP_BASEURL+"register", {
+            let resp = await fetch(process.env.REACT_APP_BASEURL + ":" + process.env.REACT_APP_BACKEND_PORT + "/"+"register", {
                 method: 'POST',
                 body: JSON.stringify({
                     "username": this.state.username,
