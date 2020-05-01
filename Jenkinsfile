@@ -15,10 +15,9 @@ npm install
 
     stage('deploy') {
       steps {
-        sh '''export BUILD_ID=dontKillMe
-pm2 kill
-pm2 start 410democentral-backend/app.js
-pm2 start 410democentral-backend/serv_frontend.js'''
+        sh '''pm2 kill
+export BUILD_ID=dontKillMe pm2 start 410democentral-backend/app.js
+export BUILD_ID=dontKillMe pm2 start 410democentral-backend/serv_frontend.js'''
       }
     }
 
