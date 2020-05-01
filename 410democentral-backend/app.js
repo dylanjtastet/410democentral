@@ -12,7 +12,7 @@ app.use(parser.json({limit: '1mb', strict:false}));
 app.use(cookieParser());
 
 app.use(function(req, res, next){
-    res.setHeader("Access-Control-Allow-Origin", "http://localhost:3001");
+    res.setHeader("Access-Control-Allow-Origin", "http://localhost:80");
     res.setHeader("Access-Control-Allow-Headers", "content-type");
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
     res.setHeader("Access-Control-Allow-Credentials", "true");

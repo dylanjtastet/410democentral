@@ -25,9 +25,9 @@ npm install'''
     stage('deploy') {
       steps {
         sh '''export JENKINS_NODE_COOKIE=dontKillMe
-pkill node
-node 410democentral-backend/app.js &
-node 410democentral-backend/serv_frontend.js &'''
+sudo pkill node
+sudo node 410democentral-backend/app.js &
+sudo node 410democentral-backend/serv_frontend.js &'''
       }
     }
 
