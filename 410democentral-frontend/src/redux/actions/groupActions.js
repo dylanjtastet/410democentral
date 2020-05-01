@@ -159,7 +159,7 @@ export const addMemberToGroupFailure = error => ({
 export const addMemberToGroup = (name, member = null) => {
 	return dispatch => {
 		dispatch(addMemberToGroupBegin());
-		let addURL = new URL("http://loclhost:3009/addto/" + name);
+		let addURL = new URL(process.env.REACT_APP_BASEURL + ":" + process.env.REACT_APP_BACKEND_PORT + "/addto/" + name);
 		if (member !== null) {
 			addURL.searchParams.append("username", member);
 		}
