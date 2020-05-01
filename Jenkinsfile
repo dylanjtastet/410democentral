@@ -23,10 +23,15 @@ npm install'''
     }
 
     stage('deploy') {
+      agent any
+      environment {
+        JENKINS_NODE_COOKIE = 'dontkillme'
+      }
       steps {
         sh '''export JENKINS_NODE_COOKIE=dontKillMe
-pm2 start -f -l /home/djt0812/pm2logb 410democentral-backend/app.js
-pm2 start -f -l /home/djt0812/pm2logf 410democentral-backend/serv_frontend.js'''
+pm2 kill
+pm2 start 410democentral-backend/app.js
+pm2 start 410democentral-backend/serv_frontend.js'''
       }
     }
 
