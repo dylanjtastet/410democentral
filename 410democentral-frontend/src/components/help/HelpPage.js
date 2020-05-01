@@ -53,6 +53,8 @@ const HelpPage = () => {
                                 For the most part, you can just navigate to a demo in one of your courses and start running JavaScript! Be sure to
                                 select the "Edit" tab or "Make a copy" of an uneditable demo in order to make your own changes. We provide a few
                                 extra features that might be useful in running and creating Demos.
+
+                                <br></br><br></br>Note: <span className="inlinecode"> console.log </span> only supports one argument at the moment.
                             </p>
                          </div>
                      </div>
