@@ -1,5 +1,7 @@
 export default () => {
 
+// this is never used, but could be useful for the commented-out code
+// eslint-disable-next-line no-unused-vars
 let suppressErrors = false;
 let rootConsole = console;
 let sendToParent = (messageInfo) => {

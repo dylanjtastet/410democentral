@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from 'react';
 
 import { Hook, Console, Decode } from 'console-feed'
-import ConstControlPanel from './ConstControlPanel';
 
 function ConsoleWrapper(props) {
 
@@ -34,7 +33,7 @@ function ConsoleWrapper(props) {
 			});
 			consoleBuffer.current = [];
 		}
-	}, [mockConsole, consoleRerenderHook]);
+	}, [mockConsole, consoleRerenderHook, consoleBuffer]);
 
 	return (
 		<Console class="console" logs={props.logs} variant="dark" />
