@@ -32,7 +32,7 @@ export default class LoginPage extends React.Component {
 
     async handleSubmit(event){
         try{
-            let resp = await fetch("http://localhost:3009/login", {
+            let resp = await fetch(process.env.BASEURL+"login", {
                                     headers:{"Content-Type": "application/json"},
                                     method: "POST",
                                     body: JSON.stringify({
@@ -44,7 +44,7 @@ export default class LoginPage extends React.Component {
             if(res.sessid){
                 Cookies.set("sessid", res.sessid, {expires: new Date(res.exp)});
 
-                let rootlink = new URL("http://localhost:3009/isroot")
+                let rootlink = new URL(process.env.BASEURL+"isroot")
                 let rootResp = await fetch(rootlink, {
                     headers:{"Content-Type": "application/json"},
                     method: "GET",

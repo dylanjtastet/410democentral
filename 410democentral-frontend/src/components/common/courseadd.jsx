@@ -20,7 +20,7 @@ const Courseadd = (props) => {
     }
 
     const joinGroup = async function(event) {
-        let addURL = new URL("http://localhost:3009/addto/:group")
+        let addURL = new URL(process.env.BASEURL+"addto/:group")
         addURL.searchParams.append("group", course)
         await fetch(addURL, {
             method: "GET",
