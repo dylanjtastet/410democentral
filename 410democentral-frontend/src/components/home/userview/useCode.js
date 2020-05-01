@@ -11,7 +11,7 @@ export default function useCode(id, setLogs) {
 
   useEffect(() => {
     if (id === "") return;
-    let sampleURL = new URL(process.env.BASEURL+"sample");
+    let sampleURL = new URL(process.env.REACT_APP_BASEURL+"sample");
     sampleURL.searchParams.append("id", id);
     fetch(sampleURL, {credentials:"include"})
     .then(res => res.json())
