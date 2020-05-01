@@ -499,6 +499,7 @@ app.get("/addto/:group", async function(req, res, next){
                 await db.addUserToGroup(user._id, req.query.group);
             }
             res.sendStatus(200);
+            return;
         }
         else{
             res.sendStatus(401);
@@ -515,7 +516,8 @@ app.get("/removefrom/:group", async function(req, res, next){
             if (req.query.username) {
                 let currIsRoot = await auth.isRootSession(req.cookies.sessid);
                 let currIsInstructor = await auth.checkGroupPermissionsForSession(
-                    req.cookies.sessid
+                    req.cookies.sessid,
+                    req.params.group
                 );
                 let targetIsInstructor = await auth.checkGroupPermissions(
                     req.query.username,
@@ -527,6 +529,7 @@ app.get("/removefrom/:group", async function(req, res, next){
                 }
                 else {
                     res.sendStatus(403);
+                    return;
                 }
             }
             else {
