@@ -14,7 +14,7 @@ npm run build
 
         stage('build backend') {
           steps {
-            sh '''cd ../410democentral-backend
+            sh '''cd 410democentral-backend
 npm install'''
           }
         }
