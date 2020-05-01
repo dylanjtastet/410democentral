@@ -28,9 +28,9 @@ const verifyPasswd = async function(passwd, hashRecord){
     return testHash.equals(hashRecord.hash); 
 }
 
-module.exports.registerUser = async function(username, passwd, email){
+module.exports.registerUser = async function(username, passwd, email, isroot){
     let creds = await getPasswordSaltedHash(passwd);
-    await db.insertUser(username, creds, email);
+    await db.insertUser(username, creds, email, isroot);
     return true;
 }
 

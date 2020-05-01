@@ -90,14 +90,14 @@ module.exports.deleteSample = async function(id){
     return deleteSampleByIdPromise(db, id);
 }
 
-module.exports.insertUser = async function(username, creds, email){
+module.exports.insertUser = async function(username, creds, email, isroot){
     let db = await dbPromise;
     return db.collection("users").insertOne({
         _id: username,
         creds: creds,
         email: email,
         groups: [],
-        isroot: false
+        isroot: isroot
     });
 }
 

@@ -281,7 +281,7 @@ app.get("/user/:username", async function(req, res, next){
 app.post('/register', async function(req, res, next){
     try{
         if(!(await db.checkUserExists(req.body.username))){
-            await auth.registerUser(req.body.username, req.body.password, req.body.email);
+            await auth.registerUser(req.body.username, req.body.password, req.body.email, false);
             res.send(true);
         }
         else{
