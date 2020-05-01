@@ -15,8 +15,7 @@ npm install
 
     stage('deploy') {
       steps {
-        sh '''pm2 stop all
-pm2 start 410democentral-backend/app.js
+        sh '''pm2 start 410democentral-backend/app.js
 pm2 start 410democentral-backend/serv_frontend.js'''
       }
     }
